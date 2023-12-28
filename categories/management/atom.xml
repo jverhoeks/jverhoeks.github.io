@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Jacobs Tech Blog - management</title>
+    <subtitle>Tech, Cloud and Programming</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://jacob.verhoeks.org/categories/management/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://jacob.verhoeks.org"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2022-02-02T00:00:00+00:00</updated>
+    <id>https://jacob.verhoeks.org/categories/management/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Maker&#x27;s Schedule, Manager&#x27;s Schedule</title>
+        <published>2022-02-02T00:00:00+00:00</published>
+        <updated>2022-02-02T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jacob.verhoeks.org/makers-schedule-managers-schedule/"/>
+        <id>https://jacob.verhoeks.org/makers-schedule-managers-schedule/</id>
+        
+        <summary type="html">&lt;p&gt;Being an engineer and a tech lead, meetings are always a necessary evil. I intend to minimize them, some can be a slack message, others an email.
+But for some cases a meeting is required. It&#x27;s hard to plan, difficult to get the right engagement.
+Then i read this article: &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;http:&#x2F;&#x2F;www.paulgraham.com&#x2F;makersschedule.html&quot;&gt;http:&#x2F;&#x2F;www.paulgraham.com&#x2F;makersschedule.html&lt;&#x2F;a&gt; it opened my eyes.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Jacobs Tech Blog - talk</title>
+    <subtitle>Tech, Cloud and Programming</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://jacob.verhoeks.org/categories/talk/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://jacob.verhoeks.org"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2022-10-03T00:00:00+00:00</updated>
+    <id>https://jacob.verhoeks.org/categories/talk/atom.xml</id>
+    <entry xml:lang="en">
+        <title>AWSUG.nl talk about Step Functions</title>
+        <published>2022-10-03T00:00:00+00:00</published>
+        <updated>2022-10-03T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jacob.verhoeks.org/awsug-step-functions-talk/"/>
+        <id>https://jacob.verhoeks.org/awsug-step-functions-talk/</id>
+        
+        <summary type="html">&lt;p&gt;I was invited to give a talk at the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;awscommunityday.nl&#x2F;sessions&#x2F;sls412&#x2F;&quot;&gt;awscommunityday.nl&lt;&#x2F;a&gt;.
+I gave an overview of the Step Functions features released in the past years. &lt;&#x2F;p&gt;
+&lt;p&gt;Great location at the rijtuigenloods in Amersfoort. Talk where held inside old rail carriages. &lt;img src=&quot;&#x2F;img&#x2F;aws-cd-houtwagen.jpg&quot; alt=&quot;houtwagen&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;The presentation can be found there: &lt;a href=&quot;&#x2F;files&#x2F;AwsUg-Stepfunctions-2022-10-03.pdf&quot;&gt;Presentation&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>AWSUG.nl talk about EventBridge</title>
+        <published>2022-05-24T00:00:00+00:00</published>
+        <updated>2022-05-24T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jacob.verhoeks.org/awsug-eventbridge-talk/"/>
+        <id>https://jacob.verhoeks.org/awsug-eventbridge-talk/</id>
+        
+        <summary type="html">&lt;p&gt;It was great to give an in-person talk at the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;awsug.nl&#x2F;events&#x2F;2022&#x2F;05&#x2F;24&#x2F;aws-meetup-at-postnl&#x2F;&quot;&gt;AWSug.nl&lt;&#x2F;a&gt;.
+I gave an overview of the EventBridge features released in the past years.&lt;&#x2F;p&gt;
+&lt;p&gt;The presentation can be found there: &lt;a href=&quot;&#x2F;files&#x2F;AwsUg-Eventbridge-2022-05-24.pdf&quot;&gt;Presentation&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

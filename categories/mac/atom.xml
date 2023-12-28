@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Jacobs Tech Blog - mac</title>
+    <subtitle>Tech, Cloud and Programming</subtitle>
+    <link rel="self" type="application/atom+xml" href="https://jacob.verhoeks.org/categories/mac/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://jacob.verhoeks.org"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2022-03-28T00:00:00+00:00</updated>
+    <id>https://jacob.verhoeks.org/categories/mac/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Docker on Mac with Colima</title>
+        <published>2022-03-28T00:00:00+00:00</published>
+        <updated>2022-03-28T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jacob.verhoeks.org/docker-with-colima/"/>
+        <id>https://jacob.verhoeks.org/docker-with-colima/</id>
+        
+        <summary type="html">&lt;p&gt;Docker is almost an essential tool for developing applications in a devops environment. It allows easy context switching and grouping. The standard way of installing it on the mac via &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.docker.com&#x2F;products&#x2F;docker-desktop&#x2F;&quot;&gt;Docker Desktop&lt;&#x2F;a&gt; was free, but since 2021 it&#x27;s a payed subscription model for companies &amp;gt; 250 workers with a minimum of $5&#x2F;month.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

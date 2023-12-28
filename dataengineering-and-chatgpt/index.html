@@ -1,0 +1,566 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    
+    
+
+    
+    
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+
+    
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  <meta name="description" content="Jacobs Tech Blog Tech, Cloud and Programming">
+
+
+    
+    
+<title>
+    
+    Data Engineering and ChatGPT &middot; Jacobs Tech Blog
+    
+</title>
+
+
+
+    
+  <!-- CSS -->
+  <link rel="stylesheet" href="https:&#x2F;&#x2F;jacob.verhoeks.org/main.css">
+  <script src="https://kit.fontawesome.com/ac557d6010.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <script src="https://getinsights.io/js/insights.js"></script>
+  <script>
+  insights.init('t6rLVGW6KcRuQdn8');
+  insights.trackPages();
+  </script>
+
+
+    
+<meta name="theme-color" content="#ffffff">
+
+  <!-- Icons -->
+  <link rel="shortcut icon" href="https:&#x2F;&#x2F;jacob.verhoeks.org/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jacob.verhoeks.org/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jacob.verhoeks.org/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://jacob.verhoeks.org/favicon-16x16.png">
+
+
+    
+
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+
+	
+
+
+	
+
+
+
+    
+
+
+
+    
+  
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	
+
+
+<link rel="canonical" href="https://jacob.verhoeks.org/dataengineering-and-chatgpt/">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  
+    <meta name="twitter:image" content="https://jacob.verhoeks.org/&#x2F;apple-touch-icon.png">
+  
+  <meta name="twitter:title" content="Data Engineering and ChatGPT">
+  <meta name="twitter:description" content="Data Engineering and ChatGPT">
+  <meta name="twitter:site" content="@zamwan">
+  <meta name="twitter:creator" content="@zamwan">
+
+  <meta property="og:title" content="Data Engineering and ChatGPT">
+  <meta property="og:description" content="Data Engineering and ChatGPT">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jacob.verhoeks.org/dataengineering-and-chatgpt/">
+
+  
+    <meta property="og:image" content="https://jacob.verhoeks.org/&#x2F;apple-touch-icon.png">
+  
+
+  <meta property="og:updated_time" content="2021-05-01T08:08:08+08:00">
+  <meta property="og:site_name" content="Data Engineering and ChatGPT">
+
+  
+
+  
+
+  
+  <meta property="og:locale" content="en_US">
+
+
+
+  
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "url": "/dataengineering-and-chatgpt/",
+      "name": "Data Engineering and ChatGPT",
+      "logo": "/dataengineering-and-chatgpt/logo-doks.png",
+      "sameAs": [
+        "https://twitter.com/zamwan",
+        "https://www.linkedin.com/in/jacobverhoeks/",
+        "https://github.com/jverhoeks"
+      ]
+    }
+    </script>
+  
+  
+  
+
+
+
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://jacob.verhoeks.org/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Dataengineering And Chatgpt",
+            "item": "https://jacob.verhoeks.org/dataengineering-and-chatgpt/"
+          }
+        
+      
+    
+   ]
+  }
+</script>
+
+
+
+    
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+
+    
+  
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+
+  </head>
+
+  <body>
+
+    
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+        styles, `#sidebar-checkbox` for behavior. -->
+    <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+    <!-- Toggleable sidebar -->
+    <div class="sidebar" id="sidebar">
+      
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="https://gravatar.com/2ec5bb1c3a7caaeff2a4e57872a28f85">
+          <img src="https://www.gravatar.com/avatar/2ec5bb1c3a7caaeff2a4e57872a28f85?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>🇳🇱 Cloud Architect & AWS Community Builder</p>
+      </div>
+      
+      
+      
+      <div class="sidebar-personal-info-section">
+        <p> Follow me: <br />
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;jacobverhoeks&#x2F;">
+          <i class="fa fa-linkedin" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;github.com&#x2F;jverhoeks">
+          <i class="fa fa-github" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;twitter.com&#x2F;zamwan">
+          <i class="fa fa-twitter" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        </p>
+      </div>
+      
+    </div>
+  </div>
+ 
+
+      
+   
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;categories&#x2F;">
+          Categories
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;tags&#x2F;">
+          Tags
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;about&#x2F;">
+          About
+        </a>
+
+        
+      </span>
+
+    
+  </nav>
+
+
+
+      
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="https://aws.amazon.com/developer/community/community-builders/">
+          <img src="/img/cb-badge.png" title="AWS Community Builders" alt="AWS Community Builders" />
+        </a>
+      </div>
+    </div>
+  </div>
+ 
+
+      
+  <div class="sidebar-item sidebar-item-last">
+    <p>
+    &copy; 2022 Jacob Verhoeks. This work is licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>.
+    </p>
+  </div>
+
+
+
+    </div>
+    
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+
+      
+
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="https:&#x2F;&#x2F;jacob.verhoeks.org/" title="Home" title="Jacobs Tech Blog">
+              <img class="masthead-logo" src="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;logo2.png" alt="logo"/>
+            </a>
+            <small>Tech, Cloud and Programming</small>
+            
+          </h3>
+        </div>
+      </div>
+
+
+
+      <div class="container content">
+
+        
+	      <div class="post">
+          <h1 class="post-title">Data Engineering and ChatGPT</h1>
+          <span class="post-date">2022-12-06</span>
+
+           |
+            
+            <a href="https://jacob.verhoeks.org/tags/aws/" class="post-tag">aws</a>
+            
+            <a href="https://jacob.verhoeks.org/tags/dataengineering/" class="post-tag">dataengineering</a>
+            
+            <a href="https://jacob.verhoeks.org/tags/chatgpt/" class="post-tag">chatgpt</a>
+            
+          
+          <article>
+            <p>ChatGPT is out and everybody is trying it.  Blogs, songs are easy, but can it help with Data Engineering?</p>
+<h2 id="question-1">question 1</h2>
+<blockquote>
+<p>i have a table  named 'people' with fields: id, name, job_type and a table names 'jobs' with fields: id,job_name. Create a join on this two tables in sql</p>
+</blockquote>
+<p>To create a join on two tables in SQL, you can use the JOIN keyword. Here's an example:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>SELECT people.name, jobs.job_name
+</span><span>FROM people
+</span><span>INNER JOIN jobs ON people.job_type = jobs.id
+</span></code></pre>
+<p>This query will return a table with columns name and job_name, and each row will represent a person and the job they have. The JOIN keyword is used to specify the tables to be joined, and the ON keyword is used to specify the criteria for matching rows in the two tables. In this case, the ON clause specifies that rows in the people table should be matched with rows in the jobs table based on the value of job_type in the people table and the value of id in the jobs table.</p>
+<hr />
+<span id="continue-reading"></span>
+<p>Impressive, but let's see how much it can do.</p>
+<h2 id="question-2">question 2</h2>
+<blockquote>
+<p>can you insert some random data in both tables</p>
+</blockquote>
+<p>To insert data into a table in SQL, you can use the INSERT INTO statement. Here's an example:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>INSERT INTO people (id, name, job_type)
+</span><span>VALUES (1, &#39;John&#39;, 2),
+</span><span>       (2, &#39;Jane&#39;, 1),
+</span><span>       (3, &#39;Bob&#39;, 3);
+</span></code></pre>
+<p>This will insert three rows into the people table. Similarly, you can use the INSERT INTO statement to insert data into the jobs table as well:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>INSERT INTO jobs (id, job_name)
+</span><span>VALUES (1, &#39;Teacher&#39;),
+</span><span>       (2, &#39;Engineer&#39;),
+</span><span>       (3, &#39;Doctor&#39;);
+</span></code></pre>
+<p>This will insert three rows into the jobs table. Note that the values in the job_type column of the people table should correspond to the values in the id column of the jobs table, so that the join will work correctly.</p>
+<hr />
+<p>Great, let's try how it's context is.</p>
+<h2 id="question-3">question 3</h2>
+<blockquote>
+<p>can you show the result of the join with these example data</p>
+</blockquote>
+<p>Here's an example of how you can use the JOIN keyword to join the people and jobs tables and show the results:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>SELECT people.name, jobs.job_name
+</span><span>FROM people
+</span><span>INNER JOIN jobs ON people.job_type = jobs.id
+</span><span>
+</span></code></pre>
+<p>This query will return a table with columns name and job_name, and each row will represent a person and the job they have. For example, if the data in the people and jobs tables are as follows:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>people
+</span><span>id  name  job_type
+</span><span>1   John  2
+</span><span>2   Jane  1
+</span><span>3   Bob   3
+</span><span>
+</span><span>jobs
+</span><span>id  job_name
+</span><span>1   Teacher
+</span><span>2   Engineer
+</span><span>3   Doctor
+</span></code></pre>
+<p>Then the result of this query will be:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>name    job_name
+</span><span>John    Engineer
+</span><span>Jane    Teacher
+</span><span>Bob     Doctor
+</span></code></pre>
+<p>This shows that John is an engineer, Jane is a teacher, and Bob is a doctor.</p>
+<hr />
+<p>I'm a AWS Data Engineer, curious how far it goes.</p>
+<h2 id="question-4">question 4</h2>
+<blockquote>
+<p>can you write the terraform code to execute this query in athena</p>
+</blockquote>
+<p>To execute a SQL query in Amazon Athena using Terraform, you can use the aws_athena_query_execution resource. Here's an example:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>resource &quot;aws_athena_query_execution&quot; &quot;example&quot; {
+</span><span>  query = &lt;&lt;QUERY
+</span><span>SELECT people.name, jobs.job_name
+</span><span>FROM people
+</span><span>INNER JOIN jobs ON people.job_type = jobs.id
+</span><span>QUERY
+</span><span>
+</span><span>  result_configuration {
+</span><span>    output_location = &quot;s3://my-bucket/query-results&quot;
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>This code will create an Athena query execution that runs the specified SQL query. The query results will be saved to the specified S3 bucket. Note that this code assumes that the people and jobs tables have already been created in Athena. You will need to use additional Terraform code to create these tables. For more information, see the AWS Athena documentation.</p>
+<hr />
+<p>Very impressive, gives the example and the explanation. How far can we go with this?</p>
+<h2 id="question-5">question 5</h2>
+<blockquote>
+<p>can you write this query in pyspark in a glue job</p>
+</blockquote>
+<p>! Hmm...something seems to have gone wrong. Maybe try me again in a little bit.</p>
+<hr />
+<p>Lucky :) seems we still have some work as a data engineer, but ChatGPT is very powerful. But the amount of progress is staggering. In a short while it'll be able to create complex etl jobs. With access to the data it will analyse data and suggest analytics.</p>
+<p>Exciting development!</p>
+
+          </article>
+        </div>
+
+        <div class="related">
+          <h2>Other Posts</h2>
+          <ul class="related-posts">
+            <li class="previous">
+            
+            </li>
+            <li class="next">
+            
+            </li>
+          </ul>
+        </div>
+
+        
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"> </label>
+
+    
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        // set default sidebar if widescreen
+        if(window.innerWidth > 1400)
+          checkbox.checked = true;
+
+        window.addEventListener('resize',function(e) {
+          if(window.innerWidth > 1400 && !checkbox.checked )
+              checkbox.checked = true;  
+          if(window.innerWidth < 1400 && checkbox.checked )
+              checkbox.checked = false;  
+        },true);
+
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+
+
+
+  </body>
+
+  
+ 
+
+
+</html>

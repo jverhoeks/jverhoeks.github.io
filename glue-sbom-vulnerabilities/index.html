@@ -1,0 +1,561 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    
+    
+
+    
+    
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+
+    
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  <meta name="description" content="Jacobs Tech Blog Tech, Cloud and Programming">
+
+
+    
+    
+<title>
+    
+    Glue SBOM exporter and vulnerabilities &middot; Jacobs Tech Blog
+    
+</title>
+
+
+
+    
+  <!-- CSS -->
+  <link rel="stylesheet" href="https:&#x2F;&#x2F;jacob.verhoeks.org/main.css">
+  <script src="https://kit.fontawesome.com/ac557d6010.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <script src="https://getinsights.io/js/insights.js"></script>
+  <script>
+  insights.init('t6rLVGW6KcRuQdn8');
+  insights.trackPages();
+  </script>
+
+
+    
+<meta name="theme-color" content="#ffffff">
+
+  <!-- Icons -->
+  <link rel="shortcut icon" href="https:&#x2F;&#x2F;jacob.verhoeks.org/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jacob.verhoeks.org/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jacob.verhoeks.org/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://jacob.verhoeks.org/favicon-16x16.png">
+
+
+    
+
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+
+	
+
+
+	
+
+
+
+    
+
+
+
+    
+  
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	
+
+
+<link rel="canonical" href="https://jacob.verhoeks.org/glue-sbom-vulnerabilities/">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  
+    <meta name="twitter:image" content="https://jacob.verhoeks.org/&#x2F;apple-touch-icon.png">
+  
+  <meta name="twitter:title" content="Glue SBOM exporter and vulnerabilities">
+  <meta name="twitter:description" content="Glue SBOM exporter and vulnerabilities">
+  <meta name="twitter:site" content="@zamwan">
+  <meta name="twitter:creator" content="@zamwan">
+
+  <meta property="og:title" content="Glue SBOM exporter and vulnerabilities">
+  <meta property="og:description" content="Glue SBOM exporter and vulnerabilities">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jacob.verhoeks.org/glue-sbom-vulnerabilities/">
+
+  
+    <meta property="og:image" content="https://jacob.verhoeks.org/&#x2F;apple-touch-icon.png">
+  
+
+  <meta property="og:updated_time" content="2021-05-01T08:08:08+08:00">
+  <meta property="og:site_name" content="Glue SBOM exporter and vulnerabilities">
+
+  
+
+  
+
+  
+  <meta property="og:locale" content="en_US">
+
+
+
+  
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "url": "/glue-sbom-vulnerabilities/",
+      "name": "Glue SBOM exporter and vulnerabilities",
+      "logo": "/glue-sbom-vulnerabilities/logo-doks.png",
+      "sameAs": [
+        "https://twitter.com/zamwan",
+        "https://www.linkedin.com/in/jacobverhoeks/",
+        "https://github.com/jverhoeks"
+      ]
+    }
+    </script>
+  
+  
+  
+
+
+
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://jacob.verhoeks.org/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Glue Sbom Vulnerabilities",
+            "item": "https://jacob.verhoeks.org/glue-sbom-vulnerabilities/"
+          }
+        
+      
+    
+   ]
+  }
+</script>
+
+
+
+    
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+
+    
+  
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+
+  </head>
+
+  <body>
+
+    
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+        styles, `#sidebar-checkbox` for behavior. -->
+    <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+    <!-- Toggleable sidebar -->
+    <div class="sidebar" id="sidebar">
+      
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="https://gravatar.com/2ec5bb1c3a7caaeff2a4e57872a28f85">
+          <img src="https://www.gravatar.com/avatar/2ec5bb1c3a7caaeff2a4e57872a28f85?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>🇳🇱 Cloud Architect & AWS Community Builder</p>
+      </div>
+      
+      
+      
+      <div class="sidebar-personal-info-section">
+        <p> Follow me: <br />
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;jacobverhoeks&#x2F;">
+          <i class="fa fa-linkedin" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;github.com&#x2F;jverhoeks">
+          <i class="fa fa-github" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;twitter.com&#x2F;zamwan">
+          <i class="fa fa-twitter" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        </p>
+      </div>
+      
+    </div>
+  </div>
+ 
+
+      
+   
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;categories&#x2F;">
+          Categories
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;tags&#x2F;">
+          Tags
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;about&#x2F;">
+          About
+        </a>
+
+        
+      </span>
+
+    
+  </nav>
+
+
+
+      
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="https://aws.amazon.com/developer/community/community-builders/">
+          <img src="/img/cb-badge.png" title="AWS Community Builders" alt="AWS Community Builders" />
+        </a>
+      </div>
+    </div>
+  </div>
+ 
+
+      
+  <div class="sidebar-item sidebar-item-last">
+    <p>
+    &copy; 2022 Jacob Verhoeks. This work is licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>.
+    </p>
+  </div>
+
+
+
+    </div>
+    
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+
+      
+
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="https:&#x2F;&#x2F;jacob.verhoeks.org/" title="Home" title="Jacobs Tech Blog">
+              <img class="masthead-logo" src="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;logo2.png" alt="logo"/>
+            </a>
+            <small>Tech, Cloud and Programming</small>
+            
+          </h3>
+        </div>
+      </div>
+
+
+
+      <div class="container content">
+
+        
+	      <div class="post">
+          <h1 class="post-title">Glue SBOM exporter and vulnerabilities</h1>
+          <span class="post-date">2023-12-27</span>
+
+           |
+            
+            <a href="https://jacob.verhoeks.org/tags/aws/" class="post-tag">aws</a>
+            
+            <a href="https://jacob.verhoeks.org/tags/dataengineering/" class="post-tag">dataengineering</a>
+            
+            <a href="https://jacob.verhoeks.org/tags/glue/" class="post-tag">glue</a>
+            
+          
+          <article>
+            <p>AWS Inspector2 is getting very powerfull with detailed vulnerabilities of EC2, ECR, Lambda functions, but the one missing is glue jobs. For that i created a SBOM Extractor for Glue Jobs.</p>
+<p>My repo (wip) can be found here <a rel="noopener" target="_blank" href="https://github.com/jverhoeks/glue-inspector/">https://github.com/jverhoeks/glue-inspector/</a></p>
+<hr />
+<h1 id="package-table">Package table</h1>
+<p>(view on wide screen)</p>
+<table><thead><tr><th style="text-align: center">Package</th><th style="text-align: center">2.0</th><th style="text-align: center">2.0 vuln</th><th style="text-align: center">3.0</th><th style="text-align: center">3.0 vuln</th><th style="text-align: center">4.0</th><th style="text-align: center">4.0 vuln</th><th style="text-align: center">shell 3.6</th><th style="text-align: center">shell 3.6 vuln</th><th style="text-align: center">shell 3.9</th><th style="text-align: center">shell 3.9 vuln</th><th style="text-align: center">shell 3.9 analytics</th><th style="text-align: center">shell 3.9 analytics vuln</th></tr></thead><tbody>
+<tr><td style="text-align: center">Cython</td><td style="text-align: center">0.29.15</td><td style="text-align: center"></td><td style="text-align: center">0.29.4</td><td style="text-align: center"></td><td style="text-align: center">0.29.32</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">Pillow</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">9.4.0</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://github.com/advisories/GHSA-56pw-mpj4-fxww">GHSA-56pw-mpj4-fxww</a></td><td style="text-align: center">9.4.0</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://github.com/advisories/GHSA-56pw-mpj4-fxww">GHSA-56pw-mpj4-fxww</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">PyGreSQL</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">5.0.6</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">PyMySQL</td><td style="text-align: center">0.9.3</td><td style="text-align: center"></td><td style="text-align: center">1.0.2</td><td style="text-align: center"></td><td style="text-align: center">1.0.2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.0.2</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">PyYAML</td><td style="text-align: center">5.3.1</td><td style="text-align: center">CRITICAL <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2020-14343">CVE-2020-14343</a></td><td style="text-align: center">5.4.1</td><td style="text-align: center"></td><td style="text-align: center">6.0.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">SQLAlchemy</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.4.36</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">Spark</td><td style="text-align: center">1.0</td><td style="text-align: center"></td><td style="text-align: center">1.0</td><td style="text-align: center"></td><td style="text-align: center">1.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">aiobotocore</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.4.2</td><td style="text-align: center"></td><td style="text-align: center">2.4.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">aiohttp</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">3.8.3</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://github.com/advisories/GHSA-pjjw-qhg8-p2p9">GHSA-pjjw-qhg8-p2p9</a></td><td style="text-align: center">3.8.3</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://github.com/advisories/GHSA-pjjw-qhg8-p2p9">GHSA-pjjw-qhg8-p2p9</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">aioitertools</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">0.11.0</td><td style="text-align: center"></td><td style="text-align: center">0.11.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">aiosignal</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.3.1</td><td style="text-align: center"></td><td style="text-align: center">1.3.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">async-timeout</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">4.0.2</td><td style="text-align: center"></td><td style="text-align: center">4.0.2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">asynctest</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">0.13.0</td><td style="text-align: center"></td><td style="text-align: center">0.13.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">attrs</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">22.2.0</td><td style="text-align: center"></td><td style="text-align: center">22.2.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">avro</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.11.0</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-39410">CVE-2023-39410</a></td></tr>
+<tr><td style="text-align: center">avro-python3</td><td style="text-align: center">1.10.0</td><td style="text-align: center"></td><td style="text-align: center">1.10.2</td><td style="text-align: center"></td><td style="text-align: center">1.10.2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">awscli</td><td style="text-align: center">1.27.60</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">116.242</td><td style="text-align: center"></td><td style="text-align: center">1.23.5</td><td style="text-align: center"></td><td style="text-align: center">1.23.5</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">awswrangler</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">2.15.1</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">boto3</td><td style="text-align: center">1.12.4</td><td style="text-align: center"></td><td style="text-align: center">1.18.50</td><td style="text-align: center"></td><td style="text-align: center">1.24.70</td><td style="text-align: center"></td><td style="text-align: center">1.9.203</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.22.5</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">botocore</td><td style="text-align: center">1.15.4</td><td style="text-align: center"></td><td style="text-align: center">1.21.50</td><td style="text-align: center"></td><td style="text-align: center">1.27.59</td><td style="text-align: center"></td><td style="text-align: center">1.12.232</td><td style="text-align: center"></td><td style="text-align: center">1.23.5</td><td style="text-align: center"></td><td style="text-align: center">1.23.5</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">certifi</td><td style="text-align: center">2019.11.28</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-23491">CVE-2022-23491</a></td><td style="text-align: center">2021.5.30</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-23491">CVE-2022-23491</a></td><td style="text-align: center">2021.5.30</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-23491">CVE-2022-23491</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">chardet</td><td style="text-align: center">3.0.4</td><td style="text-align: center"></td><td style="text-align: center">3.0.4</td><td style="text-align: center"></td><td style="text-align: center">3.0.4</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">charset-normalizer</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">2.1.1</td><td style="text-align: center"></td><td style="text-align: center">2.1.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">click</td><td style="text-align: center">8.1.3</td><td style="text-align: center"></td><td style="text-align: center">8.1.3</td><td style="text-align: center"></td><td style="text-align: center">8.1.3</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">colorama</td><td style="text-align: center">0.4.4</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">cycler</td><td style="text-align: center">0.10.0</td><td style="text-align: center"></td><td style="text-align: center">0.10.0</td><td style="text-align: center"></td><td style="text-align: center">0.10.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">docutils</td><td style="text-align: center">0.15.2</td><td style="text-align: center"></td><td style="text-align: center">0.17.1</td><td style="text-align: center"></td><td style="text-align: center">0.17.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">elasticsearch</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">8.2.0</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">enum34</td><td style="text-align: center">1.1.9</td><td style="text-align: center"></td><td style="text-align: center">1.1.10</td><td style="text-align: center"></td><td style="text-align: center">1.1.10</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">frozenlist</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.3.3</td><td style="text-align: center"></td><td style="text-align: center">1.3.3</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">fsspec</td><td style="text-align: center">0.6.2</td><td style="text-align: center"></td><td style="text-align: center">2021.8.1</td><td style="text-align: center"></td><td style="text-align: center">2021.8.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">idna</td><td style="text-align: center">2.9</td><td style="text-align: center"></td><td style="text-align: center">2.10</td><td style="text-align: center"></td><td style="text-align: center">2.10</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">importlib-metadata</td><td style="text-align: center">6.0.0</td><td style="text-align: center"></td><td style="text-align: center">6.0.0</td><td style="text-align: center"></td><td style="text-align: center">5.0.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">jmespath</td><td style="text-align: center">0.9.4</td><td style="text-align: center"></td><td style="text-align: center">0.10.0</td><td style="text-align: center"></td><td style="text-align: center">0.10.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">joblib</td><td style="text-align: center">0.14.1</td><td style="text-align: center">CRITICAL <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-21797">CVE-2022-21797</a></td><td style="text-align: center">1.0.1</td><td style="text-align: center">CRITICAL <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-21797">CVE-2022-21797</a></td><td style="text-align: center">1.0.1</td><td style="text-align: center">CRITICAL <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-21797">CVE-2022-21797</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">kiwisolver</td><td style="text-align: center">1.1.0</td><td style="text-align: center"></td><td style="text-align: center">1.3.2</td><td style="text-align: center"></td><td style="text-align: center">1.4.4</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">matplotlib</td><td style="text-align: center">3.1.3</td><td style="text-align: center"></td><td style="text-align: center">3.4.3</td><td style="text-align: center"></td><td style="text-align: center">3.4.3</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">mpmath</td><td style="text-align: center">1.1.0</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2021-29063">CVE-2021-29063</a></td><td style="text-align: center">1.2.1</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2021-29063">CVE-2021-29063</a></td><td style="text-align: center">1.2.1</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2021-29063">CVE-2021-29063</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">multidict</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">6.0.4</td><td style="text-align: center"></td><td style="text-align: center">6.0.4</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">nltk</td><td style="text-align: center">3.5</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2021-43854">CVE-2021-43854</a></td><td style="text-align: center">3.6.3</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2021-43854">CVE-2021-43854</a></td><td style="text-align: center">3.7</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">numpy</td><td style="text-align: center">1.18.1</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2021-41496">CVE-2021-41496</a></td><td style="text-align: center">1.19.5</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2021-34141">CVE-2021-34141</a></td><td style="text-align: center">1.23.5</td><td style="text-align: center"></td><td style="text-align: center">1.16.2</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2021-41496">CVE-2021-41496</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.22.3</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">packaging</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">23.0</td><td style="text-align: center"></td><td style="text-align: center">23.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pandas</td><td style="text-align: center">1.0.1</td><td style="text-align: center"></td><td style="text-align: center">1.3.2</td><td style="text-align: center"></td><td style="text-align: center">1.5.1</td><td style="text-align: center"></td><td style="text-align: center">0.24.2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.4.2</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">patsy</td><td style="text-align: center">0.5.1</td><td style="text-align: center"></td><td style="text-align: center">0.5.1</td><td style="text-align: center"></td><td style="text-align: center">0.5.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pip</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">23.0</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-5752">CVE-2023-5752</a></td><td style="text-align: center">23.0.1</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-5752">CVE-2023-5752</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pmdarima</td><td style="text-align: center">1.5.3</td><td style="text-align: center"></td><td style="text-align: center">1.8.2</td><td style="text-align: center"></td><td style="text-align: center">2.0.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">psycopg2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">2.9.3</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">ptvsd</td><td style="text-align: center">4.3.2</td><td style="text-align: center"></td><td style="text-align: center">4.3.2</td><td style="text-align: center"></td><td style="text-align: center">4.3.2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pyarrow</td><td style="text-align: center">0.16.0</td><td style="text-align: center">CRITICAL <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-47248">CVE-2023-47248</a></td><td style="text-align: center">5.0.0</td><td style="text-align: center">CRITICAL <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-47248">CVE-2023-47248</a></td><td style="text-align: center">10.0.0</td><td style="text-align: center">CRITICAL <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-47248">CVE-2023-47248</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pyasn1</td><td style="text-align: center">0.4.8</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pyathena</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">2.5.3</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pydevd</td><td style="text-align: center">1.9.0</td><td style="text-align: center"></td><td style="text-align: center">2.5.0</td><td style="text-align: center"></td><td style="text-align: center">2.5.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pyhocon</td><td style="text-align: center">0.3.54</td><td style="text-align: center"></td><td style="text-align: center">0.3.58</td><td style="text-align: center"></td><td style="text-align: center">0.3.58</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pyodbc</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">4.0.32</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pyorc</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">0.6.0</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pyparsing</td><td style="text-align: center">2.4.6</td><td style="text-align: center"></td><td style="text-align: center">2.4.7</td><td style="text-align: center"></td><td style="text-align: center">2.4.7</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">python-dateutil</td><td style="text-align: center">2.8.1</td><td style="text-align: center"></td><td style="text-align: center">2.8.2</td><td style="text-align: center"></td><td style="text-align: center">2.8.2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">pytz</td><td style="text-align: center">2019.3</td><td style="text-align: center"></td><td style="text-align: center">2021.1</td><td style="text-align: center"></td><td style="text-align: center">2021.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">redshift-connector</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">2.0.907</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">regex</td><td style="text-align: center">2022.10.31</td><td style="text-align: center"></td><td style="text-align: center">2022.10.31</td><td style="text-align: center"></td><td style="text-align: center">2022.10.31</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">requests</td><td style="text-align: center">2.23.0</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-32681">CVE-2023-32681</a></td><td style="text-align: center">2.23.0</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-32681">CVE-2023-32681</a></td><td style="text-align: center">2.23.0</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-32681">CVE-2023-32681</a></td><td style="text-align: center">2.22.0</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-32681">CVE-2023-32681</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">2.27.1</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-32681">CVE-2023-32681</a></td></tr>
+<tr><td style="text-align: center">rsa</td><td style="text-align: center">4.7.2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">s3fs</td><td style="text-align: center">0.4.0</td><td style="text-align: center"></td><td style="text-align: center">2021.8.1</td><td style="text-align: center"></td><td style="text-align: center">2022.11.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">2022.3.0</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">s3transfer</td><td style="text-align: center">0.3.3</td><td style="text-align: center"></td><td style="text-align: center">0.5.0</td><td style="text-align: center"></td><td style="text-align: center">0.6.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">scikit-learn</td><td style="text-align: center">0.22.1</td><td style="text-align: center"></td><td style="text-align: center">0.24.2</td><td style="text-align: center"></td><td style="text-align: center">0.24.2</td><td style="text-align: center"></td><td style="text-align: center">0.20.3</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.0.2</td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">scipy</td><td style="text-align: center">1.4.1</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-25399">CVE-2023-25399</a></td><td style="text-align: center">1.7.1</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-25399">CVE-2023-25399</a></td><td style="text-align: center">1.9.3</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-25399">CVE-2023-25399</a></td><td style="text-align: center">1.2.1</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-25399">CVE-2023-25399</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.8.0</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-25399">CVE-2023-25399</a></td></tr>
+<tr><td style="text-align: center">setuptools</td><td style="text-align: center">45.2.0</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-40897">CVE-2022-40897</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">49.1.3</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-40897">CVE-2022-40897</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">six</td><td style="text-align: center">1.14.0</td><td style="text-align: center"></td><td style="text-align: center">1.16.0</td><td style="text-align: center"></td><td style="text-align: center">1.16.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">statsmodels</td><td style="text-align: center">0.11.1</td><td style="text-align: center"></td><td style="text-align: center">0.12.2</td><td style="text-align: center"></td><td style="text-align: center">0.13.5</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">subprocess32</td><td style="text-align: center">3.5.4</td><td style="text-align: center"></td><td style="text-align: center">3.5.4</td><td style="text-align: center"></td><td style="text-align: center">3.5.4</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">sympy</td><td style="text-align: center">1.5.1</td><td style="text-align: center"></td><td style="text-align: center">1.8</td><td style="text-align: center"></td><td style="text-align: center">1.8</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">tbats</td><td style="text-align: center">1.0.9</td><td style="text-align: center"></td><td style="text-align: center">1.1.0</td><td style="text-align: center"></td><td style="text-align: center">1.1.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">threadpoolctl</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">3.1.0</td><td style="text-align: center"></td><td style="text-align: center">3.1.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">tqdm</td><td style="text-align: center">4.64.1</td><td style="text-align: center"></td><td style="text-align: center">4.64.1</td><td style="text-align: center"></td><td style="text-align: center">4.64.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">typing-extensions</td><td style="text-align: center">4.4.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">typing_extensions</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">4.4.0</td><td style="text-align: center"></td><td style="text-align: center">4.4.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">urllib3</td><td style="text-align: center">1.25.8</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-45803">CVE-2023-45803</a></td><td style="text-align: center">1.25.11</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-45803">CVE-2023-45803</a></td><td style="text-align: center">1.25.11</td><td style="text-align: center">MEDIUM <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2023-45803">CVE-2023-45803</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">wheel</td><td style="text-align: center">0.35.1</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-40898">CVE-2022-40898</a></td><td style="text-align: center">0.37.0</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-40898">CVE-2022-40898</a></td><td style="text-align: center">0.37.0</td><td style="text-align: center">HIGH <a rel="noopener" target="_blank" href="https://avd.aquasec.com/nvd/cve-2022-40898">CVE-2022-40898</a></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">wrapt</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.14.1</td><td style="text-align: center"></td><td style="text-align: center">1.14.1</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">yarl</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center">1.8.2</td><td style="text-align: center"></td><td style="text-align: center">1.8.2</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+<tr><td style="text-align: center">zipp</td><td style="text-align: center">3.12.0</td><td style="text-align: center"></td><td style="text-align: center">3.12.0</td><td style="text-align: center"></td><td style="text-align: center">3.10.0</td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td><td style="text-align: center"></td></tr>
+</tbody></table>
+
+          </article>
+        </div>
+
+        <div class="related">
+          <h2>Other Posts</h2>
+          <ul class="related-posts">
+            <li class="previous">
+            
+            </li>
+            <li class="next">
+            
+            </li>
+          </ul>
+        </div>
+
+        
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"> </label>
+
+    
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        // set default sidebar if widescreen
+        if(window.innerWidth > 1400)
+          checkbox.checked = true;
+
+        window.addEventListener('resize',function(e) {
+          if(window.innerWidth > 1400 && !checkbox.checked )
+              checkbox.checked = true;  
+          if(window.innerWidth < 1400 && checkbox.checked )
+              checkbox.checked = false;  
+        },true);
+
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+
+
+
+  </body>
+
+  
+ 
+
+
+</html>

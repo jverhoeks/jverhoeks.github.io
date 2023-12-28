@@ -1,0 +1,610 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    
+    
+
+    
+    
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+
+    
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  <meta name="description" content="Jacobs Tech Blog Tech, Cloud and Programming">
+
+
+    
+    
+<title>
+    
+    An ON-AIR sign with IoT &middot; Jacobs Tech Blog
+    
+</title>
+
+
+
+    
+  <!-- CSS -->
+  <link rel="stylesheet" href="https:&#x2F;&#x2F;jacob.verhoeks.org/main.css">
+  <script src="https://kit.fontawesome.com/ac557d6010.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <script src="https://getinsights.io/js/insights.js"></script>
+  <script>
+  insights.init('t6rLVGW6KcRuQdn8');
+  insights.trackPages();
+  </script>
+
+
+    
+<meta name="theme-color" content="#ffffff">
+
+  <!-- Icons -->
+  <link rel="shortcut icon" href="https:&#x2F;&#x2F;jacob.verhoeks.org/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jacob.verhoeks.org/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jacob.verhoeks.org/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://jacob.verhoeks.org/favicon-16x16.png">
+
+
+    
+
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+
+	
+
+
+	
+
+
+
+    
+
+
+
+    
+  
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	
+
+
+<link rel="canonical" href="https://jacob.verhoeks.org/on-air/">
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  
+    
+      <meta property="twitter:image" content="https://jacob.verhoeks.org/img/on-air-sign.jpeg">
+    
+      <meta property="twitter:image" content="https://jacob.verhoeks.org/img/on-air-lighton.png">
+    
+  
+  <meta name="twitter:title" content="An ON-AIR sign with IoT">
+  <meta name="twitter:description" content="Tech, Cloud and Programming">
+  <meta name="twitter:site" content="@zamwan">
+  <meta name="twitter:creator" content="@zamwan">
+
+  <meta property="og:title" content="An ON-AIR sign with IoT">
+  <meta property="og:description" content="Tech, Cloud and Programming">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jacob.verhoeks.org/on-air/">
+
+  
+    
+      <meta property="og:image" content="https://jacob.verhoeks.org/img/on-air-sign.jpeg">
+    
+      <meta property="og:image" content="https://jacob.verhoeks.org/img/on-air-lighton.png">
+    
+  
+
+  <meta property="og:updated_time" content="2021-05-01T08:08:08+08:00">
+  <meta property="og:site_name" content="An ON-AIR sign with IoT">
+
+  
+
+  
+
+  
+  <meta property="og:locale" content="en_US">
+
+
+
+  
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "url": "/on-air/",
+      "name": "An ON-AIR sign with IoT",
+      "logo": "/on-air/logo-doks.png",
+      "sameAs": [
+        "https://twitter.com/zamwan",
+        "https://www.linkedin.com/in/jacobverhoeks/",
+        "https://github.com/jverhoeks"
+      ]
+    }
+    </script>
+  
+  
+  
+
+
+
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://jacob.verhoeks.org/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "On Air",
+            "item": "https://jacob.verhoeks.org/on-air/"
+          }
+        
+      
+    
+   ]
+  }
+</script>
+
+
+
+    
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+
+    
+  
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+
+  </head>
+
+  <body>
+
+    
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+        styles, `#sidebar-checkbox` for behavior. -->
+    <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+    <!-- Toggleable sidebar -->
+    <div class="sidebar" id="sidebar">
+      
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="https://gravatar.com/2ec5bb1c3a7caaeff2a4e57872a28f85">
+          <img src="https://www.gravatar.com/avatar/2ec5bb1c3a7caaeff2a4e57872a28f85?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>🇳🇱 Cloud Architect & AWS Community Builder</p>
+      </div>
+      
+      
+      
+      <div class="sidebar-personal-info-section">
+        <p> Follow me: <br />
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;jacobverhoeks&#x2F;">
+          <i class="fa fa-linkedin" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;github.com&#x2F;jverhoeks">
+          <i class="fa fa-github" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        
+        
+        <a href="https:&#x2F;&#x2F;twitter.com&#x2F;zamwan">
+          <i class="fa fa-twitter" aria-hidden="true"></i>
+        </a>
+        
+        |
+        
+        </p>
+      </div>
+      
+    </div>
+  </div>
+ 
+
+      
+   
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;categories&#x2F;">
+          Categories
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;tags&#x2F;">
+          Tags
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+        
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;about&#x2F;">
+          About
+        </a>
+
+        
+      </span>
+
+    
+  </nav>
+
+
+
+      
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="https://aws.amazon.com/developer/community/community-builders/">
+          <img src="/img/cb-badge.png" title="AWS Community Builders" alt="AWS Community Builders" />
+        </a>
+      </div>
+    </div>
+  </div>
+ 
+
+      
+  <div class="sidebar-item sidebar-item-last">
+    <p>
+    &copy; 2022 Jacob Verhoeks. This work is licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>.
+    </p>
+  </div>
+
+
+
+    </div>
+    
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+
+      
+
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="https:&#x2F;&#x2F;jacob.verhoeks.org/" title="Home" title="Jacobs Tech Blog">
+              <img class="masthead-logo" src="https:&#x2F;&#x2F;jacob.verhoeks.org&#x2F;logo2.png" alt="logo"/>
+            </a>
+            <small>Tech, Cloud and Programming</small>
+            
+          </h3>
+        </div>
+      </div>
+
+
+
+      <div class="container content">
+
+        
+	      <div class="post">
+          <h1 class="post-title">An ON-AIR sign with IoT</h1>
+          <span class="post-date">2022-01-29</span>
+
+           |
+            
+            <a href="https://jacob.verhoeks.org/tags/iot/" class="post-tag">iot</a>
+            
+            <a href="https://jacob.verhoeks.org/tags/arduino/" class="post-tag">arduino</a>
+            
+            <a href="https://jacob.verhoeks.org/tags/esp/" class="post-tag">esp</a>
+            
+            <a href="https://jacob.verhoeks.org/tags/esp32/" class="post-tag">esp32</a>
+            
+            <a href="https://jacob.verhoeks.org/tags/mqtt/" class="post-tag">mqtt</a>
+            
+          
+          <article>
+            <p><strong>Repost from the blog from on the <a rel="noopener" target="_blank" href="https://edransit.medium.com/an-on-air-sign-with-iot-5bf2f2bc7dc9">edrans medium page</a></strong></p>
+<p>In this last year, we have all been working mostly from home, using video meetings to connect to customers and coworkers. How many times did you have an unplanned appearance of someone at your home? There are many viral videos on the internet like this one.
+A simple indicator that you are “ON-AIR” outside the room, could help to prevent this.</p>
+<span id="continue-reading"></span>
+<p><img src="/img/on-air-sign.jpeg" alt="On-Air Sign" />
+<em>&lt;a href=”https://www.freepik.com/vectors/sign&quot;&gt;Sign vector created by freepik — www.freepik.com</a></em></p>
+<h2 id="step-1-how-to-detect-if-the-camera-is-on">Step 1: How to detect if the camera is ON?</h2>
+<p>Of course we want to automate this, a manual switch can be forgotten. I use many different Video conferencing tools on my Mac: Zoom, Google Meeting, Slack, etc… so for this I was looking for a generic way to detect if the camera is ON.</p>
+<p>My first try was using the software: <a rel="noopener" target="_blank" href="https://objective-see.com/products/oversight.html">Oversight</a>; it detects which software the camera uses and asks you to deny/allow access. Parsing the log file worked, but not 100%. For example it didn’t detect the closing of the tab with Google Meet.
+The solution was going deeper in the OS. In Linux the camera device is /dev/video0, so using lsof you can detect if a process has the file handle for the camera open. Unfortunately on the Mac the camera isn’t a simple dev device. But some searching pointed me to the following stack-overflow page.</p>
+<p>The Mac log stream contains all system log events: one of these many events is the KCameraStreamStart/Stop event; this is fired when the camera is opened, and it works for the built-in camera, usb, and virtual cameras.</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>log stream | grep “Post event kCameraStream”
+</span><span>2020–12–01 14:58:53.137796–0500 0xXXXXXX Default 0x0 XXX 0 VDCAssistant: 
+</span><span>[com.apple.VDCAssistant:device] [guid:0xXXXXXXXXXXXXXXXX] Post event kCameraStreamStart 
+</span><span>2020–12–01 14:58:56.431147–0500 0xXXXXXX Default 0x0 XXX 0 VDCAssistant: 
+</span><span>[com.apple.VDCAssistant:device] [guid:0xXXXXXXXXXXXXXXXX] Post event kCameraStreamStop 
+</span><span>2020–12–01 14:58:56.668970–0500 0xXXXXXX Default 0x0 XXX 0 VDCAssistant: 
+</span><span>[com.apple.VDCAssistant:device] [guid:0xXXXXXXXXXXXXXXXX] Post event kCameraStreamStart
+</span></code></pre>
+<p>You can test it on your own Mac, running this command in your terminal. Awk is an advanced text processing utility that is installed by default on the Mac, it enables us to execute a command when a specific text is matched.</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>log stream | awk &#39;
+</span><span>             /Post event kCameraStreamStart/  { system(&quot;say active&quot;) }
+</span><span>             /Post event kCameraStreamStop/  { system(&quot;say inactive&quot;) }&#39;
+</span></code></pre>
+<p>Open your video meeting software, turn ON/OFF the camera and the system will say “active” or “inactive” over your speaker.</p>
+<p><strong>Great, problem 1 solved.</strong></p>
+<h2 id="step-2-communicate-between-the-laptop-and-our-sign">Step 2: Communicate between the laptop and our sign</h2>
+<p>The standard for communication in the IoT is MQTT; this is a lightweight protocol that allows a source to publish a message to a topic.
+Targets can subscribe to the topic and are notified when a message arrives.</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Source -&gt; Publish Message { test: 1 } -&gt; Topic: sensor/topic1
+</span><span>Topic: sensor/topic1 -&gt; Subscribe -&gt; Target Device { test: 1 }
+</span></code></pre>
+<p>I’m using the mosquito broker from Home Assistant that I have running at home for device integrations; it runs on a Raspberry Pi.
+If you don’t have an MQTT server running it’s easy to install on your Mac with the following commands:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>brew install mosquitto
+</span><span>mosquitto_passwd -c -b /usr/local/etc/mosquitto/pwfile mqtt broker
+</span><span>cat &lt;&lt;EOT &gt;&gt; /usr/local/etc/mosquitto/mosquitto.conf
+</span><span>listener 1883
+</span><span>password_file /usr/local/etc/mosquitto/pwfile
+</span><span>EOT
+</span><span>brew services start mosquitto
+</span></code></pre>
+<p>This installs an MQTT server listening on port 1883, with user: MQTT and password broker.</p>
+<h2 id="step-3-post-a-message-from-the-mac-to-the-mqtt">Step 3: Post a message from the Mac to the MQTT</h2>
+<p>I’m using hivemq mqtt-cli as a cli to post messages; it can be installed and tested like this:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>brew tap hivemq/mqtt-cli
+</span><span>brew install mqtt-cli
+</span></code></pre>
+<p>Let’s test if all works: I publish a message { onair: 1} to topic sensor/camera/laptop-jacob on my mqtt server at 192.168.1.100 with user mqtt and password broker.</p>
+<p>Listener
+<code>mqtt sub --topic sensor/camera/laptop-jacob -h 192.168.1.100 -u mqtt -pw broker</code></p>
+<p>Sender
+<code>mqtt pub --topic sensor/camera/laptop-jacob -h 192.168.1.100 -u mqtt -pw broker --message &quot;{ 'onair': 1 }&quot;</code></p>
+<p>As soon as the sender is executed, the listener will show: <code>{ 'onair': 1 }</code> If it doesn’t work, check the configuration, firewall and if you have exactly the same topic name.</p>
+<h3 id="testing-the-camera">Testing the camera</h3>
+<p>Let the subscribe script run. This is the script you can save in /usr/local/bin/watch-camera.sh, it combines the awk line with the mqtt publish. If the camera is ON it pushes { onair: 1 }, when it’s OFF: { onair: 0 }.</p>
+<p>Note the double escape to format the message.</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>#!/usr/bin/env bash
+</span><span>log stream | awk &#39;
+</span><span>                    /Post event kCameraStreamStart/  { system(&quot;mqtt pub -V 3  -d -i laptop-jacob  -p 1883 --topic sensor/camera/laptop-jacob -h 192.168.1.100 -u mqtt -p broker --message \&quot;{ \\\&quot;onair\\\&quot;: 1 }\&quot;&quot;) }
+</span><span>                    /Post event kCameraStreamStop/   { system(&quot;mqtt pub -V 3  -d -i laptop-jacob  -p 8883 --topic sensor/camera/laptop-jacob -h 192.168.1.100 -u mqtt -p broker --message \&quot;{ \\\&quot;onair\\\&quot;: 0 }\&quot;&quot;) }&#39;
+</span></code></pre>
+<p>Run: <code>chmod +x /usr/local/bin/watch-camera.sh</code> to make it executable.</p>
+<p>Run: <code>watch-camera.sh</code> to start sending messages when your camera is on/off</p>
+<p>Open your “favorite” video conferencing tool and turn ON/OFF the camera. In the console window, you subscribed on mqtt you see the messages coming in.</p>
+<h2 id="step-4-a-connected-on-air-sign">Step 4: A connected ON-AIR sign</h2>
+<p>Here comes the fun part, let’s build the sign. I’m going for the photo frame style, but you can design anything you want.</p>
+<p>My sign:</p>
+<ul>
+<li>Old Ikea photo frame with a deep frame</li>
+<li>A printed paper with “ON AIR”</li>
+<li>Some carton, scotch tape, and double-sided tape</li>
+</ul>
+<p><img src="/img/on-air-frame1.png" alt="frame 1" />
+<img src="/img/on-air-frame2.png" alt="frame 2" /></p>
+<p><em>More pictures can be found: <a rel="noopener" target="_blank" href="https://github.com/jverhoeks/on-air/blob/main/on-air-display/DEMO.md">https://github.com/jverhoeks/on-air/blob/main/on-air-display/DEMO.md</a></em></p>
+<p>For the electronics I use an ESP32 with an 8 led circle board. I re-used a board I got from Re:Invent 2018 as a drinkwater dispenser by Anton Shmagin &amp; Gavin Admins. It has a daugherboard for the esp32 to connect the leds and a 9V battery connector.</p>
+<p><img src="/img/on-air-esp.png" alt="esp board" /></p>
+<p>Any kind of addressable Leds can be easily used. WS2812b based like <a rel="noopener" target="_blank" href="https://www.adafruit.com/category/168">Adafruit Neopixel</a>.</p>
+<h3 id="circuito-io">Circuito.io</h3>
+<p>If you need some help with the electronics there is a great website circuito.io. It has a great collection of devices, leds, etc. which you can drag and drop into a design. Besides the great visual like below it gives you a list of parts and even example code to start your project. This is mine:</p>
+<p><a rel="noopener" target="_blank" href="https://www.circuito.io/app?components=513,216577,360217">https://www.circuito.io/app?components=513,216577,360217</a></p>
+<p>This is a basic design for the On-Air Sign. The components are about $20.</p>
+<p><a rel="noopener" target="_blank" href="https://www.circuito.io/app?components=513,216577,360217">https://www.circuito.io/app?components=513,216577,360217</a></p>
+<h3 id="arduino-code">Arduino Code</h3>
+<p>The code for the sign can be found here:</p>
+<p><a rel="noopener" target="_blank" href="https://github.com/jverhoeks/on-air/tree/main/on-air-display">https://github.com/jverhoeks/on-air/tree/main/on-air-display</a></p>
+<ul>
+<li>Install the Arduino Software</li>
+<li>Install the ESP32 board software</li>
+<li>Install the required libraries</li>
+<li>Rename the iot.h.templ to iot.h and fill in the required fields</li>
+</ul>
+<p>It contains the topic, host, username, password. As well as the WIFI credentials. If your LED is different change the LED_PIN and LED_COUNT to match your configuration:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>#define IOT_SUBSCRIBE_TOPIC &quot;sensor/camera/laptop&quot;
+</span><span>#define THINGNAME &quot;on-air-display&quot;
+</span><span>#define LED_PIN   5
+</span><span>#define LED_COUNT 8
+</span><span>
+</span><span>const char WIFI_SSID[] = &quot;xxx&quot;;
+</span><span>const char WIFI_PASSWORD[] = &quot;xxxxx&quot;;
+</span><span>const char IOT_ENDPOINT[] = &quot;192.168.1.100&quot;;
+</span><span>const char IOT_USER[] = &quot;mqtt&quot;;
+</span><span>const char IOT_PASSWORD[] = &quot;broker&quot;;
+</span><span>const int IOT_PORT = 1883;
+</span></code></pre>
+<p>Change the PIN id for the LED controller.</p>
+<p>Run compile and upload to the esp32</p>
+<p>Extra Libraries</p>
+<ul>
+<li>Adafruit_NeoPixel: <a rel="noopener" target="_blank" href="https://github.com/adafruit/Adafruit_NeoPixel">https://github.com/adafruit/Adafruit_NeoPixel</a></li>
+<li>MQTT (by Joel Gaelwiler): <a rel="noopener" target="_blank" href="https://github.com/256dpi/arduino-mqtt">https://github.com/256dpi/arduino-mqtt</a></li>
+<li>ArduinoJson (by Benoit Blanchon): <a rel="noopener" target="_blank" href="https://arduinojson.org/">https://arduinojson.org/</a></li>
+</ul>
+<h2 id="step-5-testing-it">Step 5: Testing it</h2>
+<p>Before you construct your sign, test the code first with the Arduino SerialMonitor enabled.
+Booting esp32, by connecting the USB-cable:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Connecting to WiFi ..
+</span><span>IP: &lt;device ip&gt;
+</span><span>RRSI: -xx  
+</span><span>Connecting to MQTT: &lt;mqtt endpoint&gt;
+</span><span>MQTT Connected!
+</span></code></pre>
+<p>Start the script on the Mac and Turn ON/OFF your camera</p>
+<p>Check if the lights are turning ON/OFF</p>
+<p>You should see LED ON / LED OFF and the LEDs are turning ON/OFF in the serial console.</p>
+<p><img src="/img/on-air-lighton.png" alt="sign on" /></p>
+<p><em>That’s it! You can now place it somewhere visible outside your office and stop the interruptions.</em></p>
+
+          </article>
+        </div>
+
+        <div class="related">
+          <h2>Other Posts</h2>
+          <ul class="related-posts">
+            <li class="previous">
+            
+            </li>
+            <li class="next">
+            
+            </li>
+          </ul>
+        </div>
+
+        
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"> </label>
+
+    
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        // set default sidebar if widescreen
+        if(window.innerWidth > 1400)
+          checkbox.checked = true;
+
+        window.addEventListener('resize',function(e) {
+          if(window.innerWidth > 1400 && !checkbox.checked )
+              checkbox.checked = true;  
+          if(window.innerWidth < 1400 && checkbox.checked )
+              checkbox.checked = false;  
+        },true);
+
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+
+
+
+  </body>
+
+  
+ 
+
+
+</html>
