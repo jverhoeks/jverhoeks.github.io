@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-bvzihdzo> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.0.9"><!-- Font preloads --><link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/jverhoeks.github.io/blog/on-air/"><!-- Primary Meta Tags --><title>An ON-AIR sign with IoT</title><meta name="title" content="An ON-AIR sign with IoT"><meta name="description" content="Building an sign with iot to show when you are in a meeting&#34;"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://jacob.verhoeks.org/jverhoeks.github.io/blog/on-air/"><meta property="og:title" content="An ON-AIR sign with IoT"><meta property="og:description" content="Building an sign with iot to show when you are in a meeting&#34;"><meta property="og:image" content="https://jacob.verhoeks.org/blog-placeholder-1.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://jacob.verhoeks.org/jverhoeks.github.io/blog/on-air/"><meta property="twitter:title" content="An ON-AIR sign with IoT"><meta property="twitter:description" content="Building an sign with iot to show when you are in a meeting&#34;"><meta property="twitter:image" content="https://jacob.verhoeks.org/blog-placeholder-1.jpg"><style>:root{--accent: #2337ff;--accent-dark: #000d8a;--black: 15, 18, 25;--gray: 96, 115, 159;--gray-light: 229, 233, 240;--gray-dark: 34, 41, 57;--gray-gradient: rgba(var(--gray-light), 50%), #fff;--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%)}@font-face{font-family:Atkinson;src:url(/jverhoeks.github.io/fonts/atkinson-regular.woff) format("woff");font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:Atkinson;src:url(/jverhoeks.github.io/fonts/atkinson-bold.woff) format("woff");font-weight:700;font-style:normal;font-display:swap}body{font-family:Atkinson,sans-serif;margin:0;padding:0;text-align:left;background:linear-gradient(var(--gray-gradient)) no-repeat;background-size:100% 600px;word-wrap:break-word;overflow-wrap:break-word;color:rgb(var(--gray-dark));font-size:20px;line-height:1.7}main{width:720px;max-width:calc(100% - 2em);margin:auto;padding:3em 1em}h1,h2,h3,h4,h5,h6{margin:0 0 .5rem;color:rgb(var(--black));line-height:1.2}h1{font-size:3.052em}h2{font-size:2.441em}h3{font-size:1.953em}h4{font-size:1.563em}h5{font-size:1.25em}strong,b{font-weight:700}a,a:hover{color:var(--accent)}p{margin-bottom:1em}.prose p{margin-bottom:2em}textarea{width:100%;font-size:16px}input{font-size:16px}table{width:100%}img{max-width:100%;height:auto;border-radius:8px}code{padding:2px 5px;background-color:rgb(var(--gray-light));border-radius:2px}pre{padding:1.5em;border-radius:8px}pre>code{all:unset}blockquote{border-left:4px solid var(--accent);padding:0 0 0 20px;margin:0;font-size:1.333em}hr{border:none;border-top:1px solid rgb(var(--gray-light))}@media (max-width: 720px){body{font-size:18px}main{padding:1em}}.sr-only{border:0;padding:0;margin:0;position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px 1px 1px 1px);clip:rect(1px,1px,1px,1px);clip-path:inset(50%);white-space:nowrap}a[data-astro-cid-eimmu3lg]{display:inline-block;text-decoration:none}a[data-astro-cid-eimmu3lg].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-3ef6ksr2]{margin:0;padding:0 1em;background:#fff;box-shadow:0 2px 8px rgba(var(--black),5%)}h2[data-astro-cid-3ef6ksr2]{margin:0;font-size:1em}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2],h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none}nav[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;justify-content:space-between}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{padding:1em .5em;color:var(--black);border-bottom:4px solid transparent;text-decoration:none}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;border-bottom-color:var(--accent)}.social-links[data-astro-cid-3ef6ksr2],.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:flex}@media (max-width: 720px){.social-links[data-astro-cid-3ef6ksr2]{display:none}}footer[data-astro-cid-sz7xmlte]{padding:2em 1em 6em;background:linear-gradient(var(--gray-gradient)) no-repeat;color:rgb(var(--gray));text-align:center}.social-links[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;gap:1em;margin-top:1em}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{text-decoration:none;color:rgb(var(--gray))}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:rgb(var(--gray-dark))}
+main[data-astro-cid-bvzihdzo]{width:calc(100% - 2em);max-width:100%;margin:0}.hero-image[data-astro-cid-bvzihdzo]{width:100%}.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{display:block;margin:0 auto;border-radius:12px;box-shadow:var(--box-shadow)}.prose[data-astro-cid-bvzihdzo]{width:720px;max-width:calc(100% - 2em);margin:auto;padding:1em;color:rgb(var(--gray-dark))}.title[data-astro-cid-bvzihdzo]{margin-bottom:1em;padding:1em 0;text-align:center;line-height:1}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{margin:0 0 .5em}.date[data-astro-cid-bvzihdzo]{margin-bottom:.5em;color:rgb(var(--gray))}.last-updated-on[data-astro-cid-bvzihdzo]{font-style:italic}
+[data-astro-image]{width:100%;height:auto;object-fit:var(--fit);object-position:var(--pos);aspect-ratio:var(--w) / var(--h)}[data-astro-image=responsive]{max-width:calc(var(--w) * 1px);max-height:calc(var(--h) * 1px)}[data-astro-image=fixed]{width:calc(var(--w) * 1px);height:calc(var(--h) * 1px)}
+</style></head> <body data-astro-cid-bvzihdzo> <header data-astro-cid-3ef6ksr2> <nav data-astro-cid-3ef6ksr2> <h2 data-astro-cid-3ef6ksr2><a href="/" data-astro-cid-3ef6ksr2>Jacob&#39;s Blog</a></h2> <div class="internal-links" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Home </a>  <a href="/blog" class="active" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Blog </a>  <a href="/about" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> About </a>  </div> <div class="social-links" data-astro-cid-3ef6ksr2> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-3ef6ksr2></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-3ef6ksr2></path></svg> </a> </div> </nav> </header>  <main data-astro-cid-bvzihdzo> <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo> <img width="1020" height="510" src="/blog-aws.jpg" alt="" data-astro-cid-bvzihdzo> </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <div class="date" data-astro-cid-bvzihdzo> <time datetime="2022-01-29T00:00:00.000Z"> Jan 29, 2022 </time>  </div> <h1 data-astro-cid-bvzihdzo>An ON-AIR sign with IoT</h1> <hr data-astro-cid-bvzihdzo> </div>  <p><strong>Repost from the blog from on the <a href="https://edransit.medium.com/an-on-air-sign-with-iot-5bf2f2bc7dc9">edrans medium page</a></strong></p>
+<p>In this last year, we have all been working mostly from home, using video meetings to connect to customers and coworkers. How many times did you have an unplanned appearance of someone at your home? There are many viral videos on the internet like this one.
+A simple indicator that you are “ON-AIR” outside the room, could help to prevent this.</p>
+<!-- more -->
+<p><img src="/images/on-air-sign.jpeg" alt="On-Air Sign">
+<em>&#x3C;a href=”<a href="https://www.freepik.com/vectors/sign%22%3ESign">https://www.freepik.com/vectors/sign”>Sign</a> vector created by freepik — <a href="http://www.freepik.com">www.freepik.com</a></em></p>
+<h2 id="step-1-how-to-detect-if-the-camera-is-on">Step 1: How to detect if the camera is ON?</h2>
+<p>Of course we want to automate this, a manual switch can be forgotten. I use many different Video conferencing tools on my Mac: Zoom, Google Meeting, Slack, etc… so for this I was looking for a generic way to detect if the camera is ON.</p>
+<p>My first try was using the software: <a href="https://objective-see.com/products/oversight.html">Oversight</a>; it detects which software the camera uses and asks you to deny/allow access. Parsing the log file worked, but not 100%. For example it didn’t detect the closing of the tab with Google Meet.
+The solution was going deeper in the OS. In Linux the camera device is /dev/video0, so using lsof you can detect if a process has the file handle for the camera open. Unfortunately on the Mac the camera isn’t a simple dev device. But some searching pointed me to the following stack-overflow page.</p>
+<p>The Mac log stream contains all system log events: one of these many events is the KCameraStreamStart/Stop event; this is fired when the camera is opened, and it works for the built-in camera, usb, and virtual cameras.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>log stream | grep “Post event kCameraStream”</span></span>
+<span class="line"><span>2020–12–01 14:58:53.137796–0500 0xXXXXXX Default 0x0 XXX 0 VDCAssistant: </span></span>
+<span class="line"><span>[com.apple.VDCAssistant:device] [guid:0xXXXXXXXXXXXXXXXX] Post event kCameraStreamStart </span></span>
+<span class="line"><span>2020–12–01 14:58:56.431147–0500 0xXXXXXX Default 0x0 XXX 0 VDCAssistant: </span></span>
+<span class="line"><span>[com.apple.VDCAssistant:device] [guid:0xXXXXXXXXXXXXXXXX] Post event kCameraStreamStop </span></span>
+<span class="line"><span>2020–12–01 14:58:56.668970–0500 0xXXXXXX Default 0x0 XXX 0 VDCAssistant: </span></span>
+<span class="line"><span>[com.apple.VDCAssistant:device] [guid:0xXXXXXXXXXXXXXXXX] Post event kCameraStreamStart</span></span></code></pre>
+<p>You can test it on your own Mac, running this command in your terminal. Awk is an advanced text processing utility that is installed by default on the Mac, it enables us to execute a command when a specific text is matched.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>log stream | awk '</span></span>
+<span class="line"><span>             /Post event kCameraStreamStart/  { system("say active") }</span></span>
+<span class="line"><span>             /Post event kCameraStreamStop/  { system("say inactive") }'</span></span></code></pre>
+<p>Open your video meeting software, turn ON/OFF the camera and the system will say “active” or “inactive” over your speaker.</p>
+<p><strong>Great, problem 1 solved.</strong></p>
+<h2 id="step-2-communicate-between-the-laptop-and-our-sign">Step 2: Communicate between the laptop and our sign</h2>
+<p>The standard for communication in the IoT is MQTT; this is a lightweight protocol that allows a source to publish a message to a topic.
+Targets can subscribe to the topic and are notified when a message arrives.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Source -> Publish Message { test: 1 } -> Topic: sensor/topic1</span></span>
+<span class="line"><span>Topic: sensor/topic1 -> Subscribe -> Target Device { test: 1 }</span></span></code></pre>
+<p>I’m using the mosquito broker from Home Assistant that I have running at home for device integrations; it runs on a Raspberry Pi.
+If you don’t have an MQTT server running it’s easy to install on your Mac with the following commands:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>brew install mosquitto</span></span>
+<span class="line"><span>mosquitto_passwd -c -b /usr/local/etc/mosquitto/pwfile mqtt broker</span></span>
+<span class="line"><span>cat &#x3C;&#x3C;EOT >> /usr/local/etc/mosquitto/mosquitto.conf</span></span>
+<span class="line"><span>listener 1883</span></span>
+<span class="line"><span>password_file /usr/local/etc/mosquitto/pwfile</span></span>
+<span class="line"><span>EOT</span></span>
+<span class="line"><span>brew services start mosquitto</span></span></code></pre>
+<p>This installs an MQTT server listening on port 1883, with user: MQTT and password broker.</p>
+<h2 id="step-3-post-a-message-from-the-mac-to-the-mqtt">Step 3: Post a message from the Mac to the MQTT</h2>
+<p>I’m using hivemq mqtt-cli as a cli to post messages; it can be installed and tested like this:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>brew tap hivemq/mqtt-cli</span></span>
+<span class="line"><span>brew install mqtt-cli</span></span></code></pre>
+<p>Let’s test if all works: I publish a message { onair: 1} to topic sensor/camera/laptop-jacob on my mqtt server at 192.168.1.100 with user mqtt and password broker.</p>
+<p>Listener
+<code>mqtt sub --topic sensor/camera/laptop-jacob -h 192.168.1.100 -u mqtt -pw broker</code></p>
+<p>Sender
+<code>mqtt pub --topic sensor/camera/laptop-jacob -h 192.168.1.100 -u mqtt -pw broker --message "{ 'onair': 1 }"</code></p>
+<p>As soon as the sender is executed, the listener will show: <code>{ 'onair': 1 }</code> If it doesn’t work, check the configuration, firewall and if you have exactly the same topic name.</p>
+<h3 id="testing-the-camera">Testing the camera</h3>
+<p>Let the subscribe script run. This is the script you can save in /usr/local/bin/watch-camera.sh, it combines the awk line with the mqtt publish. If the camera is ON it pushes { onair: 1 }, when it’s OFF: { onair: 0 }.</p>
+<p>Note the double escape to format the message.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>#!/usr/bin/env bash</span></span>
+<span class="line"><span>log stream | awk '</span></span>
+<span class="line"><span>                    /Post event kCameraStreamStart/  { system("mqtt pub -V 3  -d -i laptop-jacob  -p 1883 --topic sensor/camera/laptop-jacob -h 192.168.1.100 -u mqtt -p broker --message \"{ \\\"onair\\\": 1 }\"") }</span></span>
+<span class="line"><span>                    /Post event kCameraStreamStop/   { system("mqtt pub -V 3  -d -i laptop-jacob  -p 8883 --topic sensor/camera/laptop-jacob -h 192.168.1.100 -u mqtt -p broker --message \"{ \\\"onair\\\": 0 }\"") }'</span></span></code></pre>
+<p>Run: <code>chmod +x /usr/local/bin/watch-camera.sh</code> to make it executable.</p>
+<p>Run: <code>watch-camera.sh</code> to start sending messages when your camera is on/off</p>
+<p>Open your “favorite” video conferencing tool and turn ON/OFF the camera. In the console window, you subscribed on mqtt you see the messages coming in.</p>
+<h2 id="step-4-a-connected-on-air-sign">Step 4: A connected ON-AIR sign</h2>
+<p>Here comes the fun part, let’s build the sign. I’m going for the photo frame style, but you can design anything you want.</p>
+<p>My sign:</p>
+<ul>
+<li>Old Ikea photo frame with a deep frame</li>
+<li>A printed paper with “ON AIR”</li>
+<li>Some carton, scotch tape, and double-sided tape</li>
+</ul>
+<p><img src="/images/on-air-frame1.png" alt="frame 1">
+<img src="/images/on-air-frame2.png" alt="frame 2"></p>
+<p><em>More pictures can be found: <a href="https://github.com/jverhoeks/on-air/blob/main/on-air-display/DEMO.md">https://github.com/jverhoeks/on-air/blob/main/on-air-display/DEMO.md</a></em></p>
+<p>For the electronics I use an ESP32 with an 8 led circle board. I re-used a board I got from Re:Invent 2018 as a drinkwater dispenser by Anton Shmagin &#x26; Gavin Admins. It has a daugherboard for the esp32 to connect the leds and a 9V battery connector.</p>
+<p><img src="/images/on-air-esp.png" alt="esp board"></p>
+<p>Any kind of addressable Leds can be easily used. WS2812b based like <a href="https://www.adafruit.com/category/168">Adafruit Neopixel</a>.</p>
+<h3 id="circuitoio">Circuito.io</h3>
+<p>If you need some help with the electronics there is a great website circuito.io. It has a great collection of devices, leds, etc. which you can drag and drop into a design. Besides the great visual like below it gives you a list of parts and even example code to start your project. This is mine:</p>
+<p><a href="https://www.circuito.io/app?components=513,216577,360217">https://www.circuito.io/app?components=513,216577,360217</a></p>
+<p>This is a basic design for the On-Air Sign. The components are about $20.</p>
+<p><a href="https://www.circuito.io/app?components=513,216577,360217">https://www.circuito.io/app?components=513,216577,360217</a></p>
+<h3 id="arduino-code">Arduino Code</h3>
+<p>The code for the sign can be found here:</p>
+<p><a href="https://github.com/jverhoeks/on-air/tree/main/on-air-display">https://github.com/jverhoeks/on-air/tree/main/on-air-display</a></p>
+<ul>
+<li>Install the Arduino Software</li>
+<li>Install the ESP32 board software</li>
+<li>Install the required libraries</li>
+<li>Rename the iot.h.templ to iot.h and fill in the required fields</li>
+</ul>
+<p>It contains the topic, host, username, password. As well as the WIFI credentials. If your LED is different change the LED_PIN and LED_COUNT to match your configuration:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>#define IOT_SUBSCRIBE_TOPIC "sensor/camera/laptop"</span></span>
+<span class="line"><span>#define THINGNAME "on-air-display"</span></span>
+<span class="line"><span>#define LED_PIN   5</span></span>
+<span class="line"><span>#define LED_COUNT 8</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>const char WIFI_SSID[] = "xxx";</span></span>
+<span class="line"><span>const char WIFI_PASSWORD[] = "xxxxx";</span></span>
+<span class="line"><span>const char IOT_ENDPOINT[] = "192.168.1.100";</span></span>
+<span class="line"><span>const char IOT_USER[] = "mqtt";</span></span>
+<span class="line"><span>const char IOT_PASSWORD[] = "broker";</span></span>
+<span class="line"><span>const int IOT_PORT = 1883;</span></span></code></pre>
+<p>Change the PIN id for the LED controller.</p>
+<p>Run compile and upload to the esp32</p>
+<p>Extra Libraries</p>
+<ul>
+<li>Adafruit_NeoPixel: <a href="https://github.com/adafruit/Adafruit_NeoPixel">https://github.com/adafruit/Adafruit_NeoPixel</a></li>
+<li>MQTT (by Joel Gaelwiler): <a href="https://github.com/256dpi/arduino-mqtt">https://github.com/256dpi/arduino-mqtt</a></li>
+<li>ArduinoJson (by Benoit Blanchon): <a href="https://arduinojson.org/">https://arduinojson.org/</a></li>
+</ul>
+<h2 id="step-5-testing-it">Step 5: Testing it</h2>
+<p>Before you construct your sign, test the code first with the Arduino SerialMonitor enabled.
+Booting esp32, by connecting the USB-cable:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Connecting to WiFi ..</span></span>
+<span class="line"><span>IP: &#x3C;device ip></span></span>
+<span class="line"><span>RRSI: -xx  </span></span>
+<span class="line"><span>Connecting to MQTT: &#x3C;mqtt endpoint></span></span>
+<span class="line"><span>MQTT Connected!</span></span></code></pre>
+<p>Start the script on the Mac and Turn ON/OFF your camera</p>
+<p>Check if the lights are turning ON/OFF</p>
+<p>You should see LED ON / LED OFF and the LEDs are turning ON/OFF in the serial console.</p>
+<p><img src="/images/on-air-lighton.png" alt="sign on"></p>
+<p><em>That’s it! You can now place it somewhere visible outside your office and stop the interruptions.</em></p>  </div> </article> </main> <footer data-astro-cid-sz7xmlte>
+&copy; 2024 Jacob Verhoeks. All rights reserved.
+<div class="social-links" data-astro-cid-sz7xmlte> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/twitter" data-astro-cid-sz7xmlte><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-sz7xmlte></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github" data-astro-cid-sz7xmlte><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-sz7xmlte></path></svg> </a> </div> </footer>  </body></html>
