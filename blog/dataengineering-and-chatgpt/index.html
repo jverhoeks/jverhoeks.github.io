@@ -7,9 +7,7 @@ main[data-astro-cid-bvzihdzo]{width:calc(100% - 2em);max-width:100%;margin:0}.he
 <p>i have a table  named ‘people’ with fields: id, name, job_type and a table names ‘jobs’ with fields: id,job_name. Create a join on this two tables in sql</p>
 </blockquote>
 <p>To create a join on two tables in SQL, you can use the JOIN keyword. Here’s an example:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SELECT people.name, jobs.job_name</span></span>
-<span class="line"><span>FROM people</span></span>
-<span class="line"><span>INNER JOIN jobs ON people.job_type = jobs.id</span></span></code></pre>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.0niu6.css"><script type="module" src="/_astro/ec.8zarh.js"></script><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">SELECT people.name, jobs.job_name</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">FROM people</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">INNER JOIN jobs ON people.job_type = jobs.id</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="SELECT people.name, jobs.job_nameFROM peopleINNER JOIN jobs ON people.job_type = jobs.id"><div></div></button></div></figure></div>
 <p>This query will return a table with columns name and job_name, and each row will represent a person and the job they have. The JOIN keyword is used to specify the tables to be joined, and the ON keyword is used to specify the criteria for matching rows in the two tables. In this case, the ON clause specifies that rows in the people table should be matched with rows in the jobs table based on the value of job_type in the people table and the value of id in the jobs table.</p>
 <hr>
 <!-- more -->
@@ -19,15 +17,9 @@ main[data-astro-cid-bvzihdzo]{width:calc(100% - 2em);max-width:100%;margin:0}.he
 <p>can you insert some random data in both tables</p>
 </blockquote>
 <p>To insert data into a table in SQL, you can use the INSERT INTO statement. Here’s an example:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>INSERT INTO people (id, name, job_type)</span></span>
-<span class="line"><span>VALUES (1, 'John', 2),</span></span>
-<span class="line"><span>       (2, 'Jane', 1),</span></span>
-<span class="line"><span>       (3, 'Bob', 3);</span></span></code></pre>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">INSERT INTO people (id, name, job_type)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">VALUES (1, 'John', 2),</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">       </span></span><span style="--0:#e1e4e8;--1:#24292e">(2, 'Jane', 1),</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">       </span></span><span style="--0:#e1e4e8;--1:#24292e">(3, 'Bob', 3);</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="INSERT INTO people (id, name, job_type)VALUES (1, &#x27;John&#x27;, 2),       (2, &#x27;Jane&#x27;, 1),       (3, &#x27;Bob&#x27;, 3);"><div></div></button></div></figure></div>
 <p>This will insert three rows into the people table. Similarly, you can use the INSERT INTO statement to insert data into the jobs table as well:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>INSERT INTO jobs (id, job_name)</span></span>
-<span class="line"><span>VALUES (1, 'Teacher'),</span></span>
-<span class="line"><span>       (2, 'Engineer'),</span></span>
-<span class="line"><span>       (3, 'Doctor');</span></span></code></pre>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">INSERT INTO jobs (id, job_name)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">VALUES (1, 'Teacher'),</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">       </span></span><span style="--0:#e1e4e8;--1:#24292e">(2, 'Engineer'),</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">       </span></span><span style="--0:#e1e4e8;--1:#24292e">(3, 'Doctor');</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="INSERT INTO jobs (id, job_name)VALUES (1, &#x27;Teacher&#x27;),       (2, &#x27;Engineer&#x27;),       (3, &#x27;Doctor&#x27;);"><div></div></button></div></figure></div>
 <p>This will insert three rows into the jobs table. Note that the values in the job_type column of the people table should correspond to the values in the id column of the jobs table, so that the join will work correctly.</p>
 <hr>
 <p>Great, let’s try how it’s context is.</p>
@@ -36,27 +28,12 @@ main[data-astro-cid-bvzihdzo]{width:calc(100% - 2em);max-width:100%;margin:0}.he
 <p>can you show the result of the join with these example data</p>
 </blockquote>
 <p>Here’s an example of how you can use the JOIN keyword to join the people and jobs tables and show the results:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SELECT people.name, jobs.job_name</span></span>
-<span class="line"><span>FROM people</span></span>
-<span class="line"><span>INNER JOIN jobs ON people.job_type = jobs.id</span></span>
-<span class="line"><span></span></span></code></pre>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">SELECT people.name, jobs.job_name</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">FROM people</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">INNER JOIN jobs ON people.job_type = jobs.id</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="SELECT people.name, jobs.job_nameFROM peopleINNER JOIN jobs ON people.job_type = jobs.id"><div></div></button></div></figure></div>
 <p>This query will return a table with columns name and job_name, and each row will represent a person and the job they have. For example, if the data in the people and jobs tables are as follows:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>people</span></span>
-<span class="line"><span>id  name  job_type</span></span>
-<span class="line"><span>1   John  2</span></span>
-<span class="line"><span>2   Jane  1</span></span>
-<span class="line"><span>3   Bob   3</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>jobs</span></span>
-<span class="line"><span>id  job_name</span></span>
-<span class="line"><span>1   Teacher</span></span>
-<span class="line"><span>2   Engineer</span></span>
-<span class="line"><span>3   Doctor</span></span></code></pre>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">people</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">id  name  job_type</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">1   John  2</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">2   Jane  1</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">3   Bob   3</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">jobs</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">id  job_name</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">1   Teacher</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">2   Engineer</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">3   Doctor</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="peopleid  name  job_type1   John  22   Jane  13   Bob   3jobsid  job_name1   Teacher2   Engineer3   Doctor"><div></div></button></div></figure></div>
 <p>Then the result of this query will be:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>name    job_name</span></span>
-<span class="line"><span>John    Engineer</span></span>
-<span class="line"><span>Jane    Teacher</span></span>
-<span class="line"><span>Bob     Doctor</span></span></code></pre>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">name    job_name</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">John    Engineer</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Jane    Teacher</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Bob     Doctor</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="name    job_nameJohn    EngineerJane    TeacherBob     Doctor"><div></div></button></div></figure></div>
 <p>This shows that John is an engineer, Jane is a teacher, and Bob is a doctor.</p>
 <hr>
 <p>I’m a AWS Data Engineer, curious how far it goes.</p>
@@ -65,17 +42,8 @@ main[data-astro-cid-bvzihdzo]{width:calc(100% - 2em);max-width:100%;margin:0}.he
 <p>can you write the terraform code to execute this query in athena</p>
 </blockquote>
 <p>To execute a SQL query in Amazon Athena using Terraform, you can use the aws_athena_query_execution resource. Here’s an example:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>resource "aws_athena_query_execution" "example" {</span></span>
-<span class="line"><span>  query = &#x3C;&#x3C;QUERY</span></span>
-<span class="line"><span>SELECT people.name, jobs.job_name</span></span>
-<span class="line"><span>FROM people</span></span>
-<span class="line"><span>INNER JOIN jobs ON people.job_type = jobs.id</span></span>
-<span class="line"><span>QUERY</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>  result_configuration {</span></span>
-<span class="line"><span>    output_location = "s3://my-bucket/query-results"</span></span>
-<span class="line"><span>  }</span></span>
-<span class="line"><span>}</span></span></code></pre>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">resource "aws_athena_query_execution" "example" {</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">query = &#x3C;&#x3C;QUERY</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">SELECT people.name, jobs.job_name</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">FROM people</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">INNER JOIN jobs ON people.job_type = jobs.id</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">QUERY</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">result_configuration {</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">    </span></span><span style="--0:#e1e4e8;--1:#24292e">output_location = "s3://my-bucket/query-results"</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">}</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">}</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="resource &#x22;aws_athena_query_execution&#x22; &#x22;example&#x22; {  query = <<QUERYSELECT people.name, jobs.job_nameFROM peopleINNER JOIN jobs ON people.job_type = jobs.idQUERY  result_configuration {    output_location = &#x22;s3://my-bucket/query-results&#x22;  }}"><div></div></button></div></figure></div>
 <p>This code will create an Athena query execution that runs the specified SQL query. The query results will be saved to the specified S3 bucket. Note that this code assumes that the people and jobs tables have already been created in Athena. You will need to use additional Terraform code to create these tables. For more information, see the AWS Athena documentation.</p>
 <hr>
 <p>Very impressive, gives the example and the explanation. How far can we go with this?</p>
@@ -87,5 +55,5 @@ main[data-astro-cid-bvzihdzo]{width:calc(100% - 2em);max-width:100%;margin:0}.he
 <hr>
 <p>Lucky :) seems we still have some work as a data engineer, but ChatGPT is very powerful. But the amount of progress is staggering. In a short while it’ll be able to create complex etl jobs. With access to the data it will analyse data and suggest analytics.</p>
 <p>Exciting development!</p>  </div> </article> </main> <footer data-astro-cid-sz7xmlte>
-&copy; 2024 Jacob Verhoeks. All rights reserved.
+&copy; 2025 Jacob Verhoeks. All rights reserved.
 <div class="social-links" data-astro-cid-sz7xmlte> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/twitter" data-astro-cid-sz7xmlte><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-sz7xmlte></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github" data-astro-cid-sz7xmlte><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-sz7xmlte></path></svg> </a> </div> </footer>  </body></html>
