@@ -5,7 +5,7 @@
 <title>AWS re:Invent 2025 Quiz – How Many Did You Catch? ☁️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  body {font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#232f3e,#1a1a1a);color:#fff;margin:0;padding:20px;min-height:100vh;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#232f3e,#1a1a1a);color:#fff;margin:0;padding:20px;min-height:100vh;}
   .container{max-width:900px;margin:0 auto;padding:20px;}
   h1{text-align:center;font-size:2.4em;margin-bottom:10px;}
   h1 small{display:block;font-size:0.55em;color:#ff9900;margin-top:8px;}
@@ -19,7 +19,7 @@
   button:hover{transform:translateY(-4px);background:#e47911;}
   #result{text-align:center;padding:50px;background:rgba(255,255,255,0.18);border-radius:24px;margin:40px 0;display:none;animation:fadeIn 0.8s;}
   .score{font-size:5em;font-weight:bold;margin:10px 0;}
-  .emoji{font-size:6em;margin:10px 0;}
+  .emoji{font-size:6em;margin:20px 0;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
   footer{text-align:center;margin-top:60px;color:#aaa;font-size:0.95em;}
   .correct{background:rgba(34,197,94,0.5)!important;border:2px solid #22c55e!important;}
@@ -34,7 +34,7 @@
   </h1>
 
   <form id="quiz">
-    <div class="card" id="questions-container">
+    <div class="card">
 
       <div class="question-block"><div class="question"><strong>1.</strong> Did AWS launch Trainium3 chips with up to 2x better price-performance for training?</div><div class="options"><label><input type="radio" name="q1" value="t"> True</label><label><input type="radio" name="q1" value="f"> False</label></div></div>
       <div class="question-block"><div class="question"><strong>2.</strong> Is Amazon Bedrock’s new “Guardians” feature an actual superhero team for content safety?</div><div class="options"><label><input type="radio" name="q2" value="t"> True</label><label><input type="radio" name="q2" value="f"> False (it’s just smarter content filters, no capes)</label></div></div>
@@ -72,8 +72,6 @@
 <footer>Made with coffee & AWS love – Share freely on LinkedIn!</footer>
 
 <script>
-// CORRECT ANSWER KEY (verified against official re:Invent 2025 announcements)
-// 1T 2F 3T 4F 5T 6F 7T 8F 9T 10F 11T 12T 13F 14T 15T 16F 17T 18T 19F 20T
 const correctAnswers = "tftftftftftftfttftft";
 
 function showResults() {
@@ -97,17 +95,27 @@ function showResults() {
   });
 
   const percent = Math.round((correct / 20) * 100);
-  let msg = "", emo = "";
+  let msg = "", emoji = "";
 
-  if (percent === 100) { msg = "AWS Legend! You basically gave the keynote"; emo = "fire"; }
-  else if (percent >= 90) { msg = "Near perfect – Solutions Architect Pro material"; emo = "rocket"; }
-  else if (percent >= 70) { msg = "Strong! You definitely watched the keynotes"; emo = "check mark button"; }
-  else if (percent >= 50) { msg = "Not bad! Time for session replays"; emo = "thumbs up"; }
-  else { msg = "400+ announcements is a lot – you’re not alone!"; emo = "face with cold sweat"; }
-
+  if (percent === 100) {
+    msg = "AWS Legend! You basically gave the keynote!";
+    emoji = "🔥";
+  } else if (percent >= 90) {
+    msg = "Near-perfect – Solutions Architect Pro material!";
+    emoji = "🚀";
+  } else if (percent >= 70) {
+    msg = "Strong! You definitely watched the keynotes live!";
+    emoji = "🎉";
+  } else if (percent >= 50) {
+    msg = "Not bad! Time for some session replays!";
+    emoji = "👍";
+  } else {
+    msg = "400+ announcements is a lot – you’re not alone!";
+    emoji = "😅";
+  }
   document.getElementById("score").textContent = percent + "%";
-  document.getElementById("message").innerHTML = `<strong>${msg}</strong><br>(${correct}/20 correct)`;
-  document.getElementById("emoji").textContent = emo;
+  document.getElementById("message").textContent = msg + ` (${correct}/20 correct)`;
+  document.getElementById("emoji").textContent = emoji;
   document.getElementById("result").style.display = "block";
   document.getElementById("result").scrollIntoView({ behavior: "smooth" });
 }
