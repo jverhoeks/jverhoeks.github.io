@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AWS re:Invent 2025 Quiz – Did You Catch Them All? ☁️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+    background: linear-gradient(135deg, #232f3e, #1a1a1a); 
+    color: #fff; 
+    margin: 0; 
+    padding: 20px; 
+    min-height: 100vh;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  h1 { text-align: center; font-size: 2.4em; margin-bottom: 10px; }
+  h1 small { display: block; font-size: 0.55em; color: #ff9900; margin-top: 8px; }
+  .card { 
+    background: rgba(255,255,255,0.1); 
+    backdrop-filter: blur(12px); 
+    border-radius: 20px; 
+    padding: 30px; 
+    margin: 20px 0; 
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .question-block { 
+    background: rgba(255,255,255,0.08); 
+    padding: 18px; 
+    border-radius: 14px; 
+    margin: 16px 0; 
+    transition: all 0.4s;
+  }
+  .question { font-size: 1.18em; margin-bottom: 12px; font-weight: 500; }
+  .options label { 
+    display: block; 
+    padding: 14px 20px; 
+    margin: 8px 0; 
+    background: rgba(255,255,255,0.12); 
+    border-radius: 12px; 
+    cursor: pointer; 
+    transition: all 0.3s;
+  }
+  .options label:hover { background: rgba(255,153,0,0.3); }
+  input[type="radio"] { margin-right: 12px; transform: scale(1.4); }
+  button { 
+    background: #ff9900; 
+    color: white; 
+    border: none; 
+    padding: 18px 50px; 
+    font-size: 1.3em; 
+    font-weight: bold; 
+    border-radius: 50px; 
+    cursor: pointer; 
+    display: block; 
+    margin: 50px auto; 
+    box-shadow: 0 8px 25px rgba(255,153,0,0.5);
+    transition: all 0.3s;
+  }
+  button:hover { transform: translateY(-4px); background: #e47911; }
+  #result { 
+    text-align: center; 
+    padding: 50px; 
+    background: rgba(255,255,255,0.18); 
+    border-radius: 24px; 
+    margin: 40px 0; 
+    display: none; 
+    animation: fadeIn 0.8s;
+  }
+  .score { font-size: 5em; font-weight: bold; margin: 10px 0; }
+  .emoji { font-size: 6em; margin: 10px 0; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  footer { text-align: center; margin-top: 60px; color: #aaa; font-size: 0.95em; }
+  .correct { background: rgba(34, 197, 94, 0.4) !important; border: 2px solid #22c55e; }
+  .wrong { background: rgba(239, 68, 68, 0.4) !important; border: 2px solid #ef4444; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>AWS re:Invent 2025 Quiz
+    <small>20 fun true/false questions – how many did you really catch?</small>
+  </h1>
+
+  <form id="quiz">
+    <div class="card" id="questions-container">
+
+      <!-- Question 1 -->
+      <div class="question-block">
+        <div class="question"><strong>1.</strong> Did AWS launch Trainium3 chips with up to 2x better price-performance for training?</div>
+        <div class="options">
+          <label><input type="radio" name="q1" value="t"> True</label>
+          <label><input type="radio" name="q1" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>2.</strong> Is Amazon Bedrock’s new “Guardians” feature an actual superhero team for content safety?</div>
+        <div class="options">
+          <label><input type="radio" name="q2" value="t"> True</label>
+          <label><input type="radio" name="q2" value="f"> False (it’s just smarter content filters, no capes)</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>3.</strong> Can Amazon Q Developer now write entire pull requests and explain them in plain English?</div>
+        <div class="options">
+          <label><input type="radio" name="q3" value="t"> True</label>
+          <label><input type="radio" name="q3" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>4.</strong> Did AWS announce a new instance type called “Graviton Ultra” for general workloads?</div>
+        <div class="options">
+          <label><input type="radio" name="q4" value="t"> True</label>
+          <label><input type="radio" name="q4" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>5.</strong> Does AWS Glue now support Spark 4.0 for faster ETL jobs?</div>
+        <div class="options">
+          <label><input type="radio" name="q5" value="t"> True</label>
+          <label><input type="radio" name="q5" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>6.</strong> Is “Amazon S3 Bucket of Infinite Storage” a real new tier announced this year?</div>
+        <div class="options">
+          <label><input type="radio" name="q6" value="t"> True</label>
+          <label><input type="radio" name="q6" value="f"> False (we wish!)</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>7.</strong> Can Amazon SageMaker Canvas now build ML models with zero code and zero excuses?</div>
+        <div class="options">
+          <label><input type="radio" name="q7" value="t"> True</label>
+          <label><input type="radio" name="q7" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>8.</strong> Did AWS launch a new service literally called “AWS Magic Button”?</div>
+        <div class="options">
+          <label><input type="radio" name="q8" value="t"> True</label>
+          <label><input type="radio" name="q8" value="f"> False (but Amazon Q feels pretty magical)</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>9.</strong> Is AWS Shield Advanced now using generative AI to auto-mitigate DDoS attacks?</div>
+        <div class="options">
+          <label><input type="radio" name="q9" value="t"> True</label>
+          <label><input type="radio" name="q9" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>10.</strong> Did AWS announce quantum computers you can rent by the hour on Black Friday?</div>
+        <div class="options">
+          <label><input type="radio" name="q10" value="t"> True</label>
+          <label><input type="radio" name="q10" value="f"> False (nice try though)</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>11.</strong> Can Amazon Q Business now connect to over 40 enterprise data sources out of the box?</div>
+        <div class="options">
+          <label><input type="radio" name="q11" value="t"> True</label>
+          <label><input type="radio" name="q11" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>12.</strong> Is the new Karpenter generally available for EKS cluster autoscaling?</div>
+        <div class="options">
+          <label><input type="radio" name="q12" value="t"> True</label>
+          <label><input type="radio" name="q12" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>13.</strong> Did AWS rename EC2 to “Elastic Cat Videos” for better streaming performance?</div>
+        <div class="options">
+          <label><input type="radio" name="q13" value="t"> True</label>
+          <label><input type="radio" name="q13" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>14.</strong> Does Amazon DynamoDB now offer up to 2x faster performance with the new v2 APIs?</div>
+        <div class="options">
+          <label><input type="radio" name="q14" value="t"> True</label>
+          <label><input type="radio" name="q14" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>15.</strong> Is AWS Clean Rooms adding differential privacy and collaboration with Snowflake?</div>
+        <div class="options">
+          <label><input type="radio" name="q15" value="t"> True</label>
+          <label><input type="radio" name="q15" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>16.</strong> Did AWS launch a physical “re:Invent 2025” coffee machine that auto-scales?</div>
+        <div class="options">
+          <label><input type="radio" name="q16" value="t"> True</label>
+          <label><input type="radio" name="q16" value="f"> False (still waiting on that one)</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>17.</strong> Can Amazon EC2 Spot Instances now hibernate and resume to save even more?</div>
+        <div class="options">
+          <label><input type="radio" name="q17" value="t"> True</label>
+          <label><input type="radio" name="q17" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>18.</strong> Is AWS Local Zones expanding to 100+ new metro areas by 2026?</div>
+        <div class="options">
+          <label><input type="radio" name="q18" value="t"> True</label>
+          <label><input type="radio" name="q18" value="f"> False</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>19.</strong> Did AWS announce a new region on Mars?</div>
+        <div class="options">
+          <label><input type="radio" name="q19" value="t"> True</label>
+          <label><input type="radio" name="q19" value="f"> False (not yet!)</label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question"><strong>20.</strong> Can you now deploy full container apps in minutes with the new AWS App Runner features?</div>
+        <div class="options">
+          <label><input type="radio" name="q20" value="t"> True</label>
+          <label><input type="radio" name="q20" value="f"> False</label>
+        </div>
+      </div>
+
+    </div>
+
+    <button type="button" onclick="showResults()">Show My Score!</button>
+  </form>
+
+  <div id="result">
+    <div class="emoji" id="emoji"></div>
+    <div class="score" id="score">0%</div>
+    <p id="message"></p>
+    <p style="font-size:1.2em; margin-top:20px; opacity:0.9;">Share your score below – who got 100%?</p>
+  </div>
+</div>
+
+<footer>Made with ☕ & AWS love – Share this quiz on LinkedIn!</footer>
+
+<script>
+// Correct answers: t f t f t f t f f t  t t f t t t t t t f
+// → tftftftffttfttttttft
+const correctAnswers = (() => {
+  const nums = [19,5,19,5,19,5,19,5,5,19,19,19,5,19,19,19,19,19,19,5];
+  return nums.map(n => n === 19 ? 't' : 'f').join('');
+})();
+
+function showResults() {
+  let correct = 0;
+  const blocks = document.querySelectorAll('.question-block');
+
+  blocks.forEach((block, index) => {
+    const qNum = index + 1;
+    const selected = block.querySelector(`input[name="q${qNum}"]:checked`);
+    const isCorrect = selected && selected.value === correctAnswers[index];
+
+    // Remove previous classes
+    block.classList.remove('correct', 'wrong');
+
+    if (selected) {
+      if (isCorrect) {
+        correct++;
+        block.classList.add('correct');
+      } else {
+        block.classList.add('wrong');
+      }
+    }
+  });
+
+  const percent = Math.round((correct / 20) * 100);
+  let msg = "", emo = "";
+
+  if (percent === 100) { msg = "AWS Legend! You basically work in Seattle now"; emo = "🔥"; }
+  else if (percent >= 90) { msg = "Near-perfect! You're ready for the Solutions Architect exam"; emo = "🚀"; }
+  else if (percent >= 70) { msg = "Strong work! You definitely watched the keynotes"; emo = "✅"; }
+  else if (percent >= 50) { msg = "Not bad! Time to catch up on the session replays"; emo = "👍"; }
+  else { msg = "400+ announcements is a lot! You're not alone"; emo = "😅"; }
+
+  document.getElementById("score").textContent = percent + "%";
+  document.getElementById("message").textContent = msg + ` (${correct}/20 correct)`;
+  document.getElementById("emoji").textContent = emo;
+  document.getElementById("result").style.display = "block";
+  document.getElementById("result").scrollIntoView({ behavior: "smooth" });
+}
+</script>
+
+</body>
+</html>
