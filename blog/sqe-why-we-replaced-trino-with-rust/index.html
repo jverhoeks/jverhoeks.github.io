@@ -1,0 +1,177 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-bvzihdzo> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v6.1.5"><!-- Font preloads --><link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/sqe-why-we-replaced-trino-with-rust/"><!-- Primary Meta Tags --><title>We Replaced Our Trino Fork with a Rust SQL Engine. Here&#39;s Why It Works.</title><meta name="title" content="We Replaced Our Trino Fork with a Rust SQL Engine. Here's Why It Works."><meta name="description" content="How we went from maintaining a 2M-line Java fork to shipping a 50MB binary that runs every query as the authenticated user"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://jacob.verhoeks.org/blog/sqe-why-we-replaced-trino-with-rust/"><meta property="og:title" content="We Replaced Our Trino Fork with a Rust SQL Engine. Here's Why It Works."><meta property="og:description" content="How we went from maintaining a 2M-line Java fork to shipping a 50MB binary that runs every query as the authenticated user"><meta property="og:image" content="https://jacob.verhoeks.org/blog-placeholder-1.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://jacob.verhoeks.org/blog/sqe-why-we-replaced-trino-with-rust/"><meta property="twitter:title" content="We Replaced Our Trino Fork with a Rust SQL Engine. Here's Why It Works."><meta property="twitter:description" content="How we went from maintaining a 2M-line Java fork to shipping a 50MB binary that runs every query as the authenticated user"><meta property="twitter:image" content="https://jacob.verhoeks.org/blog-placeholder-1.jpg"><style>:root{--accent: #2337ff;--accent-dark: #000d8a;--black: 15, 18, 25;--gray: 96, 115, 159;--gray-light: 229, 233, 240;--gray-dark: 34, 41, 57;--gray-gradient: rgba(var(--gray-light), 50%), #fff;--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%)}@font-face{font-family:Atkinson;src:url(/fonts/atkinson-regular.woff) format("woff");font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:Atkinson;src:url(/fonts/atkinson-bold.woff) format("woff");font-weight:700;font-style:normal;font-display:swap}body{font-family:Atkinson,sans-serif;margin:0;padding:0;text-align:left;background:#fff;word-wrap:break-word;overflow-wrap:break-word;color:rgb(var(--gray-dark));font-size:20px;line-height:1.7}main{width:720px;max-width:calc(100% - 2em);margin:auto;padding:3em 1em}h1,h2,h3,h4,h5,h6{margin:0 0 .5rem;color:rgb(var(--black));line-height:1.2}h1{font-size:3.052em}h2{font-size:2.441em}h3{font-size:1.953em}h4{font-size:1.563em}h5{font-size:1.25em}strong,b{font-weight:700}a,a:hover{color:var(--accent)}p{margin-bottom:1em}.prose p{margin-bottom:2em}textarea{width:100%;font-size:16px}input{font-size:16px}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{border:1px solid #ddd;padding:8px;text-align:left}thead{background-color:#f4f4f4}tbody tr:nth-child(2n){background-color:#f9f9f9}tbody tr:hover{background-color:#e0e0e0}img{max-width:100%;height:auto;border-radius:8px}code{padding:2px 6px;background-color:#f5f5f5;border-radius:3px;font-size:.9em}pre{padding:1.5em;border-radius:4px;border:1px solid rgb(var(--gray-light))}pre>code{all:unset}blockquote{border-left:4px solid var(--accent);padding:0 0 0 20px;margin:0;font-size:1.333em}hr{border:none;border-top:1px solid rgb(var(--gray-light))}@media(max-width:720px){body{font-size:18px}main{padding:1em}}.sr-only{border:0;padding:0;margin:0;position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px 1px 1px 1px);clip:rect(1px,1px,1px,1px);clip-path:inset(50%);white-space:nowrap}a[data-astro-cid-eimmu3lg]{display:inline-block;text-decoration:none}a[data-astro-cid-eimmu3lg].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-3ef6ksr2]{margin:0;padding:0 1em;background:#fff;box-shadow:0 2px 8px rgba(var(--black),5%)}h2[data-astro-cid-3ef6ksr2]{margin:0;font-size:1em}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2],h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none}nav[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;justify-content:space-between}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{padding:1em .5em;color:var(--black);border-bottom:4px solid transparent;text-decoration:none}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;border-bottom-color:var(--accent)}.social-links[data-astro-cid-3ef6ksr2],.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:flex}@media(max-width:720px){.social-links[data-astro-cid-3ef6ksr2]{display:none}}footer[data-astro-cid-sz7xmlte]{padding:2em 1em 6em;background:linear-gradient(var(--gray-gradient)) no-repeat;color:rgb(var(--gray));text-align:center}.social-links[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;gap:1em;margin-top:1em}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{text-decoration:none;color:rgb(var(--gray))}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:rgb(var(--gray-dark))}
+main[data-astro-cid-bvzihdzo]{width:100%;max-width:720px;margin:0 auto;padding:0 2rem}article[data-astro-cid-bvzihdzo]{margin:3rem 0}.article-header[data-astro-cid-bvzihdzo]{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid rgb(var(--gray-light))}.article-meta[data-astro-cid-bvzihdzo]{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;font-size:.875rem;color:rgb(var(--gray))}.article-date[data-astro-cid-bvzihdzo]{font-variant-numeric:tabular-nums}.article-tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;flex-wrap:wrap}.article-tag[data-astro-cid-bvzihdzo]{color:rgb(var(--gray));font-size:.875rem;text-transform:lowercase}.article-tag[data-astro-cid-bvzihdzo]:before{content:"#";opacity:.5}.article-title[data-astro-cid-bvzihdzo]{font-size:2.5rem;font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:0 0 1rem;color:rgb(var(--black))}.article-description[data-astro-cid-bvzihdzo]{font-size:1.125rem;line-height:1.6;color:rgb(var(--gray-dark));margin:0}.last-updated[data-astro-cid-bvzihdzo]{font-size:.875rem;color:rgb(var(--gray));margin-top:.5rem}.prose[data-astro-cid-bvzihdzo]{color:rgb(var(--gray-dark))}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.75rem;font-weight:600;letter-spacing:-.01em}.prose[data-astro-cid-bvzihdzo] h3{margin-top:2rem;margin-bottom:.75rem;font-size:1.375rem;font-weight:600}.prose[data-astro-cid-bvzihdzo] a{color:rgb(var(--black));text-decoration:underline;text-decoration-color:rgb(var(--gray-light));text-underline-offset:2px;transition:text-decoration-color .15s ease}.prose[data-astro-cid-bvzihdzo] a:hover{text-decoration-color:rgb(var(--black))}.prose[data-astro-cid-bvzihdzo] img{border-radius:4px;margin:2rem 0}.prose[data-astro-cid-bvzihdzo] pre{margin:1.5rem 0;border-radius:4px}.prose[data-astro-cid-bvzihdzo] blockquote{margin:2rem 0;border-left:3px solid rgb(var(--gray-light));padding-left:1.5rem;font-style:italic;color:rgb(var(--gray))}@media(max-width:767px){main[data-astro-cid-bvzihdzo]{padding:0 1rem}article[data-astro-cid-bvzihdzo]{margin:2rem 0}.article-header[data-astro-cid-bvzihdzo]{margin-bottom:2rem;padding-bottom:1.5rem}.article-title[data-astro-cid-bvzihdzo]{font-size:1.875rem}.article-description[data-astro-cid-bvzihdzo]{font-size:1rem}.article-meta[data-astro-cid-bvzihdzo]{flex-direction:column;align-items:flex-start;gap:.5rem}}
+</style></head> <body data-astro-cid-bvzihdzo> <header data-astro-cid-3ef6ksr2> <nav data-astro-cid-3ef6ksr2> <h2 data-astro-cid-3ef6ksr2><a href="/" data-astro-cid-3ef6ksr2>Jacob&#39;s Blog</a></h2> <div class="internal-links" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Home </a> <a href="/blog" class="active" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Blog </a> <a href="/about" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> About </a> </div> <div class="social-links" data-astro-cid-3ef6ksr2> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-3ef6ksr2></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-3ef6ksr2></path></svg> </a> </div> </nav> </header> <main data-astro-cid-bvzihdzo> <article data-astro-cid-bvzihdzo> <header class="article-header" data-astro-cid-bvzihdzo> <div class="article-meta" data-astro-cid-bvzihdzo> <time class="article-date" data-astro-cid-bvzihdzo> <time datetime="2026-03-01T00:00:00.000Z"> Mar 1, 2026 </time> </time>  </div> <h1 class="article-title" data-astro-cid-bvzihdzo>We Replaced Our Trino Fork with a Rust SQL Engine. Here&#39;s Why It Works.</h1> <p class="article-description" data-astro-cid-bvzihdzo>How we went from maintaining a 2M-line Java fork to shipping a 50MB binary that runs every query as the authenticated user</p>  </header> <div class="prose" data-astro-cid-bvzihdzo>  <p><em>How we went from maintaining a 2M-line Java fork to shipping a 50MB binary that runs every query as the authenticated user.</em></p>
+<hr>
+<h2 id="the-problem-we-were-solving">The problem we were solving</h2>
+<p>We run a sovereign data platform. Every customer gets their own Iceberg lakehouse on S3, managed through Apache Polaris as the REST catalog, with Keycloak handling identity. The architecture is clean — until you need a query engine.</p>
+<p>Trino was the obvious choice. It’s battle-tested, speaks SQL, and has an Iceberg connector. But Trino was designed for a world where a service account connects to everything on behalf of users. Our world is different: every query must run as the authenticated user, with their bearer token passed through to the catalog and storage layer. No god-mode service account. No shared credentials.</p>
+<p>So we forked Trino. We built a custom Keycloak SPI, patched the Iceberg connector to pass bearer tokens, and maintained what we called the “DCAF branch.” It worked. But every Trino release meant rebasing our patches, re-running compatibility tests, and hoping nothing broke in the 2 million lines of Java we didn’t write.</p>
+<p>Then came the questions we couldn’t answer with patches:</p>
+<ul>
+<li><strong>How do we inject row-level security filters into query plans before optimisation?</strong> Trino’s access control is a gate — it either allows or denies. We needed plan rewriting: transparent row filters, column masking, predicate pushdown that respects security boundaries.</li>
+<li><strong>How do we run this in Kubernetes without 8GB per worker?</strong> Trino’s JVM overhead means large heaps, stop-the-world GC pauses, and 10-30 second cold starts. Not great for autoscaling.</li>
+<li><strong>How do we stop maintaining someone else’s codebase?</strong> Every quarter, the rebase got harder. Features we didn’t use created merge conflicts with features we did.</li>
+</ul>
+<p>We needed to stop patching and start building.</p>
+<hr>
+<h2 id="why-datafusion">Why DataFusion</h2>
+<p>We evaluated DataFusion, DuckDB, and Velox. DataFusion won for one reason: it gives you the query plan as a first-class data structure you can inspect, rewrite, and extend — before the optimiser touches it.</p>
+<p>This is exactly what we needed for security. Our architecture injects policy filters (row filters, column masks) into the <code>LogicalPlan</code> between parsing and optimisation. DataFusion’s optimizer then pushes user predicates through our security filters where safe, but can never push predicates through masked columns. This is the PostgreSQL RLS model, implemented at the query engine level.</p>
+<p>DataFusion also gave us:</p>
+<ul>
+<li><strong>Arrow-native execution.</strong> Columnar data, zero-copy where possible, no serialisation between plan nodes. The same Arrow RecordBatches flow from Iceberg through the engine to the client.</li>
+<li><strong>Extensible physical plans.</strong> Custom <code>ExecutionPlan</code> nodes for Iceberg scans, distributed fragment shipping, and credential injection — all within DataFusion’s framework, not fighting it.</li>
+<li><strong>A Rust ecosystem.</strong> One language from query parsing to S3 I/O. No JNI bridges, no serialisation boundaries between Java and native code.</li>
+</ul>
+<p>The key insight: DataFusion is a library, not a server. We compose the query engine we need rather than configuring the one someone else built.</p>
+<hr>
+<h2 id="the-architecture-bearer-token-passthrough">The architecture: bearer token passthrough</h2>
+<p>This is the design that made everything click:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.y0rd3.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Client (JDBC / Flight SQL / HTTP)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">        </span></span><span style="--0:#e1e4e8;--1:#24292e">|</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">        </span></span><span style="--0:#e1e4e8;--1:#24292e">v</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">Coordinator</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">|  - OIDC password grant (Keycloak, Auth0, any provider)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">|  - Policy enforcement (plan rewriting)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">|  - Fragment scheduling</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">|</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">+---> Polaris REST Catalog  (Authorization: Bearer {user_token})</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">|         |</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">|         +---> S3 credential vending (per-user, per-table)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">|</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">   </span></span><span style="--0:#e1e4e8;--1:#24292e">+---> Workers (plan fragments + credentials via Flight metadata)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">            </span></span><span style="--0:#e1e4e8;--1:#24292e">|</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">            </span></span><span style="--0:#e1e4e8;--1:#24292e">+---> S3 (with user-scoped credentials)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="Client (JDBC / Flight SQL / HTTP)        |        v   Coordinator   |  - OIDC password grant (Keycloak, Auth0, any provider)   |  - Policy enforcement (plan rewriting)   |  - Fragment scheduling   |   +---> Polaris REST Catalog  (Authorization: Bearer {user_token})   |         |   |         +---> S3 credential vending (per-user, per-table)   |   +---> Workers (plan fragments + credentials via Flight metadata)            |            +---> S3 (with user-scoped credentials)"><div></div></button></div></figure></div>
+<p><strong>No service account anywhere.</strong> When you run <code>SELECT * FROM sales.orders</code>, the coordinator authenticates you via OIDC, gets your bearer token, and passes it to Polaris. Polaris checks your permissions and vends S3 credentials scoped to exactly the tables you’re allowed to see. Workers receive plan fragments with those credentials attached — they never see anyone else’s data.</p>
+<p>Token refresh happens in the background. The coordinator tracks token lifetimes and refreshes them before expiry. For long-running distributed queries, refreshed credentials are pushed to workers via Flight metadata. If a token can’t be refreshed, the session expires cleanly.</p>
+<p>This is what “sovereign” means in practice: the user’s identity follows the query from parsing to storage I/O.</p>
+<hr>
+<h2 id="what-iceberg-rust-gives-us">What iceberg-rust gives us</h2>
+<p>We use <a href="https://github.com/apache/iceberg-rust">iceberg-rust</a> (v0.9) for all Iceberg operations. This matters more than you’d think.</p>
+<p>Trino’s Iceberg connector is a Java library that speaks Iceberg via the Java SDK, serialises data through Hive/Parquet readers, and bridges everything through JNI when you want native performance. It works, but it’s layers on layers.</p>
+<p>iceberg-rust is a native Rust implementation of the Iceberg spec. It reads Iceberg metadata, Parquet data files, and speaks the REST catalog protocol — all in the same language as our query engine. DataFusion’s <code>TableProvider</code> trait wraps <code>IcebergTableProvider</code> directly. No serialisation boundary. No JNI. No class-loading surprises.</p>
+<p>The practical result:</p>
+<ul>
+<li><strong>Metadata caching</strong> with 30-second TTL, built on moka’s async cache</li>
+<li><strong>Credential vending</strong> extracted from Polaris <code>loadTable</code> responses, cached per (session, table)</li>
+<li><strong>Predicate pushdown</strong> from DataFusion filters into Iceberg scan predicates — including LIMIT, LIKE, Boolean, and Timestamp pushdown available since DataFusion 52</li>
+<li><strong>Manifest-aware fragment splitting</strong> for distributed execution: the coordinator reads manifest files and groups data files into fragments assigned to workers</li>
+</ul>
+<hr>
+<h2 id="distributed-execution">Distributed execution</h2>
+<p>Single-node was the starting point. Distributed execution was the goal.</p>
+<p>The coordinator splits physical plans into fragments based on Iceberg manifest groups. Each fragment is a self-contained unit: a serialised plan (via DataFusion’s proto codec) plus the S3 credentials needed to read the data files. Fragments are dispatched to workers via Arrow Flight <code>do_exchange</code>, and results stream back as Arrow RecordBatches.</p>
+<p>Workers are stateless. They receive a fragment, build a local DataFusion <code>SessionContext</code> with the provided credentials, execute, and stream results. They don’t know about each other. They don’t share state. They heartbeat to the coordinator every 5 seconds, and the coordinator uses a weighted scheduler to balance load.</p>
+<p>If a worker dies, the coordinator re-assigns its fragments to another worker or falls back to local execution. For small queries (few manifests, few workers available), the coordinator skips distribution entirely and runs locally. This adaptive decision happens automatically based on table size and cluster state.</p>
+<hr>
+<h2 id="what-works-today">What works today</h2>
+<p>As of March 2026, the core engine is production-functional:</p>
+<p><strong>SQL</strong>: Full ANSI SQL via DataFusion — window functions (LEAD, LAG, PARTITION BY), CTEs, correlated subqueries, all join types, aggregates with HAVING, GROUPING SETS, UNION ALL, INTERSECT, EXCEPT.</p>
+<p><strong>DDL/DML</strong>: CREATE TABLE AS SELECT, INSERT INTO SELECT, CREATE/DROP VIEW, DROP TABLE, ALTER TABLE RENAME. Write path produces Parquet via Iceberg’s append snapshots.</p>
+<p><strong>Protocols</strong>: Arrow Flight SQL as the primary protocol (gRPC, binary Arrow), plus a Trino HTTP compatibility layer for dashboard migration. The Trino compat speaks enough of the Trino wire protocol that existing Trino JDBC clients connect without changes.</p>
+<p><strong>Auth &#x26; Security</strong>: OIDC password grant with any compliant provider, background token refresh, TLS support (optional mTLS), per-user and global rate limiting, query timeouts with per-role overrides, session lifecycle management (idle + absolute timeouts), structured audit logging with query hashing.</p>
+<p><strong>Observability</strong>: OpenTelemetry traces propagated from coordinator to workers, Prometheus metrics (query counts, durations, rows, fragments), health endpoints (<code>/healthz</code>, <code>/readyz</code>), JSON audit log with session tracking.</p>
+<p><strong>Distributed</strong>: Fragment scheduler with load weighting, worker heartbeats, credential refresh push, failure handling with retry and local fallback, configurable memory limits with spill-to-disk.</p>
+<hr>
+<h2 id="what-we-cant-do-yet-and-why">What we can’t do yet (and why)</h2>
+<p><strong>DELETE FROM and MERGE INTO</strong> are blocked on iceberg-rust’s Merge-on-Read implementation (position delete files). This is tracked in iceberg-rust Epic #2186, estimated Q3 2026. Without row-level deletes, we can’t support dbt’s incremental materializations. We can do full-table overwrites via <code>INSERT OVERWRITE</code> semantics, but that’s not the same thing.</p>
+<p><strong>The OPA/Cedar policy engine</strong> is designed (the <code>PolicyEnforcer</code> trait and <code>PlanRewriter</code> are in place with a passthrough implementation), but the actual policy backends aren’t wired yet. This is by design — we’re waiting for the Polaris OPA SPI refactor (PR #3999) to stabilise before building against it.</p>
+<p><strong>Time travel</strong> (<code>SELECT * FROM table FOR SYSTEM_TIME AS OF '2026-01-01'</code>) is supported by iceberg-rust but not yet wired into our SQL parser.</p>
+<p>These are real gaps. We chose to ship what works rather than wait for completeness.</p>
+<hr>
+<h2 id="the-numbers">The numbers</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Trino (DCAF fork)</th><th>SQE</th></tr></thead><tbody><tr><td>Binary size</td><td>~1.2 GB (with plugins)</td><td>~50 MB</td></tr><tr><td>Cold start</td><td>10-30 seconds</td><td>&#x3C;1 second</td></tr><tr><td>Minimum memory</td><td>2 GB (coordinator)</td><td>~100 MB</td></tr><tr><td>Worker memory</td><td>8 GB+ recommended</td><td>Configurable, 512 MB viable</td></tr><tr><td>Codebase maintained</td><td>~2M lines (fork)</td><td>~5K lines (purpose-built)</td></tr><tr><td>Language</td><td>Java 21</td><td>Rust</td></tr><tr><td>GC pauses</td><td>Yes (G1GC)</td><td>No (no GC)</td></tr><tr><td>Auth model</td><td>Service account + patches</td><td>Native bearer token passthrough</td></tr></tbody></table>
+<p>These numbers matter for Kubernetes. A 50MB container that starts in under a second and runs in 512MB means you can autoscale workers aggressively. No warm-up. No GC tuning. No heap sizing ceremonies.</p>
+<hr>
+<h2 id="the-roadmap">The roadmap</h2>
+<p>We think in steps, not sprints:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Step</th><th>Status</th><th>What</th></tr></thead><tbody><tr><td>Core engine</td><td>Done (99/103)</td><td>Distributed SQL, write path, Trino compat, observability</td></tr><tr><td>Security hardening</td><td>Done (51/51)</td><td>TLS, rate limiting, timeouts, audit, error sanitisation</td></tr><tr><td>Pluggable auth</td><td>Next</td><td>Bearer token, API key, mTLS, anonymous providers</td></tr><tr><td>Pluggable catalogs</td><td>Next</td><td>AWS Glue, Nessie, Hive Metastore, storage-only</td></tr><tr><td>Policy engine</td><td>Q3 2026</td><td>OPA/Cedar row filters, column masks, GRANT/REVOKE SQL</td></tr><tr><td>Semantic AI layer</td><td>Future</td><td>RDF/SPARQL on Iceberg, vector search, agent interfaces</td></tr></tbody></table>
+<p>Steps 4 and 5 (pluggable auth and catalogs) can run in parallel. Step 6 (semantic layer) is fully additive — new crates, no existing code broken.</p>
+<p>The blocked items (DELETE/MERGE, OPA integration) are waiting on upstream, not on us. When iceberg-rust lands Merge-on-Read, we wire it in. When Polaris stabilises its OPA SPI, we build against it. Until then, we ship what we have.</p>
+<hr>
+<h2 id="why-this-really-works">Why this really works</h2>
+<p>Three things made this project viable:</p>
+<p><strong>DataFusion is a library, not a framework.</strong> We compose the pieces we need. When we needed security plan rewriting, we added an optimizer rule. When we needed distributed execution, we added a custom physical plan codec. We never fought the framework — we extended it.</p>
+<p><strong>iceberg-rust is native, not a bridge.</strong> No JNI. No serialisation boundaries. The same Arrow types flow from Iceberg metadata through the query engine to the Flight SQL client. When iceberg-rust adds a feature, we get it directly.</p>
+<p><strong>Bearer token passthrough is an architecture, not a feature.</strong> It’s not something we bolted on. Every component — from session management to credential vending to worker dispatch — was built around the principle that the user’s identity follows the query. This simplifies everything downstream: no shared credential stores, no privilege escalation risks, no “who was this query actually running as?” questions.</p>
+<p>We went from maintaining a Trino fork to shipping a purpose-built engine in Rust. It’s less code, faster execution, stronger security, and easier to operate. The bet on DataFusion + iceberg-rust paid off.</p>
+<hr>
+<p><em>SQE is being open-sourced under Apache 2.0. Built by the data platform team at Schuberg Philis for the Chameleon sovereign data platform.</em></p>  </div> </article> </main> <footer data-astro-cid-sz7xmlte>
+&copy; 2026 Jacob Verhoeks. All rights reserved.
+<div class="social-links" data-astro-cid-sz7xmlte> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/twitter" data-astro-cid-sz7xmlte><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-sz7xmlte></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github" data-astro-cid-sz7xmlte><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-sz7xmlte></path></svg> </a> </div> </footer> </body></html>
