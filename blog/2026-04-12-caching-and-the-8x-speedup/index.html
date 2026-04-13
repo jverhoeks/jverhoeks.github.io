@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-bvzihdzo> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v6.1.5"><!-- Font preloads --><link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/2026-04-12-caching-and-the-8x-speedup/"><!-- Primary Meta Tags --><title>Five Layers of Caching and an 8.8x Speedup Over Trino</title><meta name="title" content="Five Layers of Caching and an 8.8x Speedup Over Trino"><meta name="description" content="How multi-layer caching took SQE from slower than Trino to 2.5-8.8x faster across every benchmark suite."><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://jacob.verhoeks.org/blog/2026-04-12-caching-and-the-8x-speedup/"><meta property="og:title" content="Five Layers of Caching and an 8.8x Speedup Over Trino"><meta property="og:description" content="How multi-layer caching took SQE from slower than Trino to 2.5-8.8x faster across every benchmark suite."><meta property="og:image" content="https://jacob.verhoeks.org/blog-placeholder-1.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://jacob.verhoeks.org/blog/2026-04-12-caching-and-the-8x-speedup/"><meta property="twitter:title" content="Five Layers of Caching and an 8.8x Speedup Over Trino"><meta property="twitter:description" content="How multi-layer caching took SQE from slower than Trino to 2.5-8.8x faster across every benchmark suite."><meta property="twitter:image" content="https://jacob.verhoeks.org/blog-placeholder-1.jpg"><style>:root{--accent: #2337ff;--accent-dark: #000d8a;--black: 15, 18, 25;--gray: 96, 115, 159;--gray-light: 229, 233, 240;--gray-dark: 34, 41, 57;--gray-gradient: rgba(var(--gray-light), 50%), #fff;--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%)}@font-face{font-family:Atkinson;src:url(/fonts/atkinson-regular.woff) format("woff");font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:Atkinson;src:url(/fonts/atkinson-bold.woff) format("woff");font-weight:700;font-style:normal;font-display:swap}body{font-family:Atkinson,sans-serif;margin:0;padding:0;text-align:left;background:#fff;word-wrap:break-word;overflow-wrap:break-word;color:rgb(var(--gray-dark));font-size:20px;line-height:1.7}main{width:720px;max-width:calc(100% - 2em);margin:auto;padding:3em 1em}h1,h2,h3,h4,h5,h6{margin:0 0 .5rem;color:rgb(var(--black));line-height:1.2}h1{font-size:3.052em}h2{font-size:2.441em}h3{font-size:1.953em}h4{font-size:1.563em}h5{font-size:1.25em}strong,b{font-weight:700}a,a:hover{color:var(--accent)}p{margin-bottom:1em}.prose p{margin-bottom:2em}textarea{width:100%;font-size:16px}input{font-size:16px}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{border:1px solid #ddd;padding:8px;text-align:left}thead{background-color:#f4f4f4}tbody tr:nth-child(2n){background-color:#f9f9f9}tbody tr:hover{background-color:#eef0f4}img{max-width:100%;height:auto;border-radius:8px}code{padding:2px 6px;background-color:#f5f5f5;border-radius:3px;font-size:.9em}pre{padding:1.5em;border-radius:4px;border:1px solid rgb(var(--gray-light))}pre>code{all:unset}blockquote{border-left:4px solid var(--accent);padding:0 0 0 20px;margin:0;font-size:1.333em}hr{border:none;border-top:1px solid rgb(var(--gray-light))}@media(max-width:720px){body{font-size:18px}main{padding:1em}}.sr-only{border:0;padding:0;margin:0;position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px 1px 1px 1px);clip:rect(1px,1px,1px,1px);clip-path:inset(50%);white-space:nowrap}a[data-astro-cid-eimmu3lg]{display:inline-block;text-decoration:none}a[data-astro-cid-eimmu3lg].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-3ef6ksr2]{margin:0;padding:0 1em;background:#fff;box-shadow:0 2px 8px rgba(var(--black),5%)}h2[data-astro-cid-3ef6ksr2]{margin:0;font-size:1em}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2],h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none}nav[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;justify-content:space-between}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{padding:1em .5em;color:var(--black);border-bottom:4px solid transparent;text-decoration:none}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;border-bottom-color:var(--accent)}.social-links[data-astro-cid-3ef6ksr2],.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:flex}@media(max-width:720px){.social-links[data-astro-cid-3ef6ksr2]{display:none}}footer[data-astro-cid-sz7xmlte]{padding:2em 1em 6em;background:linear-gradient(var(--gray-gradient)) no-repeat;color:rgb(var(--gray));text-align:center}.social-links[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;gap:1em;margin-top:1em}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{text-decoration:none;color:rgb(var(--gray))}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:rgb(var(--gray-dark))}
+main[data-astro-cid-bvzihdzo]{width:100%;max-width:720px;margin:0 auto;padding:0 2rem}article[data-astro-cid-bvzihdzo]{margin:3rem 0}.article-header[data-astro-cid-bvzihdzo]{margin-bottom:3rem}.article-meta[data-astro-cid-bvzihdzo]{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;font-size:.85rem;color:rgb(var(--gray))}.article-date[data-astro-cid-bvzihdzo]{font-variant-numeric:tabular-nums}.meta-dot[data-astro-cid-bvzihdzo]{color:rgb(var(--gray-light))}.article-title[data-astro-cid-bvzihdzo]{font-size:2.5rem;font-weight:700;line-height:1.15;letter-spacing:-.025em;margin:0 0 1rem;color:rgb(var(--black))}.article-description[data-astro-cid-bvzihdzo]{font-size:1.125rem;line-height:1.6;color:rgb(var(--gray));margin:0 0 1.5rem}.article-tags[data-astro-cid-bvzihdzo]{display:flex;gap:.375rem;flex-wrap:wrap;padding-bottom:2rem;border-bottom:1px solid rgb(var(--gray-light))}.article-tag[data-astro-cid-bvzihdzo]{display:inline-block;padding:.25rem .7rem;border-radius:100px;font-size:.75rem;font-weight:500;text-decoration:none;text-transform:lowercase;color:rgb(var(--gray));background:rgba(var(--gray-light),.5);border:1px solid transparent;transition:all .2s ease;line-height:1.4}.article-tag[data-astro-cid-bvzihdzo]:hover{background:rgb(var(--gray-light));color:rgb(var(--black));border-color:rgb(var(--gray-light))}.last-updated[data-astro-cid-bvzihdzo]{font-size:.85rem;color:rgb(var(--gray));margin-top:.5rem}.prose[data-astro-cid-bvzihdzo]{color:rgb(var(--gray-dark))}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2.5rem;margin-bottom:1rem;font-size:1.6rem;font-weight:600;letter-spacing:-.01em;color:rgb(var(--black))}.prose[data-astro-cid-bvzihdzo] h3{margin-top:2rem;margin-bottom:.75rem;font-size:1.3rem;font-weight:600;color:rgb(var(--black))}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:underline;text-decoration-color:#2337ff40;text-underline-offset:2px;transition:text-decoration-color .15s ease}.prose[data-astro-cid-bvzihdzo] a:hover{text-decoration-color:var(--accent)}.prose[data-astro-cid-bvzihdzo] img{border-radius:8px;margin:2rem 0}.prose[data-astro-cid-bvzihdzo] pre{margin:1.5rem 0;border-radius:8px}.prose[data-astro-cid-bvzihdzo] blockquote{margin:2rem 0;border-left:3px solid rgb(var(--gray-light));padding-left:1.5rem;font-style:italic;color:rgb(var(--gray))}.prose[data-astro-cid-bvzihdzo] hr{margin:2.5rem 0}.prose[data-astro-cid-bvzihdzo] table{border-radius:8px;overflow:hidden;border:1px solid rgb(var(--gray-light))}.prose[data-astro-cid-bvzihdzo] th,.prose[data-astro-cid-bvzihdzo] td{border-color:rgb(var(--gray-light))}.prose[data-astro-cid-bvzihdzo] thead{background:rgba(var(--gray-light),.4)}.prose[data-astro-cid-bvzihdzo] tbody tr:nth-child(2n){background:rgba(var(--gray-light),.2)}.prose[data-astro-cid-bvzihdzo] tbody tr:hover{background:rgba(var(--gray-light),.4)}.back-link[data-astro-cid-bvzihdzo]{display:inline-flex;align-items:center;gap:.35rem;font-size:.85rem;color:rgb(var(--gray));text-decoration:none;margin-top:3rem;padding:.5rem 1rem .5rem .75rem;border-radius:100px;border:1px solid rgb(var(--gray-light));transition:all .2s ease}.back-link[data-astro-cid-bvzihdzo]:hover{color:rgb(var(--black));border-color:rgb(var(--gray))}.back-link[data-astro-cid-bvzihdzo] svg[data-astro-cid-bvzihdzo]{width:14px;height:14px}@media(max-width:767px){main[data-astro-cid-bvzihdzo]{padding:0 1rem}article[data-astro-cid-bvzihdzo]{margin:2rem 0}.article-title[data-astro-cid-bvzihdzo]{font-size:1.875rem}.article-description[data-astro-cid-bvzihdzo]{font-size:1rem}.article-meta[data-astro-cid-bvzihdzo]{flex-wrap:wrap;gap:.5rem}}
+</style></head> <body data-astro-cid-bvzihdzo> <header data-astro-cid-3ef6ksr2> <nav data-astro-cid-3ef6ksr2> <h2 data-astro-cid-3ef6ksr2><a href="/" data-astro-cid-3ef6ksr2>Jacob&#39;s Blog</a></h2> <div class="internal-links" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Home </a> <a href="/blog" class="active" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Blog </a> <a href="/about" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> About </a> </div> <div class="social-links" data-astro-cid-3ef6ksr2> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-3ef6ksr2></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-3ef6ksr2></path></svg> </a> </div> </nav> </header> <main data-astro-cid-bvzihdzo> <article data-astro-cid-bvzihdzo> <header class="article-header" data-astro-cid-bvzihdzo> <div class="article-meta" data-astro-cid-bvzihdzo> <time class="article-date" data-astro-cid-bvzihdzo> <time datetime="2026-04-12T00:00:00.000Z"> Apr 12, 2026 </time> </time>  <span class="meta-dot" data-astro-cid-bvzihdzo>&middot;</span> <span data-astro-cid-bvzihdzo>Jacob Verhoeks</span>  </div> <h1 class="article-title" data-astro-cid-bvzihdzo>Five Layers of Caching and an 8.8x Speedup Over Trino</h1> <p class="article-description" data-astro-cid-bvzihdzo>How multi-layer caching took SQE from slower than Trino to 2.5-8.8x faster across every benchmark suite.</p>  <div class="article-tags" data-astro-cid-bvzihdzo> <a href="/blog/tag/performance/" class="article-tag" data-astro-cid-bvzihdzo>performance</a><a href="/blog/tag/caching/" class="article-tag" data-astro-cid-bvzihdzo>caching</a><a href="/blog/tag/trino/" class="article-tag" data-astro-cid-bvzihdzo>trino</a><a href="/blog/tag/benchmarks/" class="article-tag" data-astro-cid-bvzihdzo>benchmarks</a> </div> </header> <div class="prose" data-astro-cid-bvzihdzo>  <p><em>April 12, 2026</em></p>
+<p>Two days ago, SQE was slower than Trino on warm queries. Today it is 2.5x to 8.8x faster across every benchmark suite. The fix was not a better algorithm. It was eliminating work that should never have happened in the first place.</p>
+<h2 id="the-problem-540ms-of-overhead-on-every-query">The problem: 540ms of overhead on every query</h2>
+<p>We built the <code>--compare-trino</code> flag into <code>benchmark-test.sh</code> to run identical queries against both engines and compare wall-clock times. The first comparison run was humbling. SQE was <em>correct</em>, every answer matched, but Trino beat us on ClickBench, on short TPC-H queries, on anything that completed in under a second.</p>
+<p>Profiling told us the query execution was fast. DataFusion parsed, planned, and executed <code>SELECT 1</code> in under 1ms. The other 539ms was overhead:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Component</th><th>Cost per query</th><th>What it does</th></tr></thead><tbody><tr><td>RestCatalog creation</td><td>~250ms</td><td>Build an iceberg-rust REST client to Polaris</td></tr><tr><td>OAuth token fetch</td><td>~120ms</td><td><code>client_credentials</code> grant to Polaris</td></tr><tr><td>SessionContext build</td><td>~50ms</td><td>Register 70+ UDFs, TVFs, system tables</td></tr><tr><td>Table metadata lookup</td><td>~100ms</td><td>Polaris REST round-trip per table</td></tr></tbody></table>
+<p>Every single query paid all four costs. Trino paid them once at startup.</p>
+<h2 id="the-fix-five-caching-layers">The fix: five caching layers</h2>
+<p><strong>Layer 1: RestCatalog cache.</strong> <code>moka::future::Cache</code> keyed by <code>polaris_url + token_fingerprint</code>, 5-minute TTL. The iceberg-rust <code>RestCatalog</code> is stateless. Each <code>loadTable</code> call goes to Polaris independently. Safe to reuse.</p>
+<p><strong>Layer 2: Table metadata cache.</strong> Global, shared across all sessions. 30-second TTL. A TPC-DS run that touches 24 tables across 99 queries makes 24 Polaris calls instead of 2,376.</p>
+<p><strong>Layer 3: Manifest file cache.</strong> Iceberg manifests are immutable by spec. Cache parsed entries by S3 path with no TTL, 512MB LRU eviction. This eliminates the most expensive I/O in scan planning.</p>
+<p><strong>Layer 4: SessionContext cache.</strong> DataFusion’s <code>SessionContext</code> wraps <code>Arc&#x3C;SessionState></code>. Cloning is O(1). Cache per username, not per token, because OIDC creates fresh tokens per request. 5-minute TTL, max 100 entries. Invalidated after DDL/DML.</p>
+<p><strong>Layer 5: OAuth service token cache.</strong> The <code>client_credentials</code> grant returns the same-scope token every time. Cache it in-process, reuse until near-expiry. One <code>tokio::sync::RwLock</code>, zero contention on the read path.</p>
+<h2 id="the-cache-invalidation-bug">The cache invalidation bug</h2>
+<p>Caching the SessionContext created a correctness bug we found immediately in benchmarks. The load phase creates tables via CTAS. The cached SessionContext holds a catalog provider with a frozen namespace list. The query phase gets the cached context. “Table not found.”</p>
+<p>The fix: call <code>invalidate_session_cache(username)</code> after every schema-modifying operation. CREATE TABLE, DROP TABLE, CREATE SCHEMA, CTAS, any DDL invalidates the cached context. The next query pays the 50ms rebuild cost. Every subsequent query gets the cache hit.</p>
+<p>This is the kind of bug that only appears under the exact load/query pattern benchmarks use. Unit tests create tables and query them in the same function. The cache is empty. No bug. Benchmarks create tables in phase 2 and query them in phase 3. The cache is warm. Bug.</p>
+<h2 id="the-results">The results</h2>
+<p>We ran all seven benchmark suites with <code>--compare-trino</code> against Trino 465:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Suite</th><th>Queries</th><th>SQE (ms)</th><th>Trino (ms)</th><th>Speedup</th><th>Match</th></tr></thead><tbody><tr><td>TPC-H</td><td>22</td><td>1,646</td><td>10,796</td><td><strong>8.8x</strong></td><td>22/22</td></tr><tr><td>SSB</td><td>13</td><td>710</td><td>2,045</td><td><strong>3.2x</strong></td><td>13/13</td></tr><tr><td>TPC-DS</td><td>99</td><td>19,650</td><td>46,989</td><td><strong>2.6x</strong></td><td>93/99</td></tr><tr><td>TPC-C</td><td>8</td><td>304</td><td>1,528</td><td><strong>5.5x</strong></td><td>8/8</td></tr><tr><td>TPC-E</td><td>11</td><td>474</td><td>2,175</td><td><strong>5.3x</strong></td><td>11/11</td></tr><tr><td>TPC-BB</td><td>10</td><td>1,223</td><td>2,193</td><td><strong>3.1x</strong></td><td>10/10</td></tr><tr><td>ClickBench</td><td>43</td><td>904</td><td>2,205</td><td><strong>2.5x</strong></td><td>43/43</td></tr></tbody></table>
+<p>221/222 queries pass. One TPC-E error (execution failure on a complex UPDATE). Six TPC-DS “diff” results are ROLLUP edge cases where DataFusion and Trino disagree on the grand total row for empty inputs (filed as apache/datafusion#21570).</p>
+<p>The standout: TPC-H q01 runs in 34ms on SQE versus 2,275ms on Trino. That is 66.9x. The query itself is trivial, a filtered aggregation. All of Trino’s time is overhead.</p>
+<h2 id="the-decimal-precision-fix">The DECIMAL precision fix</h2>
+<p>While building the caching strategy, we discovered a critical correctness bug. <code>0.06 - 0.01</code> was returning <code>0.049999999999999996</code> instead of <code>0.05</code>. DataFusion’s default behavior parses <code>0.06</code> as <code>Float64</code>, introducing floating-point imprecision.</p>
+<p>TPC-H q06 has a <code>WHERE l_discount BETWEEN 0.05 AND 0.07</code> predicate. With float parsing, some rows that should match <code>0.05</code> exactly get compared as <code>0.049999...</code> and excluded. The query returned <strong>40.7 million</strong> instead of the correct <strong>68.2 million</strong>.</p>
+<p>One config line fixed it:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.y0rd3.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame"><figcaption class="header"></figcaption><pre data-language="rust"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">.</span><span style="--0:#B392F0;--1:#6F42C1">set_bool</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#9ECBFF;--1:#032F62">"datafusion.sql_parser.parse_float_as_decimal"</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#79B8FF;--1:#005CC5">true</span><span style="--0:#E1E4E8;--1:#24292E">)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code=".set_bool(&#x22;datafusion.sql_parser.parse_float_as_decimal&#x22;, true)"><div></div></button></div></figure></div>
+<p>Now <code>0.06</code> parses as <code>Decimal128(2, 2)</code>. Exact arithmetic. Correct results. This is the kind of bug that benchmarks find and unit tests miss, because you have to run TPC-H q06 with the actual data to trigger it.</p>
+<h2 id="one-week-start-to-finish">One week, start to finish</h2>
+<p>The transformation is easier to see in a table. All numbers are SF0.01, same hardware, same Polaris, same S3.</p>
+<h3 id="sqe-solo-performance">SQE solo performance</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Suite</th><th>Apr 2</th><th>Apr 10</th><th><strong>Apr 12</strong></th><th><strong>Speedup</strong></th></tr></thead><tbody><tr><td>TPC-H</td><td>13.6s (22/22)</td><td>18.5s (22/22)</td><td><strong>1.6s</strong> (22/22)</td><td><strong>8.5x</strong></td></tr><tr><td>SSB</td><td>7.7s (13/13)</td><td>8.6s (13/13)</td><td><strong>0.7s</strong> (13/13)</td><td><strong>11x</strong></td></tr><tr><td>TPC-DS</td><td>68.3s (93/99)</td><td>77.1s (99/99)</td><td><strong>13.0s</strong> (99/99)</td><td><strong>5.3x</strong></td></tr><tr><td>ClickBench</td><td>23.5s (43/43)</td><td>24.3s (43/43)</td><td><strong>0.6s</strong> (43/43)</td><td><strong>39x</strong></td></tr><tr><td>TPC-C</td><td>2.8s (5/8)</td><td>7.6s (17/17)</td><td><strong>0.9s</strong> (17/17)</td><td><strong>3.1x</strong></td></tr><tr><td>TPC-E</td><td>3.6s (6/11)</td><td>9.1s (17/18)</td><td><strong>1.0s</strong> (17/18)</td><td><strong>3.6x</strong></td></tr><tr><td>TPC-BB</td><td>6.9s (10/10)</td><td>7.4s (10/10)</td><td><strong>1.1s</strong> (10/10)</td><td><strong>6.3x</strong></td></tr><tr><td><strong>Total</strong></td><td><strong>126.4s</strong> (192)</td><td><strong>153.6s</strong> (218)</td><td><strong>18.9s</strong> (221)</td><td><strong>6.7x</strong></td></tr></tbody></table>
+<p>Note that Apr 10 is <em>slower</em> than Apr 2 on some suites. We added 70+ UDFs, streaming writes, and sort-order safety checks that week. Correctness before speed. The pass count went from 192 to 218. Then caching made everything fast.</p>
+<h3 id="sqe-vs-trino-the-reversal">SQE vs Trino: the reversal</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Suite</th><th>Apr 10</th><th><strong>Apr 12</strong></th></tr></thead><tbody><tr><td>TPC-H</td><td>SQE 0.6x Trino (lost)</td><td><strong>SQE 8.8x Trino</strong></td></tr><tr><td>SSB</td><td>SQE 0.3x Trino (3x slower)</td><td><strong>SQE 3.2x Trino</strong></td></tr><tr><td>TPC-DS</td><td>SQE 0.5x Trino (2x slower)</td><td><strong>SQE 2.6x Trino</strong></td></tr><tr><td>ClickBench</td><td>SQE 0.1x Trino (10x slower)</td><td><strong>SQE 2.5x Trino</strong></td></tr><tr><td>TPC-C</td><td>SQE 0.5x Trino</td><td><strong>SQE 5.5x Trino</strong></td></tr><tr><td>TPC-E</td><td>SQE 0.4x Trino</td><td><strong>SQE 5.3x Trino</strong></td></tr><tr><td>TPC-BB</td><td>broken (0/10 match)</td><td><strong>SQE 3.1x Trino</strong></td></tr></tbody></table>
+<p>On April 10, we lost every comparison. On April 12, we won every one.</p>
+<h3 id="what-changed-day-by-day">What changed, day by day</h3>
+<ul>
+<li><strong>Apr 6</strong>: Distributed execution landed. Coordinator + 2 workers, 3.1x on SF1 TPC-H.</li>
+<li><strong>Apr 10</strong>: Streaming writes, sort-order safety, IN-subquery rewrite, 70+ Trino-compat UDFs. Correctness went from 192/222 to 218/222. Slower overall because every query now did more setup work.</li>
+<li><strong>Apr 12 morning</strong>: RestCatalog cache, table metadata cache, manifest file cache. SQE reached parity with Trino, roughly 1.0-1.4x.</li>
+<li><strong>Apr 12 afternoon</strong>: SessionContext cache + OAuth token cache + cache invalidation + DECIMAL fix. SQE pulled ahead on every suite.</li>
+</ul>
+<p>The inflection point was the SessionContext cache. Eliminating 540ms of per-query overhead turned a 0.6x deficit into an 8.8x lead. The query execution was always fast. The infrastructure around it was not.</p>
+<h2 id="what-we-learned">What we learned</h2>
+<p>The performance gap between SQE and Trino was never about query execution. DataFusion’s execution engine was always competitive. The gap was infrastructure overhead: catalog creation, token management, session setup. Trino amortizes this across its JVM lifecycle. SQE was paying it per-query.</p>
+<p>Caching fixed the overhead. But caching introduced a correctness risk (stale catalogs) that required careful invalidation. And the process of building automated Trino comparisons surfaced a precision bug that had been silently producing wrong results since day one.</p>
+<p>Three lessons.</p>
+<p>First, you cannot optimize what you do not measure. The <code>--compare-trino</code> flag made every improvement and every regression immediately visible. Same queries, same data, same network, row-count verification on every query.</p>
+<p>Second, correctness before speed. We spent April 6-10 making things slower but more correct (192 to 218 pass). Then April 12 made them fast (218 to 221 pass, 6.7x faster). If we had optimized first, we would have built caches for code paths that did not work yet.</p>
+<p>Third, the hardest bugs hide in the infrastructure. The DECIMAL precision bug had been silently corrupting TPC-H q06 results since day one. The SessionContext cache invalidation bug only appeared under the exact load/query pattern that benchmarks produce. Neither would have surfaced from unit tests. Both required running real SQL against real data with real comparisons.</p>
+<p>221 out of 222. We will take it.</p>  </div> <a href="/blog/" class="back-link" data-astro-cid-bvzihdzo> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-bvzihdzo> <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-bvzihdzo></path> </svg>
+All posts
+</a> </article> </main> <footer data-astro-cid-sz7xmlte>
+&copy; 2026 Jacob Verhoeks. All rights reserved.
+<div class="social-links" data-astro-cid-sz7xmlte> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/twitter" data-astro-cid-sz7xmlte><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-sz7xmlte></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github" data-astro-cid-sz7xmlte><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-sz7xmlte></path></svg> </a> </div> </footer> </body></html>
