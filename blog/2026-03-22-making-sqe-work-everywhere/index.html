@@ -57,7 +57,7 @@ main[data-astro-cid-bvzihdzo]{width:100%;max-width:720px;margin:0 auto;padding:0
 <h3 id="delta-lake-read-only">Delta Lake (read-only)</h3>
 <p>One more thing. Delta Lake support via <code>delta-rs</code>, gated behind a <code>delta</code> feature flag. Unity Catalog serves both Iceberg and Delta tables, and many organisations have a mix. Read-only Delta support means SQE can query both formats without requiring table migration.</p>
 <hr>
-<h2 id="what-this-enables">What this enables</h2>
+<h2 id="what-sqe-unlocks">What SQE unlocks</h2>
 <p>With pluggable auth and catalogs, SQE stops being “the query engine for our stack” and becomes “a query engine that fits your stack.” Concretely:</p>
 <p><strong>AWS shops</strong> deploy with Glue + IAM + S3. No Keycloak, no Polaris. Bearer tokens from Cognito or IAM Identity Center flow through the auth chain.</p>
 <p><strong>Azure shops</strong> deploy with Unity Catalog’s REST endpoint + Entra ID + ADLS Gen2. Same engine, different config.</p>
