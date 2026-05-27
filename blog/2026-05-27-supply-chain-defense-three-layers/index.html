@@ -1,0 +1,487 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-bvzihdzo> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#2337ff"><meta name="author" content="Jacob Verhoeks"><meta name="generator" content="Astro v6.1.5"><!-- Google Fonts: Atkinson Hyperlegible (non-render-blocking) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;1,400;1,700&display=swap"><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/2026-05-27-supply-chain-defense-three-layers/"><!-- Primary Meta Tags --><title>Supply Chain Attacks Hit Every Ecosystem. Here&#39;s How to Defend Yours.</title><meta name="title" content="Supply Chain Attacks Hit Every Ecosystem. Here's How to Defend Yours."><meta name="description" content="A three-layer defense for developers and DevOps engineers: harden your dev machine in 5 minutes, lock down project configs for every ecosystem, and enforce policy org-wide with a proxy. Covers npm, pnpm, yarn, bun, pip, uv, Go, Maven, Gradle, NuGet, Cargo, and Composer — plus escrow, JFrog Curation, and Nexus."><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:site_name" content="Jacob's Blog"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jacob.verhoeks.org/blog/2026-05-27-supply-chain-defense-three-layers/"><meta property="og:title" content="Supply Chain Attacks Hit Every Ecosystem. Here's How to Defend Yours."><meta property="og:description" content="A three-layer defense for developers and DevOps engineers: harden your dev machine in 5 minutes, lock down project configs for every ecosystem, and enforce policy org-wide with a proxy. Covers npm, pnpm, yarn, bun, pip, uv, Go, Maven, Gradle, NuGet, Cargo, and Composer — plus escrow, JFrog Curation, and Nexus."><meta property="og:image" content="https://jacob.verhoeks.org/og-image.png"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@jverhoeks"><meta name="twitter:creator" content="@jverhoeks"><meta name="twitter:title" content="Supply Chain Attacks Hit Every Ecosystem. Here's How to Defend Yours."><meta name="twitter:description" content="A three-layer defense for developers and DevOps engineers: harden your dev machine in 5 minutes, lock down project configs for every ecosystem, and enforce policy org-wide with a proxy. Covers npm, pnpm, yarn, bun, pip, uv, Go, Maven, Gradle, NuGet, Cargo, and Composer — plus escrow, JFrog Curation, and Nexus."><meta name="twitter:image" content="https://jacob.verhoeks.org/og-image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Supply Chain Attacks Hit Every Ecosystem. Here's How to Defend Yours.","description":"A three-layer defense for developers and DevOps engineers: harden your dev machine in 5 minutes, lock down project configs for every ecosystem, and enforce policy org-wide with a proxy. Covers npm, pnpm, yarn, bun, pip, uv, Go, Maven, Gradle, NuGet, Cargo, and Composer — plus escrow, JFrog Curation, and Nexus.","datePublished":"2026-05-27T00:00:00.000Z","author":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org/about"},"publisher":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org"},"keywords":"security, supply-chain, npm, python, go, java, dotnet, rust, php, package-manager, devops, escrow, proxy","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacob.verhoeks.org/blog/2026-05-27-supply-chain-defense-three-layers/"}}</script><style>:root{--accent: #2337ff;--accent-dark: #000d8a;--black: 15, 18, 25;--gray: 96, 115, 159;--gray-light: 229, 233, 240;--gray-dark: 34, 41, 57;--gray-gradient: rgba(var(--gray-light), 50%), #fff;--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%)}body{font-family:Atkinson Hyperlegible Next,Atkinson,sans-serif;margin:0;padding:0;text-align:left;background:#fff;word-wrap:break-word;overflow-wrap:break-word;color:rgb(var(--gray-dark));font-size:20px;line-height:1.7}main{width:720px;max-width:calc(100% - 2em);margin:auto;padding:3em 1em}h1,h2,h3,h4,h5,h6{margin:0 0 .5rem;color:rgb(var(--black));line-height:1.2}h1{font-size:3.052em}h2{font-size:2.441em}h3{font-size:1.953em}h4{font-size:1.563em}h5{font-size:1.25em}strong,b{font-weight:700}a,a:hover{color:var(--accent)}p{margin-bottom:1em}.prose p{margin-bottom:2em}textarea{width:100%;font-size:16px}input{font-size:16px}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{border:1px solid #ddd;padding:8px;text-align:left}thead{background-color:#f4f4f4}tbody tr:nth-child(2n){background-color:#f9f9f9}tbody tr:hover{background-color:#eef0f4}img{max-width:100%;height:auto;border-radius:8px;content-visibility:auto}code{padding:2px 6px;background-color:#f5f5f5;border-radius:3px;font-size:.9em}pre{padding:1.5em;border-radius:4px;border:1px solid rgb(var(--gray-light))}pre>code{all:unset}blockquote{border-left:4px solid var(--accent);padding:0 0 0 20px;margin:0;font-size:1.333em}hr{border:none;border-top:1px solid rgb(var(--gray-light))}pre{overflow-x:auto}table{display:block;overflow-x:auto}@media(max-width:720px){body{font-size:18px}main{padding:1em}}@media(max-width:480px){body{font-size:16px}blockquote{font-size:1.1em;padding-left:12px}}.sr-only{border:0;padding:0;margin:0;position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px 1px 1px 1px);clip:rect(1px,1px,1px,1px);clip-path:inset(50%);white-space:nowrap}a[data-astro-cid-eimmu3lg]{display:inline-block;text-decoration:none}a[data-astro-cid-eimmu3lg].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-3ef6ksr2]{margin:0;padding:0 1em;background:#fff;box-shadow:0 2px 8px rgba(var(--black),5%);min-height:56px}h2[data-astro-cid-3ef6ksr2]{margin:0;font-size:1em}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2],h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none}nav[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;justify-content:space-between}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{padding:1em .5em;color:var(--black);border-bottom:4px solid transparent;text-decoration:none}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;border-bottom-color:var(--accent)}.social-links[data-astro-cid-3ef6ksr2],.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:flex}@media(max-width:720px){.social-links[data-astro-cid-3ef6ksr2]{display:none}}footer[data-astro-cid-sz7xmlte]{padding:2em 1em 6em;background:linear-gradient(var(--gray-gradient)) no-repeat;color:rgb(var(--gray));text-align:center}.projects[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;align-items:center;gap:.5em;margin-bottom:1em}.project-link[data-astro-cid-sz7xmlte]{color:rgb(var(--gray-dark));text-decoration:none;font-weight:700;font-size:.9em;letter-spacing:.02em;transition:color .2s}.project-link[data-astro-cid-sz7xmlte]:hover{color:var(--accent)}.project-sep[data-astro-cid-sz7xmlte]{color:rgb(var(--gray-light));font-weight:300}.social-links[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;gap:1em;margin-top:.5em}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{text-decoration:none;color:rgb(var(--gray))}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:rgb(var(--gray-dark))}.copyright[data-astro-cid-sz7xmlte]{margin-top:1em;font-size:.8em}
+</style>
+<link rel="stylesheet" href="/_astro/BlogPost.6iXUgknU.css"></head> <body data-astro-cid-bvzihdzo> <header data-astro-cid-3ef6ksr2> <nav data-astro-cid-3ef6ksr2> <h2 data-astro-cid-3ef6ksr2><a href="/" data-astro-cid-3ef6ksr2>Jacob&#39;s Blog</a></h2> <div class="internal-links" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Home </a> <a href="/blog" class="active" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Blog </a> <a href="/about" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> About </a> </div> <div class="social-links" data-astro-cid-3ef6ksr2> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-3ef6ksr2></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-3ef6ksr2></path></svg> </a> </div> </nav> </header> <main data-astro-cid-bvzihdzo> <article data-astro-cid-bvzihdzo> <header class="article-header" data-astro-cid-bvzihdzo> <div class="article-meta" data-astro-cid-bvzihdzo> <time class="article-date" data-astro-cid-bvzihdzo> <time datetime="2026-05-27T00:00:00.000Z"> May 27, 2026 </time> </time>  <span class="meta-dot" data-astro-cid-bvzihdzo>&middot;</span> <span data-astro-cid-bvzihdzo>Jacob Verhoeks</span>   <span class="meta-dot" data-astro-cid-bvzihdzo>&middot;</span> <span data-astro-cid-bvzihdzo>13 min read</span>  </div> <h1 class="article-title" data-astro-cid-bvzihdzo>Supply Chain Attacks Hit Every Ecosystem. Here&#39;s How to Defend Yours.</h1> <p class="article-description" data-astro-cid-bvzihdzo>A three-layer defense for developers and DevOps engineers: harden your dev machine in 5 minutes, lock down project configs for every ecosystem, and enforce policy org-wide with a proxy. Covers npm, pnpm, yarn, bun, pip, uv, Go, Maven, Gradle, NuGet, Cargo, and Composer — plus escrow, JFrog Curation, and Nexus.</p>  <div class="article-tags" data-astro-cid-bvzihdzo> <a href="/blog/tag/security/" class="article-tag" data-astro-cid-bvzihdzo>security</a><a href="/blog/tag/supply-chain/" class="article-tag" data-astro-cid-bvzihdzo>supply-chain</a><a href="/blog/tag/npm/" class="article-tag" data-astro-cid-bvzihdzo>npm</a><a href="/blog/tag/python/" class="article-tag" data-astro-cid-bvzihdzo>python</a><a href="/blog/tag/go/" class="article-tag" data-astro-cid-bvzihdzo>go</a><a href="/blog/tag/java/" class="article-tag" data-astro-cid-bvzihdzo>java</a><a href="/blog/tag/dotnet/" class="article-tag" data-astro-cid-bvzihdzo>dotnet</a><a href="/blog/tag/rust/" class="article-tag" data-astro-cid-bvzihdzo>rust</a><a href="/blog/tag/php/" class="article-tag" data-astro-cid-bvzihdzo>php</a><a href="/blog/tag/package-manager/" class="article-tag" data-astro-cid-bvzihdzo>package-manager</a><a href="/blog/tag/devops/" class="article-tag" data-astro-cid-bvzihdzo>devops</a><a href="/blog/tag/escrow/" class="article-tag" data-astro-cid-bvzihdzo>escrow</a><a href="/blog/tag/proxy/" class="article-tag" data-astro-cid-bvzihdzo>proxy</a> </div> </header> <div class="prose" data-astro-cid-bvzihdzo>  <h1 id="supply-chain-attacks-hit-every-ecosystem-heres-how-to-defend-yours">Supply Chain Attacks Hit Every Ecosystem. Here’s How to Defend Yours.</h1>
+<p>Supply chain attacks on package registries are no longer an npm problem. In March 2026, axios was compromised via a stolen maintainer token — two poisoned versions published, a cross-platform RAT phoning home within two seconds of <code>npm install</code>. The same attack pattern has hit PyPI, RubyGems, and Maven Central. The install step is the attack surface, and it exists in every language.</p>
+<p>This post covers three independent layers of defense. Stop at any layer — each one meaningfully reduces your exposure. Add the next when you’re ready.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Layer</th><th>What it protects</th><th>Who sets it up</th><th>Time</th></tr></thead><tbody><tr><td><strong>1 — Dev machine</strong></td><td>Your installs, on your machine</td><td>You</td><td>5 min</td></tr><tr><td><strong>2 — Project</strong></td><td>Everyone who clones the repo, regardless of their machine config</td><td>Team lead / dev</td><td>15 min</td></tr><tr><td><strong>3 — Org proxy</strong></td><td>Every install org-wide — including CI and ecosystems with no native age gate</td><td>Platform / DevOps</td><td>30 min</td></tr></tbody></table>
+<hr>
+<h2 id="layer-1--protect-your-dev-machine">Layer 1 — Protect your dev machine</h2>
+<p>Three changes protect you from the most common attack patterns before you write a single line of project code.</p>
+<h3 id="1-harden-npm">1. Harden npm</h3>
+<p>Add these flags to your global <code>~/.npmrc</code>:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.y0rd3.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame"><figcaption class="header"></figcaption><pre data-language="ini"><code><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># ~/.npmrc — global npm security baseline (npm >= 11.15)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">min-release-age</span><span style="--0:#E1E4E8;--1:#24292E">=7          </span><span style="--0:#99A0A6;--1:#616972"># quarantine window — blocks packages &#x3C; 7 days old</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">ignore-scripts</span><span style="--0:#E1E4E8;--1:#24292E">=true        </span><span style="--0:#99A0A6;--1:#616972"># block postinstall RCE</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">allow-git</span><span style="--0:#E1E4E8;--1:#24292E">=false            </span><span style="--0:#99A0A6;--1:#616972"># block git-dependency execution (npm >= 11.10)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">allow-file</span><span style="--0:#E1E4E8;--1:#24292E">=none            </span><span style="--0:#99A0A6;--1:#616972"># block installs from local tarballs / file: paths (npm >= 11.15)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">allow-remote</span><span style="--0:#E1E4E8;--1:#24292E">=none          </span><span style="--0:#99A0A6;--1:#616972"># block installs from https:// / http:// URLs (npm >= 11.15)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">allow-directory</span><span style="--0:#E1E4E8;--1:#24292E">=none       </span><span style="--0:#99A0A6;--1:#616972"># block installs from local directories (npm >= 11.15)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="# ~/.npmrc — global npm security baseline (npm >= 11.15)min-release-age=7          # quarantine window — blocks packages < 7 days oldignore-scripts=true        # block postinstall RCEallow-git=false            # block git-dependency execution (npm >= 11.10)allow-file=none            # block installs from local tarballs / file: paths (npm >= 11.15)allow-remote=none          # block installs from https:// / http:// URLs (npm >= 11.15)allow-directory=none       # block installs from local directories (npm >= 11.15)"><div></div></button></div></figure></div>
+<p>Or in one shot:</p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">npm</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">set</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">min-release-age</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">7</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">npm</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">set</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">ignore-scripts</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">npm</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">set</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">allow-git</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">false</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">npm</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">set</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">allow-file</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">npm</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">set</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">allow-remote</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">npm</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">set</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">allow-directory</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">none</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npm config set min-release-age 7npm config set ignore-scripts truenpm config set allow-git falsenpm config set allow-file nonenpm config set allow-remote nonenpm config set allow-directory none"><div></div></button></div></figure></div>
+<p>The three <code>allow-*</code> flags are new in npm 11.15 and close a real attack surface: non-registry sources (local tarballs, remote URLs, local directories) are a common dependency confusion and CI injection vector. Setting them to <code>none</code> means only packages from the configured registry are accepted. <em>Hat tip: Robert Slootjes (AWS Community Builder) for surfacing these — <a href="https://www.cryptika.com/github-adds-staged-publishing-to-npm-to-block-automated-supply-chain-attacks/">cryptika.com</a></em></p>
+<blockquote>
+<p><strong>npm 12 preview:</strong> <code>allow-git</code> will change its default from <code>all</code> to <code>none</code>. Setting it explicitly now means your config is already forward-compatible.</p>
+</blockquote>
+<h3 id="2-make-the-flags-stick-for-gui-apps-too">2. Make the flags stick for GUI apps too</h3>
+<p><code>.npmrc</code> covers CLI invocations. But VSCode, Cursor, Zed, and other GUI apps launch from the OS — they never source your shell profile, and bundled Node runtimes inside IDE extensions may not read <code>~/.npmrc</code> at all.</p>
+<p>The fix: set <code>NPM_CONFIG_*</code> env vars at the OS level so every process inherits them.</p>
+<p><strong>macOS — LaunchAgent (recommended, no root needed):</strong></p>
+<p>Save to <code>~/Library/LaunchAgents/com.npm-security.environment.plist</code> and load it:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="xml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">string</span><span style="--0:#E1E4E8;--1:#24292E">>launchctl setenv NPM_CONFIG_ALLOW_FILE none </span><span style="--0:#79B8FF;--1:#005CC5">&#x26;amp;&#x26;amp;</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">        </span></span><span style="--0:#E1E4E8;--1:#24292E">launchctl setenv NPM_CONFIG_ALLOW_REMOTE none </span><span style="--0:#79B8FF;--1:#005CC5">&#x26;amp;&#x26;amp;</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">        </span></span><span style="--0:#E1E4E8;--1:#24292E">launchctl setenv NPM_CONFIG_ALLOW_DIRECTORY none </span><span style="--0:#79B8FF;--1:#005CC5">&#x26;amp;&#x26;amp;</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">        </span></span><span style="--0:#E1E4E8;--1:#24292E">launchctl setenv NPM_CONFIG_ALLOW_GIT false </span><span style="--0:#79B8FF;--1:#005CC5">&#x26;amp;&#x26;amp;</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">        </span></span><span style="--0:#E1E4E8;--1:#24292E">launchctl setenv NPM_CONFIG_IGNORE_SCRIPTS true </span><span style="--0:#79B8FF;--1:#005CC5">&#x26;amp;&#x26;amp;</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">        </span></span><span style="--0:#E1E4E8;--1:#24292E">launchctl setenv NPM_CONFIG_MIN_RELEASE_AGE 7&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">string</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="<string>launchctl setenv NPM_CONFIG_ALLOW_FILE none &#x26;amp;&#x26;amp;        launchctl setenv NPM_CONFIG_ALLOW_REMOTE none &#x26;amp;&#x26;amp;        launchctl setenv NPM_CONFIG_ALLOW_DIRECTORY none &#x26;amp;&#x26;amp;        launchctl setenv NPM_CONFIG_ALLOW_GIT false &#x26;amp;&#x26;amp;        launchctl setenv NPM_CONFIG_IGNORE_SCRIPTS true &#x26;amp;&#x26;amp;        launchctl setenv NPM_CONFIG_MIN_RELEASE_AGE 7</string>"><div></div></button></div></figure></div>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">launchctl</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">load</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">~/Library/LaunchAgents/com.npm-security.environment.plist</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="launchctl load ~/Library/LaunchAgents/com.npm-security.environment.plist"><div></div></button></div></figure></div>
+<p>Persists across reboots. Verify: <code>launchctl getenv NPM_CONFIG_ALLOW_FILE</code> → <code>none</code></p>
+<p><strong>Shell profile (<code>.zshrc</code> / <code>.bashrc</code>) — covers new terminal sessions:</strong></p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># BEGIN npm-security-env</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> NPM_CONFIG_ALLOW_FILE</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E">none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> NPM_CONFIG_ALLOW_REMOTE</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E">none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> NPM_CONFIG_ALLOW_DIRECTORY</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E">none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> NPM_CONFIG_ALLOW_GIT</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E">false</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> NPM_CONFIG_IGNORE_SCRIPTS</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E">true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> NPM_CONFIG_MIN_RELEASE_AGE</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#79B8FF;--1:#005CC5">7</span></div></div><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># END npm-security-env</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="export NPM_CONFIG_ALLOW_FILE=noneexport NPM_CONFIG_ALLOW_REMOTE=noneexport NPM_CONFIG_ALLOW_DIRECTORY=noneexport NPM_CONFIG_ALLOW_GIT=falseexport NPM_CONFIG_IGNORE_SCRIPTS=trueexport NPM_CONFIG_MIN_RELEASE_AGE=7"><div></div></button></div></figure></div>
+<p><strong>Linux — <code>/etc/profile.d/</code> (system-wide):</strong></p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">sudo</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">tee</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">/etc/profile.d/npm-security.sh</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">&#x3C;&#x3C;</span><span style="--0:#9ECBFF;--1:#032F62">'EOF'</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">export NPM_CONFIG_ALLOW_FILE=none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">export NPM_CONFIG_ALLOW_REMOTE=none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">export NPM_CONFIG_ALLOW_DIRECTORY=none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">export NPM_CONFIG_ALLOW_GIT=false</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">export NPM_CONFIG_IGNORE_SCRIPTS=true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">export NPM_CONFIG_MIN_RELEASE_AGE=7</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">EOF</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="sudo tee /etc/profile.d/npm-security.sh <<&#x27;EOF&#x27;export NPM_CONFIG_ALLOW_FILE=noneexport NPM_CONFIG_ALLOW_REMOTE=noneexport NPM_CONFIG_ALLOW_DIRECTORY=noneexport NPM_CONFIG_ALLOW_GIT=falseexport NPM_CONFIG_IGNORE_SCRIPTS=trueexport NPM_CONFIG_MIN_RELEASE_AGE=7EOF"><div></div></button></div></figure></div>
+<p>If you’re running <a href="https://github.com/jverhoeks/escrow">escrow</a>, <code>escrow-cli</code> automates all of this in two commands:</p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">escrow-cli</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">write-env</span><span style="--0:#E1E4E8;--1:#24292E">    </span><span style="--0:#99A0A6;--1:#616972"># LaunchAgent (macOS) or /etc/profile.d/ (Linux)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">escrow-cli</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">write-shell</span><span style="--0:#E1E4E8;--1:#24292E">  </span><span style="--0:#99A0A6;--1:#616972"># .zshrc + .bashrc</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="escrow-cli config write-env    # LaunchAgent (macOS) or /etc/profile.d/ (Linux)escrow-cli config write-shell  # .zshrc + .bashrc"><div></div></button></div></figure></div>
+<h3 id="3-real-time-install-verification">3. Real-time install verification</h3>
+<p>The <code>.npmrc</code> flags are static gates. These wrapper tools add real-time threat intelligence at install time:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Tool</th><th>By</th><th>Install</th><th>Age gate</th><th>Ecosystems</th></tr></thead><tbody><tr><td><a href="https://github.com/AikidoSec/safe-chain">safe-chain</a></td><td>Aikido</td><td><code>curl -fsSL …install-safe-chain.sh | sh</code></td><td>✓ 48 h default</td><td>npm/pnpm/yarn/bun + pip/uv/poetry/pdm</td></tr><tr><td><a href="https://socket.dev/blog/introducing-socket-firewall">sfw</a></td><td>Socket</td><td><code>npm i -g sfw</code></td><td>✗</td><td>npm/yarn/pnpm/pip/uv/cargo</td></tr><tr><td><a href="https://github.com/DataDog/supply-chain-firewall">scfw</a></td><td>Datadog</td><td><code>pipx install scfw</code></td><td>✗</td><td>npm, pip, poetry</td></tr></tbody></table>
+<p>All three use the same “prefix your command” model: <code>safe-chain npm install lodash</code>. safe-chain is the only one that also enforces a release-age gate. sfw and scfw check against known-malware databases only.</p>
+<hr>
+<h2 id="layer-2--harden-your-projects">Layer 2 — Harden your projects</h2>
+<p>Config committed to the repo means every developer, every CI run, and every environment gets the same policy — even before they’ve set up their machine.</p>
+<h3 id="the-two-controls-that-matter">The two controls that matter</h3>
+<p><strong>1. Minimum release age.</strong> Most supply chain attacks follow the same pattern: compromise a package, publish a malicious version, hope developers install it before detection. A quarantine window breaks this. 7 days is long enough for the community to notice and for registries to yank the version.</p>
+<p><strong>2. Block install scripts.</strong> <code>postinstall</code> hooks run arbitrary code the moment you install a package — before you even import it. Disabling them globally, with explicit opt-in for the handful of packages that legitimately need them, eliminates this vector entirely.</p>
+<h3 id="what-each-ecosystem-can-enforce">What each ecosystem can enforce</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Ecosystem</th><th align="center">Runs code on install</th><th align="center">Native age gate</th><th align="center">Script blocking</th></tr></thead><tbody><tr><td>npm / pnpm / yarn / bun</td><td align="center">✓ postinstall</td><td align="center">✓ client-side</td><td align="center">✓</td></tr><tr><td>Python (pip / uv)</td><td align="center">✓ sdist only</td><td align="center">✓ uv only</td><td align="center">✓ <code>only-binary</code></td></tr><tr><td>PHP / Composer</td><td align="center">✓ post-install-cmd</td><td align="center">✗</td><td align="center">✓ <code>--no-scripts</code></td></tr><tr><td>Go</td><td align="center">—</td><td align="center">✗</td><td align="center">n/a</td></tr><tr><td>Maven / Gradle</td><td align="center">— (build only)</td><td align="center">✗</td><td align="center">n/a</td></tr><tr><td>NuGet</td><td align="center">— (build only)</td><td align="center">✗</td><td align="center">n/a</td></tr><tr><td>Rust / Cargo</td><td align="center">✓ build.rs</td><td align="center">✗</td><td align="center">— (no off switch)</td></tr></tbody></table>
+<p>Ecosystems without a native age gate need a proxy (Layer 3) to enforce the quarantine window.</p>
+<h3 id="quick-reference">Quick reference</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Ecosystem</th><th>Tool</th><th>Config file</th><th>Min age (7 days)</th><th>Block scripts</th></tr></thead><tbody><tr><td>Node.js</td><td>npm >= 11.15</td><td><code>.npmrc</code></td><td><code>min-release-age=7</code></td><td><code>ignore-scripts=true</code></td></tr><tr><td>Node.js</td><td>pnpm v10 >= 10.16</td><td><code>.npmrc</code></td><td><code>minimumReleaseAge=10080</code></td><td><code>ignore-scripts=true</code></td></tr><tr><td>Node.js</td><td>pnpm v11</td><td><code>.npmrc</code> + <code>pnpm-workspace.yaml</code></td><td><code>minimumReleaseAge=10080</code></td><td><code>allowBuilds: {}</code></td></tr><tr><td>Node.js</td><td>yarn >= 4.10</td><td><code>.yarnrc.yml</code></td><td><code>npmMinimalAgeGate: 10080</code></td><td><code>enableScripts: false</code></td></tr><tr><td>Node.js</td><td>bun >= 1.3</td><td><code>bunfig.toml</code></td><td><code>minimumReleaseAge = 10080</code></td><td><code>ignore-scripts = true</code></td></tr><tr><td>Python</td><td>uv</td><td><code>uv.toml</code></td><td><code>exclude-newer = "P7D"</code></td><td><code>only-binary = [":all:"]</code></td></tr><tr><td>Python</td><td>pip</td><td><code>pip.conf</code></td><td>none — use proxy</td><td><code>only-binary = :all:</code></td></tr><tr><td>Go</td><td>go</td><td>env</td><td>none — use proxy</td><td>no install scripts</td></tr><tr><td>Rust</td><td>cargo</td><td><code>deny.toml</code></td><td>none — use proxy</td><td>no off switch</td></tr><tr><td>Java</td><td>Maven</td><td><code>settings.xml</code></td><td>none — use proxy</td><td>declared in pom.xml</td></tr><tr><td>Java</td><td>Gradle</td><td><code>gradle.properties</code></td><td>none — use proxy</td><td>declared in build.gradle</td></tr><tr><td>.NET</td><td>NuGet</td><td><code>nuget.config</code></td><td>none — use proxy</td><td>no install scripts</td></tr><tr><td>PHP</td><td>Composer</td><td><code>composer.json</code></td><td>none — use proxy</td><td><code>--no-scripts</code></td></tr></tbody></table>
+<p>Units: npm uses <strong>days</strong>. pnpm, yarn, and bun use <strong>minutes</strong> (10080 min = 7 days).</p>
+<h3 id="per-ecosystem-config">Per-ecosystem config</h3>
+<h4 id="npm--1115">npm (>= 11.15)</h4>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">.npmrc</span></figcaption><pre data-language="ini"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">min-release-age</span><span style="--0:#E1E4E8;--1:#24292E">=7</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">ignore-scripts</span><span style="--0:#E1E4E8;--1:#24292E">=true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">allow-git</span><span style="--0:#E1E4E8;--1:#24292E">=false</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">allow-file</span><span style="--0:#E1E4E8;--1:#24292E">=none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">allow-remote</span><span style="--0:#E1E4E8;--1:#24292E">=none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">allow-directory</span><span style="--0:#E1E4E8;--1:#24292E">=none</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">registry</span><span style="--0:#E1E4E8;--1:#24292E">=https://registry.npmjs.org/</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="min-release-age=7ignore-scripts=trueallow-git=falseallow-file=noneallow-remote=noneallow-directory=noneregistry=https://registry.npmjs.org/"><div></div></button></div></figure></div>
+<p>CI: <code>npm ci</code></p>
+<h4 id="pnpm-v10">pnpm v10</h4>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">.npmrc</span></figcaption><pre data-language="ini"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">minimumReleaseAge</span><span style="--0:#E1E4E8;--1:#24292E">=10080</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">ignore-scripts</span><span style="--0:#E1E4E8;--1:#24292E">=true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">blockExoticSubdeps</span><span style="--0:#E1E4E8;--1:#24292E">=true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">registry</span><span style="--0:#E1E4E8;--1:#24292E">=https://registry.npmjs.org/</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="minimumReleaseAge=10080ignore-scripts=trueblockExoticSubdeps=trueregistry=https://registry.npmjs.org/"><div></div></button></div></figure></div>
+<p>CI: <code>pnpm install --frozen-lockfile</code></p>
+<h4 id="pnpm-v11--breaking-change">pnpm v11 — breaking change</h4>
+<p>Build policy moved out of <code>.npmrc</code> — settings in <code>.npmrc</code> are silently ignored in v11.</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="ini"><code><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># .npmrc — auth and registry ONLY</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">minimumReleaseAge</span><span style="--0:#E1E4E8;--1:#24292E">=10080</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">registry</span><span style="--0:#E1E4E8;--1:#24292E">=https://registry.npmjs.org/</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="# .npmrc — auth and registry ONLYminimumReleaseAge=10080registry=https://registry.npmjs.org/"><div></div></button></div></figure></div>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="yaml"><code><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># pnpm-workspace.yaml — build policy lives here</span></div></div><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">allowBuilds</span><span style="--0:#E1E4E8;--1:#24292E">: {}</span></div></div><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">strictDepBuilds</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#79B8FF;--1:#005CC5">true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">blockExoticSubdeps</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#79B8FF;--1:#005CC5">true</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="# pnpm-workspace.yaml — build policy lives hereallowBuilds: {}strictDepBuilds: trueblockExoticSubdeps: true"><div></div></button></div></figure></div>
+<p>CI: <code>pnpm install --frozen-lockfile</code></p>
+<h4 id="yarn-berry--410">Yarn Berry (>= 4.10)</h4>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">.yarnrc.yml</span></figcaption><pre data-language="yaml"><code><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">npmMinimalAgeGate</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#79B8FF;--1:#005CC5">10080</span></div></div><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">enableScripts</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#79B8FF;--1:#005CC5">false</span></div></div><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">enableHardenedMode</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#79B8FF;--1:#005CC5">true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">checksumBehavior</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">throw</span></div></div><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">nodeLinker</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">node-modules</span></div></div><div class="ec-line"><div class="code"><span style="--0:#85E89D;--1:#1E7734">npmRegistryServer</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">"https://registry.npmjs.org"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="npmMinimalAgeGate: 10080enableScripts: falseenableHardenedMode: truechecksumBehavior: thrownodeLinker: node-modulesnpmRegistryServer: &#x22;https://registry.npmjs.org&#x22;"><div></div></button></div></figure></div>
+<p>CI: <code>yarn install --immutable</code></p>
+<h4 id="bun--13">Bun (>= 1.3)</h4>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">bunfig.toml</span></figcaption><pre data-language="toml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">install</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">minimumReleaseAge = </span><span style="--0:#79B8FF;--1:#005CC5">10080</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">ignore-scripts = </span><span style="--0:#79B8FF;--1:#005CC5">true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">registry = </span><span style="--0:#9ECBFF;--1:#032F62">"https://registry.npmjs.org/"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="[install]minimumReleaseAge = 10080ignore-scripts = trueregistry = &#x22;https://registry.npmjs.org/&#x22;"><div></div></button></div></figure></div>
+<p>CI: <code>bun install --frozen-lockfile</code></p>
+<h4 id="uv-python">uv (Python)</h4>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">uv.toml</span></figcaption><pre data-language="toml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">exclude-newer = </span><span style="--0:#9ECBFF;--1:#032F62">"P7D"</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">pip</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">require-hashes = </span><span style="--0:#79B8FF;--1:#005CC5">true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">only-binary = [</span><span style="--0:#9ECBFF;--1:#032F62">":all:"</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="exclude-newer = &#x22;P7D&#x22;[pip]require-hashes = trueonly-binary = [&#x22;:all:&#x22;]"><div></div></button></div></figure></div>
+<p>CI: <code>uv sync --frozen</code></p>
+<h4 id="pip">pip</h4>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="ini"><code><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># pip.conf</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">[global]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">require-hashes</span><span style="--0:#E1E4E8;--1:#24292E"> = true</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">only-binary</span><span style="--0:#E1E4E8;--1:#24292E"> = :all:</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">index-url</span><span style="--0:#E1E4E8;--1:#24292E"> = https://pypi.org/simple/</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="# pip.conf[global]require-hashes = trueonly-binary = :all:index-url = https://pypi.org/simple/"><div></div></button></div></figure></div>
+<p>No native age gate — use escrow or another proxy.</p>
+<h4 id="go">Go</h4>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> GOFLAGS</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#9ECBFF;--1:#032F62">"-mod=readonly"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> GOPROXY</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#9ECBFF;--1:#032F62">"https://proxy.golang.org,off"</span><span style="--0:#E1E4E8;--1:#24292E">   </span><span style="--0:#99A0A6;--1:#616972"># 'off' not 'direct'</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">export</span><span style="--0:#E1E4E8;--1:#24292E"> GOSUMDB</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#9ECBFF;--1:#032F62">"sum.golang.org"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="export GOFLAGS=&#x22;-mod=readonly&#x22;export GOPROXY=&#x22;https://proxy.golang.org,off&#x22;   # &#x27;off&#x27; not &#x27;direct&#x27;export GOSUMDB=&#x22;sum.golang.org&#x22;"><div></div></button></div></figure></div>
+<p>CI: <code>go mod verify &#x26;&#x26; GOFLAGS=-mod=readonly go build ./...</code></p>
+<h4 id="rust--cargo">Rust / Cargo</h4>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="toml"><code><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># deny.toml (cargo-deny >= 0.16)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">advisories</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">db-urls = [</span><span style="--0:#9ECBFF;--1:#032F62">"https://github.com/rustsec/advisory-db"</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">ignore = []</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">licenses</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">allow = [</span><span style="--0:#9ECBFF;--1:#032F62">"MIT"</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">"Apache-2.0"</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">"Apache-2.0 WITH LLVM-exception"</span><span style="--0:#E1E4E8;--1:#24292E">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">         </span><span style="--0:#9ECBFF;--1:#032F62">"BSD-2-Clause"</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">"BSD-3-Clause"</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">"ISC"</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">sources</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">unknown-registry = </span><span style="--0:#9ECBFF;--1:#032F62">"deny"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">unknown-git = </span><span style="--0:#9ECBFF;--1:#032F62">"deny"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">allow-registry = [</span><span style="--0:#9ECBFF;--1:#032F62">"https://github.com/rust-lang/crates.io-index"</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="# deny.toml (cargo-deny >= 0.16)[advisories]db-urls = [&#x22;https://github.com/rustsec/advisory-db&#x22;]ignore = [][licenses]allow = [&#x22;MIT&#x22;, &#x22;Apache-2.0&#x22;, &#x22;Apache-2.0 WITH LLVM-exception&#x22;,         &#x22;BSD-2-Clause&#x22;, &#x22;BSD-3-Clause&#x22;, &#x22;ISC&#x22;][sources]unknown-registry = &#x22;deny&#x22;unknown-git = &#x22;deny&#x22;allow-registry = [&#x22;https://github.com/rust-lang/crates.io-index&#x22;]"><div></div></button></div></figure></div>
+<p>CI: <code>cargo build --locked &#x26;&#x26; cargo deny check advisories bans sources</code></p>
+<h4 id="java--maven">Java / Maven</h4>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="xml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">mirror</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">id</span><span style="--0:#E1E4E8;--1:#24292E">>internal-mirror&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">id</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">mirrorOf</span><span style="--0:#E1E4E8;--1:#24292E">>*&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">mirrorOf</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">url</span><span style="--0:#E1E4E8;--1:#24292E">>https://nexus.internal.company.com/repository/maven-public/&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">url</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">checksumPolicy</span><span style="--0:#E1E4E8;--1:#24292E">>fail&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">checksumPolicy</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">releases</span><span style="--0:#E1E4E8;--1:#24292E">>&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">updatePolicy</span><span style="--0:#E1E4E8;--1:#24292E">>never&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">updatePolicy</span><span style="--0:#E1E4E8;--1:#24292E">>&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">releases</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">mirror</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="<mirror>  <id>internal-mirror</id>  <mirrorOf>*</mirrorOf>  <url>https://nexus.internal.company.com/repository/maven-public/</url>  <checksumPolicy>fail</checksumPolicy>  <releases><updatePolicy>never</updatePolicy></releases></mirror>"><div></div></button></div></figure></div>
+<p>CI: <code>mvn validate &#x26;&#x26; mvn dependency-check:check</code></p>
+<h4 id="java--gradle">Java / Gradle</h4>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">gradle.properties</span></figcaption><pre data-language="properties"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">org.gradle.dependency.verification</span><span style="--0:#E1E4E8;--1:#24292E">=strict</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="org.gradle.dependency.verification=strict"><div></div></button></div></figure></div>
+<p>CI: <code>./gradlew build --dependency-verification=strict</code></p>
+<h4 id="net--nuget">.NET / NuGet</h4>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="xml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">PropertyGroup</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">RestoreLockedMode</span><span style="--0:#E1E4E8;--1:#24292E">>true&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">RestoreLockedMode</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">RestorePackagesWithLockFile</span><span style="--0:#E1E4E8;--1:#24292E">>true&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">RestorePackagesWithLockFile</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">NuGetAudit</span><span style="--0:#E1E4E8;--1:#24292E">>true&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">NuGetAudit</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">NuGetAuditMode</span><span style="--0:#E1E4E8;--1:#24292E">>all&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">NuGetAuditMode</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">NuGetAuditLevel</span><span style="--0:#E1E4E8;--1:#24292E">>low&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">NuGetAuditLevel</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">PropertyGroup</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="<PropertyGroup>  <RestoreLockedMode>true</RestoreLockedMode>  <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>  <NuGetAudit>true</NuGetAudit>  <NuGetAuditMode>all</NuGetAuditMode>  <NuGetAuditLevel>low</NuGetAuditLevel></PropertyGroup>"><div></div></button></div></figure></div>
+<p>CI: <code>dotnet restore /p:RestoreLockedMode=true</code></p>
+<h4 id="php--composer">PHP / Composer</h4>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="json"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">{</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">"config"</span><span style="--0:#E1E4E8;--1:#24292E">: {</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#79B8FF;--1:#005CC5">"preferred-install"</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">"dist"</span><span style="--0:#E1E4E8;--1:#24292E">,</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#79B8FF;--1:#005CC5">"allow-plugins"</span><span style="--0:#E1E4E8;--1:#24292E">: {}</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">}</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">}</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="{  &#x22;config&#x22;: {    &#x22;preferred-install&#x22;: &#x22;dist&#x22;,    &#x22;allow-plugins&#x22;: {}  }}"><div></div></button></div></figure></div>
+<p>CI: <code>composer install --no-scripts --prefer-dist --no-interaction</code></p>
+<hr>
+<h2 id="layer-3--org-wide-enforcement">Layer 3 — Org-wide enforcement</h2>
+<p>Client-side flags protect individual machines. A proxy enforces policy at a single chokepoint — every install from every developer, every CI runner, and every environment goes through it. It is also the <strong>only option</strong> for ecosystems with no native age gate: Go, Cargo, Maven, NuGet, and Composer cannot quarantine packages without a proxy.</p>
+<h3 id="escrow--recommended-7-ecosystems-age--osv">escrow — recommended (7 ecosystems, age + OSV)</h3>
+<p><a href="https://github.com/jverhoeks/escrow">escrow</a> v1.5.0 is a purpose-built supply-chain proxy covering <strong>seven ecosystems</strong> (npm, PyPI, Go, Cargo, NuGet, Maven, Composer) in a single binary. It enforces age gates, OSV vulnerability checks, and publisher-account-age policy server-side, with a real-time dashboard for reviewing and approving blocked packages.</p>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">7888/dashboard</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># Homebrew (macOS — auto-starts as a service)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">brew</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">tap</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">jverhoeks/tap</span><span style="--0:#E1E4E8;--1:#24292E"> &#x26;&#x26; </span><span style="--0:#B392F0;--1:#6F42C1">brew</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">install</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">escrow</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">brew</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">services</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">start</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">escrow</span></div></div><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># Docker</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">docker</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">run</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">-p</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">7888:7888</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">ghcr.io/jverhoeks/escrow:latest</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="# Homebrew (macOS — auto-starts as a service)brew tap jverhoeks/tap &#x26;&#x26; brew install escrowbrew services start escrow# Dockerdocker run -p 7888:7888 ghcr.io/jverhoeks/escrow:latest"><div></div></button></div></figure></div>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">escrow.toml</span></figcaption><pre data-language="toml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">server</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">port = </span><span style="--0:#79B8FF;--1:#005CC5">7888</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">ecosystems</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">npm = </span><span style="--0:#79B8FF;--1:#005CC5">true</span><span style="--0:#E1E4E8;--1:#24292E">  pypi = </span><span style="--0:#79B8FF;--1:#005CC5">true</span><span style="--0:#E1E4E8;--1:#24292E">  go = </span><span style="--0:#79B8FF;--1:#005CC5">true</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">cargo = </span><span style="--0:#79B8FF;--1:#005CC5">true</span><span style="--0:#E1E4E8;--1:#24292E">  nuget = </span><span style="--0:#79B8FF;--1:#005CC5">true</span><span style="--0:#E1E4E8;--1:#24292E">  maven = </span><span style="--0:#79B8FF;--1:#005CC5">true</span><span style="--0:#E1E4E8;--1:#24292E">  composer = </span><span style="--0:#79B8FF;--1:#005CC5">true</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">policy</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#B392F0;--1:#6F42C1">age</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">min_days = </span><span style="--0:#79B8FF;--1:#005CC5">7</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">action   = </span><span style="--0:#9ECBFF;--1:#032F62">"block"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="[server]  port = 7888[ecosystems]  npm = true  pypi = true  go = true  cargo = true  nuget = true  maven = true  composer = true[policy.age]  min_days = 7  action   = &#x22;block&#x22;"><div></div></button></div></figure></div>
+<p>Route all tools in one command:</p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">escrow-cli</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">write</span><span style="--0:#E1E4E8;--1:#24292E">       </span><span style="--0:#99A0A6;--1:#616972"># writes ~/.npmrc, ~/.cargo/config.toml, etc.</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">escrow-cli</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">write-env</span><span style="--0:#E1E4E8;--1:#24292E">   </span><span style="--0:#99A0A6;--1:#616972"># LaunchAgent / profile.d — GUI apps</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">escrow-cli</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">config</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">write-shell</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#99A0A6;--1:#616972"># .zshrc + .bashrc</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="escrow-cli config write       # writes ~/.npmrc, ~/.cargo/config.toml, etc.escrow-cli config write-env   # LaunchAgent / profile.d — GUI appsescrow-cli config write-shell # .zshrc + .bashrc"><div></div></button></div></figure></div>
+<p>Point each tool at port 7888: <code>registry=http://localhost:7888/</code> for npm/pnpm/bun, <code>index-url = http://localhost:7888/pypi/simple/</code> for pip/uv, <code>GOPROXY=http://localhost:7888/go,off</code> for Go, and so on. See the <a href="../../README.md">full repo README</a> for every ecosystem’s routing config.</p>
+<h3 id="jfrog-curation--commercial-if-youre-on-the-jfrog-platform">JFrog Curation — commercial, if you’re on the JFrog platform</h3>
+<p><a href="https://jfrog.com/curation/">JFrog Curation</a> is the commercial equivalent. It intercepts package requests in front of Artifactory’s remote repositories and applies policy before packages enter your SDLC.</p>
+<p>The key feature is the <strong>time-delay / immature package policy</strong>: blocks newly published versions until they reach a configurable minimum age (14 days cited as example). When a package is blocked, Curation can <strong>silently substitute a safe older version</strong> — useful for CI pipelines that can’t tolerate hard failures, but it reduces visibility compared to escrow’s explicit approval dashboard.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>JFrog Curation</th><th>escrow</th></tr></thead><tbody><tr><td>Age gate</td><td>✓ configurable</td><td>✓ configurable</td></tr><tr><td>Ecosystems</td><td>npm, PyPI, Maven, Go (Cargo: partial)</td><td>npm, PyPI, Go, Cargo, NuGet, Maven, Composer</td></tr><tr><td>OSV / malware</td><td>✓ via Xray</td><td>✓</td></tr><tr><td>Block behaviour</td><td>substitutes older version</td><td>blocks + dashboard</td></tr><tr><td>Cost</td><td>💰 paid add-on</td><td>Free / OSS</td></tr></tbody></table>
+<blockquote>
+<p>Verify Cargo support with JFrog before relying on Curation for Rust — docs describe it as “varying levels of support.”</p>
+</blockquote>
+<h3 id="nexus--if-you-already-run-it">Nexus — if you already run it</h3>
+<p>Nexus Repository OSS is the right choice when your org already operates it or needs its breadth (40+ package formats). <strong>Nexus does not enforce a release-age gate server-side</strong> — the quarantine window stays client-side, and it does not cover Cargo (Pro only).</p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">docker</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">compose</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">up</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">-d</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">nexus</span><span style="--0:#E1E4E8;--1:#24292E"> &#x26;&#x26; </span><span style="--0:#B392F0;--1:#6F42C1">bash</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">nexus/setup.sh</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="docker compose up -d nexus &#x26;&#x26; bash nexus/setup.sh"><div></div></button></div></figure></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Tool</th><th>Nexus URL</th></tr></thead><tbody><tr><td>npm / pnpm / bun</td><td><code>http://localhost:8081/repository/npm-proxy/</code></td></tr><tr><td>pip / uv</td><td><code>http://localhost:8081/repository/pypi-proxy/simple/</code></td></tr><tr><td>Go</td><td><code>http://localhost:8081/repository/go-proxy,off</code></td></tr><tr><td>Maven</td><td><code>http://localhost:8081/repository/maven-central/</code></td></tr><tr><td>NuGet</td><td><code>http://localhost:8081/repository/nuget-proxy/index.json</code></td></tr><tr><td>Composer</td><td><code>http://localhost:8081/repository/composer-proxy/</code></td></tr></tbody></table>
+<blockquote>
+<p>Nexus uses ~1.5 GB RAM at rest. Nexus CE 3.70+ requires EULA acceptance — run <code>setup.sh</code> or <code>POST /service/rest/v1/system/eula {"accepted":true}</code>.</p>
+</blockquote>
+<h3 id="per-ecosystem-lightweight-alternatives">Per-ecosystem lightweight alternatives</h3>
+<p>For single-ecosystem needs or the lowest possible footprint:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Proxy</th><th>Ecosystem</th><th>Age enforcement</th></tr></thead><tbody><tr><td>Verdaccio</td><td>npm / pnpm / yarn / bun</td><td><strong>Server-side</strong></td></tr><tr><td>devpi</td><td>pip / uv</td><td>Client-side only</td></tr><tr><td>Athens</td><td>Go modules</td><td>Client-side only</td></tr><tr><td>Reposilite</td><td>Maven / Gradle</td><td>Client-side only</td></tr><tr><td>BaGetter</td><td>NuGet</td><td>Client-side only</td></tr></tbody></table>
+<hr>
+<h2 id="things-most-teams-miss">Things Most Teams Miss</h2>
+<p><strong><code>ignore-scripts=true</code> does not block git dependencies.</strong>
+npm calls the system <code>git</code> binary to fetch git-hosted packages, bypassing the lifecycle hook system. A malicious package can override which binary npm treats as <code>git</code>. The fix: <code>allow-git=false</code> (npm >= 11.10).</p>
+<p><strong>pnpm v11 moved build policy to <code>pnpm-workspace.yaml</code>.</strong>
+<code>allowBuilds</code> in <code>.npmrc</code> is silently ignored in v11. If you upgraded from v10, your build policy may be doing nothing.</p>
+<p><strong>npm uses days, not minutes.</strong>
+<code>min-release-age=7</code> = 7 days in npm. <code>minimumReleaseAge=7</code> = 7 minutes in pnpm. Both the key and the unit differ.</p>
+<p><strong><code>GOPROXY=...,direct</code> is not safe.</strong>
+<code>direct</code> silently bypasses the proxy when it’s unreachable. Use <code>off</code> — fail loudly instead.</p>
+<p><strong>Maven <code>checksumPolicy</code> defaults to <code>warn</code>.</strong>
+A tampered artifact produces a warning in the build log and then installs. Set <code>checksumPolicy=fail</code>.</p>
+<p><strong>Composer scripts run exactly like npm postinstall — but fewer teams know this.</strong>
+Always use <code>--no-scripts</code> in CI. There is no persistent config key to disable them globally.</p>
+<p><strong><code>.npmrc</code> flags don’t reach IDE-bundled runtimes.</strong>
+VSCode, Cursor, and Zed bundle their own Node.js. That runtime may not read <code>~/.npmrc</code>. Use <code>launchctl setenv</code> (macOS) or <code>/etc/profile.d/</code> (Linux) to inject <code>NPM_CONFIG_*</code> env vars at the OS level.</p>
+<p><strong>A proxy does not replace client-side script blocking.</strong>
+Every proxy — escrow, Nexus, Verdaccio — caches packages but does not strip <code>postinstall</code> hooks. The <code>ignore-scripts</code>, <code>allowBuilds</code>, and <code>only-binary</code> settings from Layer 2 are still required even when a proxy is in the path.</p>
+<p><strong>Cargo <code>build.rs</code> has no global off switch.</strong>
+<code>cargo vet</code> and <code>cargo deny</code> are the only mitigations short of sandboxed builds.</p>
+<hr>
+<h2 id="what-this-does-not-cover">What This Does Not Cover</h2>
+<ul>
+<li><strong>Dependency confusion</strong>: scoped packages (<code>@myorg/</code>), single index only, private proxy as sole source</li>
+<li><strong>Typosquatting</strong>: lockfiles are the main mitigation</li>
+<li><strong>SBOM generation</strong>: <code>mvn cyclonedx:makeAggregateBom</code>, <code>cargo cyclonedx</code>, <code>dotnet sbom-tool</code></li>
+<li><strong>Lockfile integrity in CI</strong>: <code>npm ci</code>, <code>pnpm install --frozen-lockfile</code>, <code>uv sync --frozen</code>, <code>cargo build --locked</code></li>
+<li><strong>Vulnerability scanning</strong>: <code>npm audit</code>, <code>pip-audit</code>, <code>cargo audit</code>, <code>govulncheck</code></li>
+<li><strong>SLSA / Sigstore</strong>: provenance attestation — see <code>cross-ecosystem/slsa-sigstore.md</code></li>
+</ul>
+<hr>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://thinkingthroughcode.medium.com/i-thought-ignore-scripts-made-npm-installs-safe-it-doesnt-f409b852e7c5">I thought ignore-scripts made npm installs safe. It doesn’t.</a></li>
+<li>Robert Slootjes (AWS Community Builder) — <a href="https://www.cryptika.com/github-adds-staged-publishing-to-npm-to-block-automated-supply-chain-attacks/">GitHub adds staged publishing to npm to block automated supply chain attacks</a></li>
+<li><a href="https://academy.jfrog.com/how-to-use-curation-time-delay-policies-to-block-package-hijacks">JFrog Curation: time-delay policies to block package hijacks</a></li>
+<li><a href="https://github.com/jverhoeks/escrow">escrow — supply-chain proxy</a></li>
+</ul>  </div> <nav class="post-nav" data-astro-cid-bvzihdzo> <span data-astro-cid-bvzihdzo></span> <a href="/blog/2026-05-26-speaking-quack/" class="post-nav-link post-nav-next" data-astro-cid-bvzihdzo> <span class="post-nav-title" data-astro-cid-bvzihdzo>Speaking Quack: SQE as a DuckDB server, a DuckDB client, and a federation engine</span> <span class="post-nav-arrow" data-astro-cid-bvzihdzo>&rarr;</span> </a> </nav> <a href="/blog/" class="back-link" data-astro-cid-bvzihdzo> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-bvzihdzo> <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-bvzihdzo></path> </svg>
+All posts
+</a> </article> </main> <footer data-astro-cid-sz7xmlte> <div class="projects" data-astro-cid-sz7xmlte> <a href="https://theartofagents.com/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-sz7xmlte>
+The Art of Agents
+</a> <span class="project-sep" data-astro-cid-sz7xmlte>/</span> <a href="https://neonarcade.net/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-sz7xmlte>
+Neon Arcade
+</a> </div> <div class="social-links" data-astro-cid-sz7xmlte> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Follow on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/twitter" data-astro-cid-sz7xmlte><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-sz7xmlte></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Go to GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github" data-astro-cid-sz7xmlte><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-sz7xmlte></path></svg> </a> </div> <p class="copyright" data-astro-cid-sz7xmlte>&copy; 2026 Jacob Verhoeks</p> </footer> </body></html>
