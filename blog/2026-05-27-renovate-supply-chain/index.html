@@ -1,0 +1,209 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-bvzihdzo> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#2337ff"><meta name="author" content="Jacob Verhoeks"><meta name="generator" content="Astro v6.1.5"><!-- Google Fonts: Atkinson Hyperlegible (non-render-blocking) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;1,400;1,700&display=swap"><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/2026-05-27-renovate-supply-chain/"><!-- Primary Meta Tags --><title>Renovate + Supply Chain: What It Actually Intercepts (and What It Doesn&#39;t)</title><meta name="title" content="Renovate + Supply Chain: What It Actually Intercepts (and What It Doesn't)"><meta name="description" content="We tested Renovate's registry behaviour for every ecosystem — npm, PyPI, Go, Cargo, Maven, NuGet, Composer — and found that minimumReleaseAge works for all of them, but how each datasource resolves its registry is surprisingly different. Here's what we found and how to build a complete defence."><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:site_name" content="Jacob's Blog"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jacob.verhoeks.org/blog/2026-05-27-renovate-supply-chain/"><meta property="og:title" content="Renovate + Supply Chain: What It Actually Intercepts (and What It Doesn't)"><meta property="og:description" content="We tested Renovate's registry behaviour for every ecosystem — npm, PyPI, Go, Cargo, Maven, NuGet, Composer — and found that minimumReleaseAge works for all of them, but how each datasource resolves its registry is surprisingly different. Here's what we found and how to build a complete defence."><meta property="og:image" content="https://jacob.verhoeks.org/og-image.png"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@jverhoeks"><meta name="twitter:creator" content="@jverhoeks"><meta name="twitter:title" content="Renovate + Supply Chain: What It Actually Intercepts (and What It Doesn't)"><meta name="twitter:description" content="We tested Renovate's registry behaviour for every ecosystem — npm, PyPI, Go, Cargo, Maven, NuGet, Composer — and found that minimumReleaseAge works for all of them, but how each datasource resolves its registry is surprisingly different. Here's what we found and how to build a complete defence."><meta name="twitter:image" content="https://jacob.verhoeks.org/og-image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Renovate + Supply Chain: What It Actually Intercepts (and What It Doesn't)","description":"We tested Renovate's registry behaviour for every ecosystem — npm, PyPI, Go, Cargo, Maven, NuGet, Composer — and found that minimumReleaseAge works for all of them, but how each datasource resolves its registry is surprisingly different. Here's what we found and how to build a complete defence.","datePublished":"2026-05-27T00:00:00.000Z","author":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org/about"},"publisher":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org"},"keywords":"renovate, supply-chain, cargo, rust, npm, python, go, security, escrow","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacob.verhoeks.org/blog/2026-05-27-renovate-supply-chain/"}}</script><style>:root{--accent: #2337ff;--accent-dark: #000d8a;--black: 15, 18, 25;--gray: 96, 115, 159;--gray-light: 229, 233, 240;--gray-dark: 34, 41, 57;--gray-gradient: rgba(var(--gray-light), 50%), #fff;--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%)}body{font-family:Atkinson Hyperlegible Next,Atkinson,sans-serif;margin:0;padding:0;text-align:left;background:#fff;word-wrap:break-word;overflow-wrap:break-word;color:rgb(var(--gray-dark));font-size:20px;line-height:1.7}main{width:720px;max-width:calc(100% - 2em);margin:auto;padding:3em 1em}h1,h2,h3,h4,h5,h6{margin:0 0 .5rem;color:rgb(var(--black));line-height:1.2}h1{font-size:3.052em}h2{font-size:2.441em}h3{font-size:1.953em}h4{font-size:1.563em}h5{font-size:1.25em}strong,b{font-weight:700}a,a:hover{color:var(--accent)}p{margin-bottom:1em}.prose p{margin-bottom:2em}textarea{width:100%;font-size:16px}input{font-size:16px}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{border:1px solid #ddd;padding:8px;text-align:left}thead{background-color:#f4f4f4}tbody tr:nth-child(2n){background-color:#f9f9f9}tbody tr:hover{background-color:#eef0f4}img{max-width:100%;height:auto;border-radius:8px;content-visibility:auto}code{padding:2px 6px;background-color:#f5f5f5;border-radius:3px;font-size:.9em}pre{padding:1.5em;border-radius:4px;border:1px solid rgb(var(--gray-light))}pre>code{all:unset}blockquote{border-left:4px solid var(--accent);padding:0 0 0 20px;margin:0;font-size:1.333em}hr{border:none;border-top:1px solid rgb(var(--gray-light))}pre{overflow-x:auto}table{display:block;overflow-x:auto}@media(max-width:720px){body{font-size:18px}main{padding:1em}}@media(max-width:480px){body{font-size:16px}blockquote{font-size:1.1em;padding-left:12px}}.sr-only{border:0;padding:0;margin:0;position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px 1px 1px 1px);clip:rect(1px,1px,1px,1px);clip-path:inset(50%);white-space:nowrap}a[data-astro-cid-eimmu3lg]{display:inline-block;text-decoration:none}a[data-astro-cid-eimmu3lg].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-3ef6ksr2]{margin:0;padding:0 1em;background:#fff;box-shadow:0 2px 8px rgba(var(--black),5%);min-height:56px}h2[data-astro-cid-3ef6ksr2]{margin:0;font-size:1em}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2],h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none}nav[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;justify-content:space-between}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{padding:1em .5em;color:var(--black);border-bottom:4px solid transparent;text-decoration:none}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;border-bottom-color:var(--accent)}.social-links[data-astro-cid-3ef6ksr2],.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:flex}@media(max-width:720px){.social-links[data-astro-cid-3ef6ksr2]{display:none}}footer[data-astro-cid-sz7xmlte]{padding:2em 1em 6em;background:linear-gradient(var(--gray-gradient)) no-repeat;color:rgb(var(--gray));text-align:center}.projects[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;align-items:center;gap:.5em;margin-bottom:1em}.project-link[data-astro-cid-sz7xmlte]{color:rgb(var(--gray-dark));text-decoration:none;font-weight:700;font-size:.9em;letter-spacing:.02em;transition:color .2s}.project-link[data-astro-cid-sz7xmlte]:hover{color:var(--accent)}.project-sep[data-astro-cid-sz7xmlte]{color:rgb(var(--gray-light));font-weight:300}.social-links[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;gap:1em;margin-top:.5em}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{text-decoration:none;color:rgb(var(--gray))}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:rgb(var(--gray-dark))}.copyright[data-astro-cid-sz7xmlte]{margin-top:1em;font-size:.8em}
+</style>
+<link rel="stylesheet" href="/_astro/BlogPost.6iXUgknU.css"></head> <body data-astro-cid-bvzihdzo> <header data-astro-cid-3ef6ksr2> <nav data-astro-cid-3ef6ksr2> <h2 data-astro-cid-3ef6ksr2><a href="/" data-astro-cid-3ef6ksr2>Jacob&#39;s Blog</a></h2> <div class="internal-links" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Home </a> <a href="/blog" class="active" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Blog </a> <a href="/about" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> About </a> </div> <div class="social-links" data-astro-cid-3ef6ksr2> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Follow Astro on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-3ef6ksr2></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Go to Astro's GitHub repo</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-3ef6ksr2></path></svg> </a> </div> </nav> </header> <main data-astro-cid-bvzihdzo> <article data-astro-cid-bvzihdzo> <header class="article-header" data-astro-cid-bvzihdzo> <div class="article-meta" data-astro-cid-bvzihdzo> <time class="article-date" data-astro-cid-bvzihdzo> <time datetime="2026-05-27T00:00:00.000Z"> May 27, 2026 </time> </time>  <span class="meta-dot" data-astro-cid-bvzihdzo>&middot;</span> <span data-astro-cid-bvzihdzo>Jacob Verhoeks</span>   <span class="meta-dot" data-astro-cid-bvzihdzo>&middot;</span> <span data-astro-cid-bvzihdzo>6 min read</span>  </div> <h1 class="article-title" data-astro-cid-bvzihdzo>Renovate + Supply Chain: What It Actually Intercepts (and What It Doesn&#39;t)</h1> <p class="article-description" data-astro-cid-bvzihdzo>We tested Renovate&#39;s registry behaviour for every ecosystem — npm, PyPI, Go, Cargo, Maven, NuGet, Composer — and found that minimumReleaseAge works for all of them, but how each datasource resolves its registry is surprisingly different. Here&#39;s what we found and how to build a complete defence.</p>  <div class="article-tags" data-astro-cid-bvzihdzo> <a href="/blog/tag/renovate/" class="article-tag" data-astro-cid-bvzihdzo>renovate</a><a href="/blog/tag/supply-chain/" class="article-tag" data-astro-cid-bvzihdzo>supply-chain</a><a href="/blog/tag/cargo/" class="article-tag" data-astro-cid-bvzihdzo>cargo</a><a href="/blog/tag/rust/" class="article-tag" data-astro-cid-bvzihdzo>rust</a><a href="/blog/tag/npm/" class="article-tag" data-astro-cid-bvzihdzo>npm</a><a href="/blog/tag/python/" class="article-tag" data-astro-cid-bvzihdzo>python</a><a href="/blog/tag/go/" class="article-tag" data-astro-cid-bvzihdzo>go</a><a href="/blog/tag/security/" class="article-tag" data-astro-cid-bvzihdzo>security</a><a href="/blog/tag/escrow/" class="article-tag" data-astro-cid-bvzihdzo>escrow</a> </div> </header> <div class="prose" data-astro-cid-bvzihdzo>  <p>Renovate is a popular automated dependency update tool. When combined with an age-gating proxy like <a href="https://github.com/jverhoeks/escrow">escrow</a>, it can be part of a strong supply chain defence. But Renovate’s registry behaviour varies significantly by ecosystem — and some of those differences matter for security.</p>
+<p>We ran live tests against every ecosystem. Here’s what we found.</p>
+<hr>
+<h2 id="tldr">TL;DR</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Ecosystem</th><th>Renovate version lookup</th><th><code>minimumReleaseAge</code> works?</th><th>Auto-uses proxy?</th></tr></thead><tbody><tr><td><strong>npm</strong></td><td>Direct to npmjs.org</td><td>✅</td><td>❌ rejects localhost</td></tr><tr><td><strong>PyPI</strong></td><td>Via <code>PIP_INDEX_URL</code> env</td><td>✅</td><td>✅ auto-detected</td></tr><tr><td><strong>Go</strong></td><td>Via <code>GOPROXY</code> env</td><td>✅</td><td>✅ auto-detected</td></tr><tr><td><strong>Cargo</strong></td><td>Direct to crates.io</td><td>✅ tested</td><td>❌ git-clone only</td></tr><tr><td><strong>Maven</strong></td><td>Via pom.xml <code>&#x3C;repositories></code></td><td>✅</td><td>⚠️ needs pom.xml</td></tr><tr><td><strong>NuGet</strong></td><td>Merge strategy</td><td>✅</td><td>⚠️ needs config</td></tr><tr><td><strong>Composer</strong></td><td>Hunt strategy</td><td>✅</td><td>⚠️ needs config</td></tr></tbody></table>
+<p><code>minimumReleaseAge</code> works for <strong>all ecosystems</strong> — it’s applied after Renovate fetches release data, regardless of where that data came from.</p>
+<p>The proxy routing is what varies.</p>
+<hr>
+<h2 id="testing-minimumreleaseage-for-cargo">Testing <code>minimumReleaseAge</code> for Cargo</h2>
+<p>We set up a test with tokio, pinning to <code>=1.51.0</code>, and configured <code>minimumReleaseAge: "21 days"</code>. At test time the release landscape was:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Version</th><th>Age</th><th>Expected</th></tr></thead><tbody><tr><td>1.52.3</td><td>19 days</td><td>❌ blocked by age gate</td></tr><tr><td>1.52.2</td><td>23 days</td><td>✅ should be proposed</td></tr><tr><td>1.51.3</td><td>19 days</td><td>❌ blocked</td></tr><tr><td>1.51.2</td><td>23 days</td><td>✅ available</td></tr></tbody></table>
+<p>Renovate’s output:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.y0rd3.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame"><figcaption class="header"></figcaption><pre data-language="json"><code><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">"newVersion"</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">"1.52.2"</span><span style="--0:#E1E4E8;--1:#24292E">,</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">"newVersionAgeInDays"</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#79B8FF;--1:#005CC5">23</span><span style="--0:#E1E4E8;--1:#24292E">,</span></div></div><div class="ec-line"><div class="code"><span style="--0:#9ECBFF;--1:#032F62">"pendingVersions"</span><span style="--0:#E1E4E8;--1:#24292E">: [</span><span style="--0:#9ECBFF;--1:#032F62">"1.52.3"</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="&#x22;newVersion&#x22;: &#x22;1.52.2&#x22;,&#x22;newVersionAgeInDays&#x22;: 23,&#x22;pendingVersions&#x22;: [&#x22;1.52.3&#x22;]"><div></div></button></div></figure></div>
+<p><strong>Result: correct.</strong> Renovate proposed 1.52.2, filed 1.52.3 as <code>pendingVersions</code> (will propose when it ages past 21 days), and skipped 1.51.3. The age gate works exactly as designed.</p>
+<hr>
+<h2 id="why-npm-rejects-localhost">Why npm rejects localhost</h2>
+<p>Renovate has an explicit security check in its npm datasource that <strong>rejects any <code>.npmrc</code> file containing a localhost registry</strong>:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="js"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">if</span><span style="--0:#E1E4E8;--1:#24292E"> (key.</span><span style="--0:#B392F0;--1:#6F42C1">endsWith</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#9ECBFF;--1:#032F62">'registry'</span><span style="--0:#E1E4E8;--1:#24292E">) </span><span style="--0:#F97583;--1:#BF3441">&#x26;&#x26;</span><span style="--0:#E1E4E8;--1:#24292E"> val.</span><span style="--0:#B392F0;--1:#6F42C1">includes</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#9ECBFF;--1:#032F62">'localhost'</span><span style="--0:#E1E4E8;--1:#24292E">)) {</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">    </span></span><span style="--0:#E1E4E8;--1:#24292E">logger.</span><span style="--0:#B392F0;--1:#6F42C1">debug</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#9ECBFF;--1:#032F62">'Detected localhost registry - rejecting npmrc file'</span><span style="--0:#E1E4E8;--1:#24292E">);</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">    </span></span><span style="--0:#E1E4E8;--1:#24292E">npmrc </span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E"> existingNpmrc;</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#F97583;--1:#BF3441">return</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">}</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="if (key.endsWith(&#x27;registry&#x27;) &#x26;&#x26; val.includes(&#x27;localhost&#x27;)) {    logger.debug(&#x27;Detected localhost registry - rejecting npmrc file&#x27;);    npmrc = existingNpmrc;    return;}"><div></div></button></div></figure></div>
+<p>This is intentional. Without it, a malicious <code>renovate.json</code> in a repository could redirect Renovate’s npm version lookups to a local attacker-controlled server. So even if your <code>~/.npmrc</code> has <code>registry=http://127.0.0.1:7888/</code>, Renovate will ignore it and go directly to <code>registry.npmjs.org</code>.</p>
+<p><strong>What this means for you:</strong> <code>minimumReleaseAge</code> still works — Renovate fetches from npmjs.org and applies the age filter there. The escrow proxy still protects the actual <code>npm install</code> step. Renovate just won’t use the proxy for <em>version discovery</em>.</p>
+<hr>
+<h2 id="why-cargo-cant-use-a-sparse-http-proxy">Why Cargo can’t use a sparse HTTP proxy</h2>
+<p>Renovate’s crate datasource tries to <strong>git-clone</strong> custom registry URLs to fetch the crate index. Escrow serves a <strong>sparse HTTP registry</strong> (the protocol <code>cargo install</code> uses). These are incompatible:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Renovate:     git clone http://127.0.0.1:7888/cargo/  ← fails, not a git repo</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">cargo build:  GET http://127.0.0.1:7888/cargo/...     ← works, sparse HTTP</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="Renovate:     git clone http://127.0.0.1:7888/cargo/  ← fails, not a git repocargo build:  GET http://127.0.0.1:7888/cargo/...     ← works, sparse HTTP"><div></div></button></div></figure></div>
+<p>For version discovery, Renovate always goes directly to <code>https://crates.io/api/v1/</code>. For downloading crates, <code>cargo build</code> goes through escrow via <code>~/.cargo/config.toml</code> source replacement.</p>
+<p><strong>The right model:</strong></p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Renovate: "tokio 1.52.3 exists" → queries crates.io directly (discovery)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">CI/dev:   cargo build            → escrow checks age + CVE (enforcement)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="Renovate: &#x22;tokio 1.52.3 exists&#x22; → queries crates.io directly (discovery)CI/dev:   cargo build            → escrow checks age + CVE (enforcement)"><div></div></button></div></figure></div>
+<hr>
+<h2 id="the-complete-defence-for-cargo">The complete defence for Cargo</h2>
+<p>Since Renovate bypasses escrow for version discovery, the defence needs to be layered:</p>
+<h3 id="1-minimumreleaseage-in-renovatejson-blocks-pr-before-it-opens">1. <code>minimumReleaseAge</code> in renovate.json (blocks PR before it opens)</h3>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="json"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">{</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">"packageRules"</span><span style="--0:#E1E4E8;--1:#24292E">: [{</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#79B8FF;--1:#005CC5">"matchManagers"</span><span style="--0:#E1E4E8;--1:#24292E">: [</span><span style="--0:#9ECBFF;--1:#032F62">"cargo"</span><span style="--0:#E1E4E8;--1:#24292E">],</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#79B8FF;--1:#005CC5">"minimumReleaseAge"</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">"7 days"</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">}]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">}</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="{  &#x22;packageRules&#x22;: [{    &#x22;matchManagers&#x22;: [&#x22;cargo&#x22;],    &#x22;minimumReleaseAge&#x22;: &#x22;7 days&#x22;  }]}"><div></div></button></div></figure></div>
+<h3 id="2-cargo-audit-postupgradetasks-cve-check-before-pr-opens">2. <code>cargo audit</code> postUpgradeTasks (CVE check before PR opens)</h3>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="json"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">{</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">"postUpgradeTasks"</span><span style="--0:#E1E4E8;--1:#24292E">: {</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#79B8FF;--1:#005CC5">"commands"</span><span style="--0:#E1E4E8;--1:#24292E">: [</span><span style="--0:#9ECBFF;--1:#032F62">"cargo audit --deny warnings"</span><span style="--0:#E1E4E8;--1:#24292E">],</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#79B8FF;--1:#005CC5">"fileFilters"</span><span style="--0:#E1E4E8;--1:#24292E">: [</span><span style="--0:#9ECBFF;--1:#032F62">"Cargo.lock"</span><span style="--0:#E1E4E8;--1:#24292E">],</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#79B8FF;--1:#005CC5">"executionMode"</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">"branch"</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">}</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">}</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="{  &#x22;postUpgradeTasks&#x22;: {    &#x22;commands&#x22;: [&#x22;cargo audit --deny warnings&#x22;],    &#x22;fileFilters&#x22;: [&#x22;Cargo.lock&#x22;],    &#x22;executionMode&#x22;: &#x22;branch&#x22;  }}"><div></div></button></div></figure></div>
+<h3 id="3-escrow-in-ci-age--cve-gate-before-pr-merges">3. escrow in CI (age + CVE gate before PR merges)</h3>
+<div class="expressive-code"><figure class="frame has-title"><figcaption class="header"><span class="title">.github/workflows/cargo-escrow.yml</span></figcaption><pre data-language="yaml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">- </span><span style="--0:#85E89D;--1:#1E7734">uses</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">jverhoeks/escrow@v1</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#85E89D;--1:#1E7734">with</span><span style="--0:#E1E4E8;--1:#24292E">:</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#85E89D;--1:#1E7734">ecosystems</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">'cargo'</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#85E89D;--1:#1E7734">min-days</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">'7'</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#85E89D;--1:#1E7734">osv-severity</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">'HIGH'</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">- </span><span style="--0:#85E89D;--1:#1E7734">run</span><span style="--0:#E1E4E8;--1:#24292E">: </span><span style="--0:#9ECBFF;--1:#032F62">cargo build --locked</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="- uses: jverhoeks/escrow@v1  with:    ecosystems: &#x27;cargo&#x27;    min-days: &#x27;7&#x27;    osv-severity: &#x27;HIGH&#x27;- run: cargo build --locked"><div></div></button></div></figure></div>
+<h3 id="4-escrow-on-dev-machine-final-gate-at-actual-build">4. escrow on dev machine (final gate at actual build)</h3>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#99A0A6;--1:#616972"># ~/.cargo/config.toml (written by: escrow-cli config write --ecosystems cargo)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[source.crates-io]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">replace-with</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">=</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"escrow"</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[source.escrow]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">registry</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">=</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"sparse+http://127.0.0.1:7888/cargo/"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="[source.crates-io]replace-with = &#x22;escrow&#x22;[source.escrow]registry = &#x22;sparse+http://127.0.0.1:7888/cargo/&#x22;"><div></div></button></div></figure></div>
+<p>The combined timeline:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Renovate: suggests tokio 1.52.3 (19d old)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">→ minimumReleaseAge: "7 days" → ✅ passes (> 7d)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">→ cargo audit → ✅ no CVEs</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">→ PR opened</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">→ CI: cargo build through escrow</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">       </span></span><span style="--0:#e1e4e8;--1:#24292e">→ escrow age gate: 19 days ✓</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">       </span></span><span style="--0:#e1e4e8;--1:#24292e">→ escrow OSV scan: ✓</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">→ PR mergeable</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">→ developer merges</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">  </span></span><span style="--0:#e1e4e8;--1:#24292e">→ dev machine: cargo build through escrow → ✓ again</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="Renovate: suggests tokio 1.52.3 (19d old)  → minimumReleaseAge: &#x22;7 days&#x22; → ✅ passes (> 7d)  → cargo audit → ✅ no CVEs  → PR opened  → CI: cargo build through escrow       → escrow age gate: 19 days ✓       → escrow OSV scan: ✓  → PR mergeable  → developer merges  → dev machine: cargo build through escrow → ✓ again"><div></div></button></div></figure></div>
+<p>A package has to pass two independent age checks (Renovate + escrow) and two independent CVE checks (cargo audit + escrow OSV) before it gets installed.</p>
+<hr>
+<h2 id="pypi-and-go-the-happy-path">PyPI and Go: the happy path</h2>
+<p>These two ecosystems work automatically with the escrow proxy:</p>
+<ul>
+<li><strong>PyPI</strong>: Renovate reads <code>PIP_INDEX_URL</code> env var as its default datasource URL. When the escrow GitHub Action exports <code>PIP_INDEX_URL=http://127.0.0.1:7888/pypi/simple/</code>, Renovate in CI will use the proxy for version lookups.</li>
+<li><strong>Go</strong>: Same pattern via <code>GOPROXY</code>.</li>
+</ul>
+<p>No extra configuration needed for these.</p>
+<hr>
+<h2 id="maven-only-works-if-pomxml-says-so">Maven: only works if pom.xml says so</h2>
+<p>Renovate’s Maven datasource uses a <code>registryStrategy: 'merge'</code> — it queries all configured registries plus the default Maven Central. The configured registries come from the pom.xml <code>&#x3C;repositories></code> section, not from <code>~/.m2/settings.xml</code>.</p>
+<p>If your pom.xml has:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="xml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">repositories</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">repository</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">    </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">id</span><span style="--0:#E1E4E8;--1:#24292E">>escrow&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">id</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">    </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;</span><span style="--0:#85E89D;--1:#1E7734">url</span><span style="--0:#E1E4E8;--1:#24292E">>http://127.0.0.1:7888/maven2/&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">url</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">repository</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">&#x3C;/</span><span style="--0:#85E89D;--1:#1E7734">repositories</span><span style="--0:#E1E4E8;--1:#24292E">></span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="<repositories>  <repository>    <id>escrow</id>    <url>http://127.0.0.1:7888/maven2/</url>  </repository></repositories>"><div></div></button></div></figure></div>
+<p>Renovate will query your proxy <strong>and</strong> Maven Central. Without the <code>&#x3C;repositories></code> section, Renovate goes directly to Maven Central regardless of <code>~/.m2/settings.xml</code>.</p>
+<p>For teams using escrow server-side (not on <code>localhost</code>), the <code>renovate.json</code> entry works:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="json"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">{</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">"maven"</span><span style="--0:#E1E4E8;--1:#24292E">: { </span><span style="--0:#79B8FF;--1:#005CC5">"registryUrls"</span><span style="--0:#E1E4E8;--1:#24292E">: [</span><span style="--0:#9ECBFF;--1:#032F62">"https://escrow.internal/maven2/"</span><span style="--0:#E1E4E8;--1:#24292E">] }</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">}</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="{  &#x22;maven&#x22;: { &#x22;registryUrls&#x22;: [&#x22;https://escrow.internal/maven2/&#x22;] }}"><div></div></button></div></figure></div>
+<hr>
+<h2 id="renovate-for-localhost-proxies-what-actually-works">Renovate for localhost proxies: what actually works</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Config approach</th><th>Works?</th><th>Notes</th></tr></thead><tbody><tr><td><code>~/.npmrc registry=http://localhost:7888/</code></td><td>❌</td><td>Renovate explicitly rejects localhost</td></tr><tr><td><code>NPM_CONFIG_REGISTRY</code> env</td><td>❌</td><td>Same rejection</td></tr><tr><td><code>PIP_INDEX_URL</code> env</td><td>✅</td><td>Auto-detected</td></tr><tr><td><code>GOPROXY</code> env</td><td>✅</td><td>Auto-detected</td></tr><tr><td><code>renovate.json registryUrls</code> for cargo</td><td>❌</td><td>git-clone, not sparse HTTP</td></tr><tr><td><code>renovate.json registryUrls</code> for maven</td><td>✅</td><td>If escrow is network-accessible</td></tr><tr><td><code>minimumReleaseAge</code> in renovate.json</td><td>✅</td><td>Works for all ecosystems</td></tr><tr><td><code>postUpgradeTasks: cargo audit</code></td><td>✅</td><td>Works for cargo</td></tr><tr><td>escrow in CI workflow</td><td>✅</td><td>Full protection for any ecosystem</td></tr></tbody></table>
+<p><strong>The core insight:</strong> Renovate is a version <em>discovery</em> tool. Your proxy is a version <em>enforcement</em> tool. They don’t need to be the same service. Wire them together through CI, not through registry routing.</p>  </div> <nav class="post-nav" data-astro-cid-bvzihdzo> <span data-astro-cid-bvzihdzo></span> <a href="/blog/2026-05-27-supply-chain-defense-three-layers/" class="post-nav-link post-nav-next" data-astro-cid-bvzihdzo> <span class="post-nav-title" data-astro-cid-bvzihdzo>Supply Chain Attacks Hit Every Ecosystem. Here&#39;s How to Defend Yours.</span> <span class="post-nav-arrow" data-astro-cid-bvzihdzo>&rarr;</span> </a> </nav> <a href="/blog/" class="back-link" data-astro-cid-bvzihdzo> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-bvzihdzo> <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-bvzihdzo></path> </svg>
+All posts
+</a> </article> </main> <footer data-astro-cid-sz7xmlte> <div class="projects" data-astro-cid-sz7xmlte> <a href="https://theartofagents.com/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-sz7xmlte>
+The Art of Agents
+</a> <span class="project-sep" data-astro-cid-sz7xmlte>/</span> <a href="https://neonarcade.net/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-sz7xmlte>
+Neon Arcade
+</a> </div> <div class="social-links" data-astro-cid-sz7xmlte> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Follow on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/twitter" data-astro-cid-sz7xmlte><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-sz7xmlte></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Go to GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github" data-astro-cid-sz7xmlte><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-sz7xmlte></path></svg> </a> </div> <p class="copyright" data-astro-cid-sz7xmlte>&copy; 2026 Jacob Verhoeks</p> </footer> </body></html>
