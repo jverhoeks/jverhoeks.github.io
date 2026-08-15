@@ -1,0 +1,451 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-bvzihdzo> <head><!-- Theme: default dark (/echo). Honor saved light preference. --><script>
+	(function () {
+		try {
+			if (localStorage.getItem('theme') === 'light') {
+				document.documentElement.setAttribute('data-theme', 'light');
+			}
+		} catch (e) {}
+	})();
+</script> <!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#071014"><meta name="author" content="Jacob Verhoeks"><meta name="generator" content="Astro v6.4.8"><!-- Google Fonts: Oswald + Spectral + IBM Plex Mono (non-render-blocking) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"></noscript><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/2026-08-10-one-policy-model-sqe-and-spark/"><!-- Primary Meta Tags --><title>One policy model, two engines: access control across SQE and Spark</title><meta name="title" content="One policy model, two engines: access control across SQE and Spark"><meta name="description" content="A complete, executable account of how SQE and Spark query the same Iceberg table under the same Apache Ranger policies: Polaris object grants, row filters, column masks, tags, precedence, writes, views, and the differences that remain."><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:site_name" content="Jacob's Blog"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jacob.verhoeks.org/blog/2026-08-10-one-policy-model-sqe-and-spark/"><meta property="og:title" content="One policy model, two engines: access control across SQE and Spark"><meta property="og:description" content="A complete, executable account of how SQE and Spark query the same Iceberg table under the same Apache Ranger policies: Polaris object grants, row filters, column masks, tags, precedence, writes, views, and the differences that remain."><meta property="og:image" content="https://jacob.verhoeks.org/og-image.png"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@jverhoeks"><meta name="twitter:creator" content="@jverhoeks"><meta name="twitter:title" content="One policy model, two engines: access control across SQE and Spark"><meta name="twitter:description" content="A complete, executable account of how SQE and Spark query the same Iceberg table under the same Apache Ranger policies: Polaris object grants, row filters, column masks, tags, precedence, writes, views, and the differences that remain."><meta name="twitter:image" content="https://jacob.verhoeks.org/og-image.png"><meta name="theme-color" content="#071014"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"One policy model, two engines: access control across SQE and Spark","description":"A complete, executable account of how SQE and Spark query the same Iceberg table under the same Apache Ranger policies: Polaris object grants, row filters, column masks, tags, precedence, writes, views, and the differences that remain.","datePublished":"2026-08-10T00:00:00.000Z","author":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org/about"},"publisher":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org"},"keywords":"security, ranger, spark, polaris, iceberg, access-control","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacob.verhoeks.org/blog/2026-08-10-one-policy-model-sqe-and-spark/"}}</script><link rel="stylesheet" href="/_astro/BaseHead.Rnmzki-c.css"><style>a[data-astro-cid-eimmu3lg]{display:inline-block;text-decoration:none}a[data-astro-cid-eimmu3lg].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-3ef6ksr2]{margin:0;padding:0 1em;background:linear-gradient(180deg,var(--echo-ink-2),var(--bg));border-top:2px solid var(--accent);border-bottom:1px solid var(--echo-hair);min-height:56px;transition:background-color .25s ease,border-color .25s ease}h2[data-astro-cid-3ef6ksr2]{margin:0;font-size:.95em;font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.06em}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2],h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;color:rgb(var(--black))}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover{color:var(--accent)}nav[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;justify-content:space-between;gap:.75rem}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{padding:1em .5em;color:var(--echo-mute);border-bottom:2px solid transparent;text-decoration:none;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover{color:rgb(var(--black))}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;color:rgb(var(--black));border-bottom-color:var(--accent)}.social-links[data-astro-cid-3ef6ksr2],.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:flex;align-items:center}.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{color:var(--echo-mute);padding:.5em;border-bottom:none}.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover{color:var(--accent)}.theme-toggle[data-astro-cid-3ef6ksr2]{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;margin-right:.35em;padding:0;border:1px solid var(--echo-hair);border-radius:2px;background:transparent;color:var(--echo-mute);cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease}.theme-toggle[data-astro-cid-3ef6ksr2]:hover{border-color:var(--accent);color:var(--accent)}.icon-sun[data-astro-cid-3ef6ksr2]{display:block}.icon-moon[data-astro-cid-3ef6ksr2]{display:none}:root[data-theme=light] .icon-sun[data-astro-cid-3ef6ksr2]{display:none}:root[data-theme=light] .icon-moon[data-astro-cid-3ef6ksr2]{display:block}@media(max-width:720px){.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:none}.social-links[data-astro-cid-3ef6ksr2] .theme-toggle[data-astro-cid-3ef6ksr2]{display:inline-flex}}footer[data-astro-cid-sz7xmlte]{padding:2.5em 1em 5em;background:linear-gradient(180deg,transparent,var(--echo-ink-2));border-top:1px solid var(--echo-hair);color:var(--echo-mute);text-align:center}.projects[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;align-items:center;gap:.5em;margin-bottom:1em;flex-wrap:wrap}.project-link[data-astro-cid-sz7xmlte]{color:rgb(var(--black));text-decoration:none;font-family:var(--font-mono);font-weight:500;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}.project-link[data-astro-cid-sz7xmlte]:hover{color:var(--accent)}.project-sep[data-astro-cid-sz7xmlte]{color:var(--echo-mute);opacity:.5;font-weight:300}.social-links[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;gap:1em;margin-top:.5em}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{text-decoration:none;color:var(--echo-mute)}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:var(--accent)}.copyright[data-astro-cid-sz7xmlte]{margin-top:1.25em;font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
+body.echo-blog{background:var(--bg)}
+</style><link rel="stylesheet" href="/_astro/BlogPost.BP_iv8XY.css"></head> <body class="echo-blog" data-astro-cid-bvzihdzo> <header data-astro-cid-3ef6ksr2> <nav data-astro-cid-3ef6ksr2> <h2 data-astro-cid-3ef6ksr2><a href="/" data-astro-cid-3ef6ksr2>Jacob&#39;s Blog</a></h2> <div class="internal-links" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Home </a> <a href="/blog" class="active" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Blog </a> <a href="/#books" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Books </a> <a href="/projects" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Projects </a> <a href="/about" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> About </a> </div> <div class="social-links" data-astro-cid-3ef6ksr2> <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle light mode" title="Toggle light mode" data-astro-cid-3ef6ksr2> <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-3ef6ksr2><circle cx="12" cy="12" r="4" data-astro-cid-3ef6ksr2></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" data-astro-cid-3ef6ksr2></path></svg> <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor" data-astro-cid-3ef6ksr2><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" data-astro-cid-3ef6ksr2></path></svg> </button> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Follow on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-3ef6ksr2></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Go to GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-3ef6ksr2></path></svg> </a> </div> </nav> </header>  <script>
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		btn.addEventListener('click', function () {
+			var root = document.documentElement;
+			var isLight = root.getAttribute('data-theme') === 'light';
+			if (isLight) {
+				root.removeAttribute('data-theme');
+				try { localStorage.setItem('theme', 'dark'); } catch (e) {}
+			} else {
+				root.setAttribute('data-theme', 'light');
+				try { localStorage.setItem('theme', 'light'); } catch (e) {}
+			}
+		});
+	})();
+</script> <main data-astro-cid-bvzihdzo> <article data-astro-cid-bvzihdzo> <header class="article-header" data-astro-cid-bvzihdzo> <div class="article-meta" data-astro-cid-bvzihdzo> <time class="article-date" data-astro-cid-bvzihdzo> <time datetime="2026-08-10T00:00:00.000Z"> Aug 10, 2026 </time> </time>  <span class="meta-dot" data-astro-cid-bvzihdzo>|</span> <span data-astro-cid-bvzihdzo>Jacob Verhoeks</span>   <span class="meta-dot" data-astro-cid-bvzihdzo>|</span> <span data-astro-cid-bvzihdzo>17 min read</span>  </div> <h1 class="article-title" data-astro-cid-bvzihdzo>One policy model, two engines: access control across SQE and Spark</h1> <p class="article-description" data-astro-cid-bvzihdzo>A complete, executable account of how SQE and Spark query the same Iceberg table under the same Apache Ranger policies: Polaris object grants, row filters, column masks, tags, precedence, writes, views, and the differences that remain.</p>  <div class="article-tags" data-astro-cid-bvzihdzo> <a href="/blog/tag/security/" class="echo-pill" data-astro-cid-bvzihdzo>security</a><a href="/blog/tag/ranger/" class="echo-pill" data-astro-cid-bvzihdzo>ranger</a><a href="/blog/tag/spark/" class="echo-pill" data-astro-cid-bvzihdzo>spark</a><a href="/blog/tag/polaris/" class="echo-pill" data-astro-cid-bvzihdzo>polaris</a><a href="/blog/tag/iceberg/" class="echo-pill" data-astro-cid-bvzihdzo>iceberg</a><a href="/blog/tag/access-control/" class="echo-pill" data-astro-cid-bvzihdzo>access-control</a> </div> </header> <div class="prose" data-astro-cid-bvzihdzo>  <p><em>August 10, 2026</em></p>
+<p>A lakehouse stops being open the moment its security model depends on which engine
+reads the table.</p>
+<p>That is an easy failure to create. Spark runs the pipelines, another SQL engine serves
+the dashboards, and both read the same Iceberg table. If each engine has a separate
+policy language and a separate copy of every rule, those copies eventually drift. An
+SSN is masked in one engine and raw in the other. A regional filter is updated for the
+batch path but not for the interactive path. Both systems can pass their own tests and
+the platform can still be wrong.</p>
+<p>We wanted a stronger property for SQE: write a security rule once, store it in Apache
+Ranger, then prove what happens by running the same query through SQE and Apache Spark
+against the same data and user identity.</p>
+<p>The result is not a claim of perfect byte-for-byte compatibility. Most portable rules
+do agree exactly. Some Ranger features have engine-specific semantics, and pretending
+otherwise would be more dangerous than documenting the difference. The useful result
+is an executable contract: object access, writes, row filters, column masks, tags,
+policy composition, precedence, views, and revocation are all exercised in one live
+demo.</p>
+<h2 id="first-there-are-not-two-ranger-servers">First: there are not two Ranger servers</h2>
+<p>The quickstart runs one Ranger Admin 2.8 instance. Inside it are separate service
+instances for separate kinds of decisions:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Ranger service</th><th>Service definition</th><th>Decision</th><th>Enforcer</th></tr></thead><tbody><tr><td><code>polaris</code></td><td>custom Polaris definition</td><td>May this principal discover, load, read, or modify this catalog object?</td><td>Apache Polaris</td></tr><tr><td><code>query</code></td><td>Ranger’s built-in <code>hive</code> definition</td><td>Which rows and column values may this query return?</td><td>SQE or Kyuubi’s Spark extension</td></tr><tr><td><code>tag</code></td><td>Ranger’s built-in tag definition, linked to <code>query</code></td><td>Which mask or filter follows a classification such as <code>PII</code> or <code>GEO</code>?</td><td>SQE or Kyuubi’s Spark extension</td></tr></tbody></table>
+<p>People often call the first two “the two Rangers.” Operationally they are one Ranger
+server and two authorization planes. The linked <code>tag</code> service is the classification
+half of the fine-grained plane, not another server to deploy.</p>
+<p>That separation is necessary. The Polaris service definition understands catalogs,
+namespaces, tables, views, snapshots, and metadata operations. It answers boolean
+object-access questions. It does not define row filters or column masks. Ranger’s Hive
+service definition does define those fine-grained policies, and both query engines
+already know how to consume them.</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.y0rd3.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame"><figcaption class="header"></figcaption><pre data-language="text"><code><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                                  </span></span><span style="--0:#e1e4e8;--1:#24292e">one Ranger Admin</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                               </span></span><span style="--0:#e1e4e8;--1:#24292e">┌─────────────────────┐</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                               </span></span><span style="--0:#e1e4e8;--1:#24292e">│ polaris service     │</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                               </span></span><span style="--0:#e1e4e8;--1:#24292e">│ query + tag service │</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                               </span></span><span style="--0:#e1e4e8;--1:#24292e">└──────────┬──────────┘</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                                          </span></span><span style="--0:#e1e4e8;--1:#24292e">│ policies</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">         </span></span><span style="--0:#e1e4e8;--1:#24292e">end-user token                   │</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">client ───────────────► SQE ─────────► Polaris ─────────► Iceberg metadata</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                         </span></span><span style="--0:#e1e4e8;--1:#24292e">│                 │</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                         </span></span><span style="--0:#e1e4e8;--1:#24292e">│ rewrites plan   └─ object gate (`polaris`)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                         </span></span><span style="--0:#e1e4e8;--1:#24292e">└─────────────────── data gate (`query` + `tag`)</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">client ───────────────► Spark ─────────► Polaris ─────────► Iceberg metadata</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">         </span></span><span style="--0:#e1e4e8;--1:#24292e">end-user token    │                 │</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                           </span></span><span style="--0:#e1e4e8;--1:#24292e">│ Kyuubi rewrites └─ object gate (`polaris`)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">                           </span></span><span style="--0:#e1e4e8;--1:#24292e">└─────────────────── data gate (`query` + `tag`)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="                                  one Ranger Admin                               ┌─────────────────────┐                               │ polaris service     │                               │ query + tag service │                               └──────────┬──────────┘                                          │ policies         end-user token                   │client ───────────────► SQE ─────────► Polaris ─────────► Iceberg metadata                         │                 │                         │ rewrites plan   └─ object gate (&#x60;polaris&#x60;)                         └─────────────────── data gate (&#x60;query&#x60; + &#x60;tag&#x60;)client ───────────────► Spark ─────────► Polaris ─────────► Iceberg metadata         end-user token    │                 │                           │ Kyuubi rewrites └─ object gate (&#x60;polaris&#x60;)                           └─────────────────── data gate (&#x60;query&#x60; + &#x60;tag&#x60;)"><div></div></button></div></figure></div>
+<p>The engines share data and policy, but not execution code. SQE rewrites a DataFusion
+logical plan. Spark is rewritten by <code>RangerSparkExtension</code> from Kyuubi Authz. Agreement
+between them is therefore meaningful: two independent implementations interpreted the
+same policy the same way.</p>
+<h2 id="the-object-gate-belongs-to-polaris">The object gate belongs to Polaris</h2>
+<p>Both engines reach the same Iceberg REST catalog in Polaris. Every invocation carries
+the user’s own Keycloak bearer token. Polaris resolves the principal and asks Ranger’s
+<code>polaris</code> service whether the requested catalog operation is allowed.</p>
+<p>SQE provides the SQL management surface:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">GRANT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">SELECT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders </span><span style="--0:#F97583;--1:#BF3441">TO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"analyst"</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">GRANT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">INSERT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders </span><span style="--0:#F97583;--1:#BF3441">TO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"analyst"</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">REVOKE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">INSERT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders </span><span style="--0:#F97583;--1:#BF3441">FROM</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"analyst"</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">REVOKE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">SELECT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders </span><span style="--0:#F97583;--1:#BF3441">FROM</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"analyst"</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="GRANT SELECT ON sales_wh.acparity.orders TO ROLE &#x22;analyst&#x22;;GRANT INSERT ON sales_wh.acparity.orders TO ROLE &#x22;analyst&#x22;;REVOKE INSERT ON sales_wh.acparity.orders FROM ROLE &#x22;analyst&#x22;;REVOKE SELECT ON sales_wh.acparity.orders FROM ROLE &#x22;analyst&#x22;;"><div></div></button></div></figure></div>
+<p>These statements are not an SQE-local ACL. SQE translates them into Ranger policies on
+the <code>polaris</code> service. Polaris enforces those policies for SQE and Spark alike.</p>
+<p>A SQL privilege expands to the Polaris access types required by the operation. SELECT
+needs discovery and metadata access before files can be read. INSERT needs the snapshot,
+schema, property, and commit operations that can participate in an Iceberg write. This
+is why SELECT and INSERT are tested independently: permission to read a table must not
+silently authorize a snapshot commit.</p>
+<p>The identity path matters here. The Spark catalog is deliberately not configured with
+a root credential. The demo obtains a token for Alice, Bob, Carol, or Dave and passes it
+to Spark’s Iceberg REST catalog for that process. Token refresh is disabled because an
+OAuth exchange could replace the end-user identity with a service identity. A parity
+test that reaches Polaris as root proves nothing about user authorization.</p>
+<p>The denial text differs. SQE follows an information-hiding posture and can surface a
+denied table as not found. Spark commonly passes through Polaris’s explicit
+<code>LOAD_TABLE</code> 403. The messages are different; the security result is the same.</p>
+<h2 id="the-data-gate-belongs-to-the-query-engine">The data gate belongs to the query engine</h2>
+<p>Once Polaris permits a table load, the <code>query</code> service answers a different question:
+what may this user see inside that table?</p>
+<p>SQE downloads Ranger’s Hive-shaped policy bundle and injects filters and projections
+before DataFusion optimization. Spark’s Kyuubi extension performs the corresponding
+rewrite in Spark. The table scan never hands an unfiltered logical result to the rest
+of the query plan.</p>
+<p>We manage these rules through SQL as well:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CREATE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">OR</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">REPLACE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">POLICY</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"amount-null"</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">TABLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">COLUMN MASK MASK_NULL </span><span style="--0:#F97583;--1:#BF3441">TO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> engineer </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> COLUMN amount;</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CREATE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">OR</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">REPLACE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">POLICY</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"ssn-last-four"</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">TABLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">COLUMN MASK MASK_SHOW_LAST_4 </span><span style="--0:#F97583;--1:#BF3441">TO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> engineer </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> COLUMN ssn;</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CREATE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">OR</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">REPLACE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">POLICY</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"eu-only"</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">TABLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">ROW</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">FILTER</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">TO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> engineer </span><span style="--0:#F97583;--1:#BF3441">USING</span><span style="--0:#E1E4E8;--1:#24292E"> (region </span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">'EU'</span><span style="--0:#E1E4E8;--1:#24292E">);</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="CREATE OR REPLACE POLICY &#x22;amount-null&#x22;  ON TABLE sales_wh.acparity.orders  COLUMN MASK MASK_NULL TO ROLE engineer ON COLUMN amount;CREATE OR REPLACE POLICY &#x22;ssn-last-four&#x22;  ON TABLE sales_wh.acparity.orders  COLUMN MASK MASK_SHOW_LAST_4 TO ROLE engineer ON COLUMN ssn;CREATE OR REPLACE POLICY &#x22;eu-only&#x22;  ON TABLE sales_wh.acparity.orders  ROW FILTER TO ROLE engineer USING (region = &#x27;EU&#x27;);"><div></div></button></div></figure></div>
+<p>SQE parses and validates this Databricks-inspired administrative SQL, then writes the
+corresponding Ranger policy. Spark does not have an equivalent SQL command for
+creating Ranger policies. That is a management-surface difference, not an enforcement
+difference: after SQE writes the rule, both engines consume it.</p>
+<p>This distinction also prevents a misleading demo. The policy creation statement is
+printed as <code>SQL (SQE/carol)</code>. Every data query is then printed twice, once under SQE and
+once under Spark. Nothing is hidden behind an unexplained Ranger REST POST.</p>
+<h2 id="tags-live-with-the-table-and-are-projected-for-spark">Tags live with the table and are projected for Spark</h2>
+<p>A resource policy names a concrete column. A tag policy says something broader, such
+as “mask every column classified as PII.” The rule belongs in Ranger, but the
+association between a column and a classification is table metadata:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">ALTER</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">TABLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">SET</span><span style="--0:#E1E4E8;--1:#24292E"> TAGS (phone </span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E"> (</span><span style="--0:#9ECBFF;--1:#032F62">'PII'</span><span style="--0:#E1E4E8;--1:#24292E">));</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CREATE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">OR</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">REPLACE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">POLICY</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"pii-redaction"</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> TAG PII</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">COLUMN MASK CUSTOM </span><span style="--0:#F97583;--1:#BF3441">TO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> engineer </span><span style="--0:#F97583;--1:#BF3441">USING</span><span style="--0:#E1E4E8;--1:#24292E"> (</span><span style="--0:#9ECBFF;--1:#032F62">'XX'</span><span style="--0:#E1E4E8;--1:#24292E">);</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="ALTER TABLE sales_wh.acparity.orders  SET TAGS (phone = (&#x27;PII&#x27;));CREATE OR REPLACE POLICY &#x22;pii-redaction&#x22;  ON TAG PII  COLUMN MASK CUSTOM TO ROLE engineer USING (&#x27;XX&#x27;);"><div></div></button></div></figure></div>
+<p>SQE stores the association in the Iceberg property <code>sqe.column-tags</code>. That makes the
+classification travel with the table instead of trapping it inside a query engine.
+SQE can read that property directly. Kyuubi cannot, because the standard Ranger plugin
+looks in Ranger’s tag store. With <code>project-tags = true</code>, SQE therefore projects every
+SET or UNSET into Ranger as part of the DDL operation. The Iceberg property remains the
+source of truth; the Ranger copy is the interoperability projection Spark needs.</p>
+<p>Projection failure is not harmless. If Iceberg says PII while Ranger does not, SQE
+masks and Spark returns raw data. The implementation rolls the table-property change
+back when projection fails, so a successful statement cannot knowingly leave the two
+engines in that split state.</p>
+<h2 id="the-fixture-and-the-four-identities">The fixture and the four identities</h2>
+<p>The parity demo creates one six-column Iceberg table and three rows:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CREATE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">TABLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#B392F0;--1:#6F42C1">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">orders</span><span style="--0:#E1E4E8;--1:#24292E"> (</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">id </span><span style="--0:#F97583;--1:#BF3441">BIGINT</span><span style="--0:#E1E4E8;--1:#24292E">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">region </span><span style="--0:#F97583;--1:#BF3441">VARCHAR</span><span style="--0:#E1E4E8;--1:#24292E">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">amount DOUBLE,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">ssn </span><span style="--0:#F97583;--1:#BF3441">VARCHAR</span><span style="--0:#E1E4E8;--1:#24292E">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">email </span><span style="--0:#F97583;--1:#BF3441">VARCHAR</span><span style="--0:#E1E4E8;--1:#24292E">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">phone </span><span style="--0:#F97583;--1:#BF3441">VARCHAR</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">);</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">INSERT INTO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders </span><span style="--0:#F97583;--1:#BF3441">VALUES</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#79B8FF;--1:#005CC5">1</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'EU'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#79B8FF;--1:#005CC5">10</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">0</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'111-11-1111'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'a@x'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'555-0001'</span><span style="--0:#E1E4E8;--1:#24292E">),</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#79B8FF;--1:#005CC5">2</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'US'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#79B8FF;--1:#005CC5">20</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">0</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'222-22-2222'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'b@x'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'555-0002'</span><span style="--0:#E1E4E8;--1:#24292E">),</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#79B8FF;--1:#005CC5">3</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'EU'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#79B8FF;--1:#005CC5">30</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">0</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'333-33-3333'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'c@x'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'555-0003'</span><span style="--0:#E1E4E8;--1:#24292E">);</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="CREATE TABLE sales_wh.acparity.orders (  id BIGINT,  region VARCHAR,  amount DOUBLE,  ssn VARCHAR,  email VARCHAR,  phone VARCHAR);INSERT INTO sales_wh.acparity.orders VALUES  (1, &#x27;EU&#x27;, 10.0, &#x27;111-11-1111&#x27;, &#x27;a@x&#x27;, &#x27;555-0001&#x27;),  (2, &#x27;US&#x27;, 20.0, &#x27;222-22-2222&#x27;, &#x27;b@x&#x27;, &#x27;555-0002&#x27;),  (3, &#x27;EU&#x27;, 30.0, &#x27;333-33-3333&#x27;, &#x27;c@x&#x27;, &#x27;555-0003&#x27;);"><div></div></button></div></figure></div>
+<p>Each column carries exactly one kind of rule. <code>region</code> is read by the row filter,
+<code>amount</code>, <code>ssn</code> and <code>email</code> carry resource masks, and <code>phone</code> carries the tag mask.
+Keeping them separate is deliberate: overlapping two rules on one column is where the
+engines stop agreeing, and each overlap gets its own section later.</p>
+<p>Carol is the administrator. Alice belongs to <code>analyst</code>. Bob belongs to <code>engineer</code>.
+Dave belongs to neither demo role. These identities provide a control beside every
+policy claim:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Identity</th><th>Purpose in the demo</th></tr></thead><tbody><tr><td>Carol</td><td>Creates the fixture and authors policy</td></tr><tr><td>Alice / <code>analyst</code></td><td>Granted and deliberately unmasked control</td></tr><tr><td>Bob / <code>engineer</code> + <code>analyst</code></td><td>Filtered and masked subject</td></tr><tr><td>Dave / no role</td><td>Proof that role membership is required</td></tr></tbody></table>
+<p>Bob holding two roles is deliberate, and the closing REVOKE check is where it bites.
+Removing the <code>engineer</code> grant does not lock Bob out, because the <code>analyst</code> grant from
+section one still reaches him. Revoking analyst SELECT is not enough either, and this
+is the part worth writing down: the grant profile expands <code>table-data-write</code> to include
+<code>table-data-read</code>, so the INSERT granted earlier keeps conferring read. <code>REVOKE SELECT</code>
+reports success and the rows still come back.</p>
+<p>That is the right behaviour. A writer that cannot read its own table is useless, and
+Polaris asks Ranger for the exact access type an operation needs rather than applying
+subsumption at query time, so the expansion has to happen when the grant is written.
+The consequence for anyone closing a gate: revoke every privilege that implies read,
+not the one named SELECT. Measured one statement at a time, engineer SELECT gone leaves
+three rows, analyst SELECT gone still leaves them, and only analyst INSERT gone produces
+the 403.</p>
+<p>Controls matter. “Table not found” is not proof of a denial unless the same table is
+shown to exist for an authorized user. A masked result is not proof of role scoping
+unless a user outside that role sees the raw control value. The script establishes
+both.</p>
+<h2 id="what-the-complete-parity-demo-proves">What the complete parity demo proves</h2>
+<p>The older demo compared a small subset of the SQE-only transcript. The consolidated
+script now carries every behavior family over:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Area</th><th align="right">Assertion through SQE</th><th align="right">Assertion through Spark</th></tr></thead><tbody><tr><td>Denial before GRANT and allow after GRANT</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td>Role member versus user outside the role</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td>SELECT separate from INSERT</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td>Successful SQE write visible cross-engine</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td>Successful Spark write visible cross-engine</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td><code>MASK_NULL</code></td><td align="right">yes</td><td align="right">yes</td></tr><tr><td><code>MASK_SHOW_LAST_4</code></td><td align="right">yes</td><td align="right">yes, with documented rendering difference</td></tr><tr><td><code>MASK_HASH</code> protects all values</td><td align="right">yes</td><td align="right">yes; keyed bytes and digest length are not a parity promise</td></tr><tr><td>Resource row filter</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td>Tag mask and tag projection</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td>Filter + three resource masks + tag mask in one plan</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td>Resource-mask/tag-mask precedence</td><td align="right">yes</td><td align="right">yes, identical since <code>mask-precedence</code> defaults to <code>tag</code></td></tr><tr><td>Row filter reading a tag-masked column</td><td align="right">yes</td><td align="right">yes, with documented ordering difference</td></tr><tr><td>Tag with no policy is inert</td><td align="right">yes</td><td align="right">yes</td></tr><tr><td>Invalid CUSTOM policy is rejected</td><td align="right">SQL management check</td><td align="right">no Spark policy DDL</td></tr><tr><td><code>SHOW GRANTS</code> and <code>CHECK ACCESS</code></td><td align="right">SQL management check</td><td align="right">no Spark equivalent</td></tr><tr><td>View grant type and base-table authorization</td><td align="right">yes</td><td align="right">query enforcement checked where supported</td></tr><tr><td>Denial after REVOKE</td><td align="right">yes</td><td align="right">yes</td></tr></tbody></table>
+<p>Successful writes are important here. The demo first proves that SELECT does not imply
+INSERT in either engine. It then grants INSERT, commits a row through SQE, and verifies
+both engines see four rows. Carol deletes that row and both return to three. The same
+sequence is repeated with the commit made through Spark. This catches both authorization
+errors and stale cross-user table snapshots.</p>
+<p>The combined policy query is intentionally compact:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">SELECT</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">count</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#F97583;--1:#BF3441">*</span><span style="--0:#E1E4E8;--1:#24292E">) </span><span style="--0:#F97583;--1:#BF3441">AS</span><span style="--0:#E1E4E8;--1:#24292E"> rows_seen,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">sum</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#F97583;--1:#BF3441">CASE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">WHEN</span><span style="--0:#E1E4E8;--1:#24292E"> phone </span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">'XX'</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">THEN</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">1</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ELSE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">0</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">END</span><span style="--0:#E1E4E8;--1:#24292E">) </span><span style="--0:#F97583;--1:#BF3441">AS</span><span style="--0:#E1E4E8;--1:#24292E"> tag_masked,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">sum</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#F97583;--1:#BF3441">CASE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">WHEN</span><span style="--0:#E1E4E8;--1:#24292E"> amount </span><span style="--0:#F97583;--1:#BF3441">IS</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">NULL</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">THEN</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">1</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ELSE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">0</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">END</span><span style="--0:#E1E4E8;--1:#24292E">) </span><span style="--0:#F97583;--1:#BF3441">AS</span><span style="--0:#E1E4E8;--1:#24292E"> amount_nullified,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">sum</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#F97583;--1:#BF3441">CASE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">WHEN</span><span style="--0:#E1E4E8;--1:#24292E"> substr(ssn, </span><span style="--0:#79B8FF;--1:#005CC5">8</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#79B8FF;--1:#005CC5">4</span><span style="--0:#E1E4E8;--1:#24292E">) </span><span style="--0:#F97583;--1:#BF3441">IN</span><span style="--0:#E1E4E8;--1:#24292E"> (</span><span style="--0:#9ECBFF;--1:#032F62">'1111'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'3333'</span><span style="--0:#E1E4E8;--1:#24292E">)</span></div></div><div class="ec-line"><div class="code"><span class="indent">            </span><span style="--0:#F97583;--1:#BF3441">AND</span><span style="--0:#E1E4E8;--1:#24292E"> ssn </span><span style="--0:#F97583;--1:#BF3441">NOT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">IN</span><span style="--0:#E1E4E8;--1:#24292E"> (</span><span style="--0:#9ECBFF;--1:#032F62">'111-11-1111'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'333-33-3333'</span><span style="--0:#E1E4E8;--1:#24292E">)</span></div></div><div class="ec-line"><div class="code"><span class="indent">           </span><span style="--0:#F97583;--1:#BF3441">THEN</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">1</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ELSE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">0</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">END</span><span style="--0:#E1E4E8;--1:#24292E">) </span><span style="--0:#F97583;--1:#BF3441">AS</span><span style="--0:#E1E4E8;--1:#24292E"> ssn_masked,</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#79B8FF;--1:#005CC5">sum</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#F97583;--1:#BF3441">CASE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">WHEN</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">length</span><span style="--0:#E1E4E8;--1:#24292E">(email) </span><span style="--0:#F97583;--1:#BF3441">>=</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">32</span></div></div><div class="ec-line"><div class="code"><span class="indent">            </span><span style="--0:#F97583;--1:#BF3441">AND</span><span style="--0:#E1E4E8;--1:#24292E"> email </span><span style="--0:#F97583;--1:#BF3441">NOT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">IN</span><span style="--0:#E1E4E8;--1:#24292E"> (</span><span style="--0:#9ECBFF;--1:#032F62">'a@x'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'b@x'</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#9ECBFF;--1:#032F62">'c@x'</span><span style="--0:#E1E4E8;--1:#24292E">)</span></div></div><div class="ec-line"><div class="code"><span class="indent">           </span><span style="--0:#F97583;--1:#BF3441">THEN</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">1</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ELSE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">0</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">END</span><span style="--0:#E1E4E8;--1:#24292E">) </span><span style="--0:#F97583;--1:#BF3441">AS</span><span style="--0:#E1E4E8;--1:#24292E"> email_hashed</span></div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">FROM</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders;</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="SELECT  count(*) AS rows_seen,  sum(CASE WHEN phone = &#x27;XX&#x27; THEN 1 ELSE 0 END) AS tag_masked,  sum(CASE WHEN amount IS NULL THEN 1 ELSE 0 END) AS amount_nullified,  sum(CASE WHEN substr(ssn, 8, 4) IN (&#x27;1111&#x27;, &#x27;3333&#x27;)            AND ssn NOT IN (&#x27;111-11-1111&#x27;, &#x27;333-33-3333&#x27;)           THEN 1 ELSE 0 END) AS ssn_masked,  sum(CASE WHEN length(email) >= 32            AND email NOT IN (&#x27;a@x&#x27;, &#x27;b@x&#x27;, &#x27;c@x&#x27;)           THEN 1 ELSE 0 END) AS email_hashedFROM sales_wh.acparity.orders;"><div></div></button></div></figure></div>
+<p>For Bob, every count must be two. The row filter removes the US row, while four masks
+transform the two surviving rows. Composition is proven in one logical plan instead of
+proving each policy only in isolation.</p>
+<p>The email predicate asks whether the address was replaced by something hash-shaped, not
+whether it is a specific length. SQE emits a 64-character sha256 digest and Kyuubi emits
+a 32-character md5 digest, so a fixed length would assert the digest algorithm rather
+than the protection.</p>
+<h2 id="where-sqe-and-spark-intentionally-do-not-claim-byte-parity">Where SQE and Spark intentionally do not claim byte parity</h2>
+<p>Shared policy does not automatically mean identical semantics. Three differences showed
+up. One we closed, two we expose in the transcript rather than smoothing over.</p>
+<p>First, Ranger’s named <code>MASK_SHOW_LAST_4</code> is not byte-portable. SQE honors the Hive
+service definition’s transformer and renders <code>111-11-1111</code> as <code>xxx-xx-1111</code>. Kyuubi
+uses its own character-class substitutions and renders <code>nnnUnnU1111</code>. Both hide the
+same characters and preserve the same final four digits, but the strings differ.</p>
+<p>When identical output matters, use a portable CUSTOM expression:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">USING</span><span style="--0:#E1E4E8;--1:#24292E"> (</span><span style="--0:#79B8FF;--1:#005CC5">concat</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#9ECBFF;--1:#032F62">'xxx-xx-'</span><span style="--0:#E1E4E8;--1:#24292E">, substr({col}, </span><span style="--0:#79B8FF;--1:#005CC5">8</span><span style="--0:#E1E4E8;--1:#24292E">, </span><span style="--0:#79B8FF;--1:#005CC5">4</span><span style="--0:#E1E4E8;--1:#24292E">)))</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="USING (concat(&#x27;xxx-xx-&#x27;, substr({col}, 8, 4)))"><div></div></button></div></figure></div>
+<p>Both engines inject that expression and return identical bytes.</p>
+<p>Second was a resource mask and a tag mask on the same column, and this one we closed
+rather than documented. SQE chose the resource-specific mask on a most-specific-rule
+reading; Kyuubi, following the standard Ranger plugin order, chose the tag mask. Neither
+returned the raw SSN, so nothing leaked, but the same policy set rendered two different
+values and that is not a policy model, it is two.</p>
+<p><code>policy.mask-precedence</code> now decides it, and the default is <code>tag</code>. Matching the plugin
+order costs SQE the narrower reading and buys one answer per policy across both engines,
+which is the property the whole exercise is about. <code>resource</code> restores the old behaviour
+for anyone who wants the specific rule to win, and the parity demo diverges again when
+they set it.</p>
+<p>The choice is genuinely arguable, which is why it is a setting. A resource policy names
+the column outright, so “most specific wins” is a defensible reading of intent. What
+settles it is that Ranger is the shared store: a rule authored once should not mean two
+things depending on which engine reads it.</p>
+<p>Third, and the sharpest of the three, a row filter that reads a tag-masked column does
+not compose the same way. SQE evaluates the filter against stored values and masks the
+rows that survive. Kyuubi injects its masking projection <em>below</em> its row-filter marker,
+so the filter compares the mask literal instead of the stored value. Tag <code>region</code> with
+<code>PII</code> while <code>region = 'EU'</code> is the active row filter and the result is stark:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Engine</th><th align="right">Rows Bob sees</th></tr></thead><tbody><tr><td>SQE</td><td align="right">2, with <code>region</code> rendered as <code>XX</code></td></tr><tr><td>Spark / Kyuubi</td><td align="right">0</td></tr></tbody></table>
+<p>Nothing leaks, so this is a correctness difference rather than a security hole, and it is
+the reason the demo fixture keeps the filtered column and the tag-masked column apart.
+Section 5b of the script then re-creates the collision on purpose and asserts the two row
+counts, because a difference that is only discovered by accident tends to be rediscovered
+by accident. The count is asserted rather than the empty result set: an empty result is
+also what a failed query produces, and 0 is not.</p>
+<p><code>MASK_HASH</code> deserves a separate warning. SQE’s hash is a keyed HMAC using an engine-held
+key, and Kyuubi’s is an unkeyed md5. The security property under test is that every value
+is replaced by a digest and no row disappears. Those digest bytes and their length are not
+a cross-engine compatibility contract. A keyed hash should not be weakened merely to make
+it equal to another runtime’s unkeyed function.</p>
+<p>These are precisely the cases where a vague “Ranger compatible” label is insufficient.
+The policy source is shared; the behavioral contract still has to name the semantics.</p>
+<h2 id="management-sql-versus-spark-sql">Management SQL versus Spark SQL</h2>
+<p>Spark has SQL for querying and modifying Iceberg tables. It does not provide a native
+SQL grammar for creating Ranger masks, row filters, or Polaris grants. Kyuubi Authz is
+an enforcement plugin, not a Ranger policy administration interface.</p>
+<p>SQE deliberately fills that administration gap with one SQL surface:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">SHOW GRANTS </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders;</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CHECK</span><span style="--0:#E1E4E8;--1:#24292E"> ACCESS </span><span style="--0:#F97583;--1:#BF3441">SELECT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders </span><span style="--0:#F97583;--1:#BF3441">FOR</span><span style="--0:#E1E4E8;--1:#24292E"> USER </span><span style="--0:#9ECBFF;--1:#032F62">"alice"</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CREATE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">OR</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">REPLACE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">POLICY</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"email-hash"</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">TABLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#E1E4E8;--1:#24292E">  </span></span><span style="--0:#E1E4E8;--1:#24292E">COLUMN MASK MASK_HASH </span><span style="--0:#F97583;--1:#BF3441">TO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> engineer </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> COLUMN email;</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">DROP</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">POLICY</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">IF</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">EXISTS</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"email-hash"</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="SHOW GRANTS ON sales_wh.acparity.orders;CHECK ACCESS SELECT ON sales_wh.acparity.orders FOR USER &#x22;alice&#x22;;CREATE OR REPLACE POLICY &#x22;email-hash&#x22;  ON TABLE sales_wh.acparity.orders  COLUMN MASK MASK_HASH TO ROLE engineer ON COLUMN email;DROP POLICY IF EXISTS &#x22;email-hash&#x22;;"><div></div></button></div></figure></div>
+<p>This is close in spirit to Databricks governance SQL: administrators describe grants,
+filters, masks, and tags in SQL next to the data object. The backing store is Ranger,
+not a proprietary metastore, and the syntax should be described as inspired by that
+style rather than falsely presented as wire-compatible Databricks SQL.</p>
+<p>The benefit is operational consistency. Administrators do not need embedded Ranger
+credentials and JSON in every demo or migration. Ranger remains the audit and policy
+system. SQE is the typed, validated SQL authoring interface. Spark remains an equal
+consumer of the resulting policies.</p>
+<h2 id="views-are-names-not-security-boundaries">Views are names, not security boundaries</h2>
+<p>The demo also creates a view and grants its name:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CREATE OR REPLACE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">VIEW</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#B392F0;--1:#6F42C1">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">orders_eu</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">AS</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">SELECT</span><span style="--0:#E1E4E8;--1:#24292E"> id, region</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">FROM</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#F97583;--1:#BF3441">WHERE</span><span style="--0:#E1E4E8;--1:#24292E"> region </span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">'EU'</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">GRANT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">SELECT</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ON</span><span style="--0:#E1E4E8;--1:#24292E"> VIEW </span><span style="--0:#79B8FF;--1:#005CC5">sales_wh</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">acparity</span><span style="--0:#E1E4E8;--1:#24292E">.orders_eu </span><span style="--0:#F97583;--1:#BF3441">TO</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">ROLE</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">"analyst"</span><span style="--0:#E1E4E8;--1:#24292E">;</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="CREATE OR REPLACE VIEW sales_wh.acparity.orders_eu AS  SELECT id, region  FROM sales_wh.acparity.orders  WHERE region = &#x27;EU&#x27;;GRANT SELECT ON VIEW sales_wh.acparity.orders_eu TO ROLE &#x22;analyst&#x22;;"><div></div></button></div></figure></div>
+<p><code>SHOW GRANTS</code> must report <code>view-list</code> and <code>view-properties-read</code>, not table access
+types. But the view is not a definer-rights privilege boundary. The engine expands its
+plan and still authorizes the underlying table. A view grant does not smuggle access
+past a missing base-table grant.</p>
+<h2 id="caches-are-part-of-the-security-model">Caches are part of the security model</h2>
+<p>This work found several bugs that only appear when identity, metadata, and policy
+changes cross process boundaries.</p>
+<p>Polaris’s Ranger plugin polls policy, so GRANT and REVOKE are not instantaneous. The
+demo polls for the documented state rather than sleeping a fixed number of seconds.
+Each Spark assertion starts a new <code>spark-sql</code> process and clears its explicit development
+policy-cache directory so it cannot inherit a stale bundle from the previous assertion.</p>
+<p>SQE also has per-session catalog state. A row inserted by Alice and deleted by Carol
+exposed a stale snapshot: Carol’s session committed the delete, while Alice’s session
+continued reading the old table metadata. Successful INSERT, DELETE, UPDATE, MERGE,
+TRUNCATE, and CTAS operations now invalidate the table across all session contexts.
+The parity demo’s write/delete sequence is the readable regression test for that fix.</p>
+<p>Caching is not a performance footnote in an authorization system. A stale allow after
+REVOKE and a stale table snapshot after DELETE are observable security behavior. Both
+need bounded, tested invalidation.</p>
+<h2 id="run-the-contract-yourself">Run the contract yourself</h2>
+<p>Build and start the quickstart from the repository:</p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#79B8FF;--1:#005CC5">cd</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">quickstart/polaris-ranger-keycloak</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">docker</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">compose</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">build</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">sqe</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">docker</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">compose</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">up</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">-d</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">--force-recreate</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">sqe</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">docker</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">compose</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">ps</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">sqe</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="cd quickstart/polaris-ranger-keycloakdocker compose build sqedocker compose up -d --force-recreate sqedocker compose ps sqe"><div></div></button></div></figure></div>
+<p>Then run the single-engine transcript:</p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">./scripts/access-control-demo.sh</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="./scripts/access-control-demo.sh"><div></div></button></div></figure></div>
+<p>Or run the full cross-engine contract:</p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">./scripts/access-control-parity-demo.sh</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="./scripts/access-control-parity-demo.sh"><div></div></button></div></figure></div>
+<p>To reuse a healthy stack without bootstrapping it again:</p>
+<div class="expressive-code"><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">AC_PARITY_NO_BOOTSTRAP</span><span style="--0:#F97583;--1:#BF3441">=</span><span style="--0:#9ECBFF;--1:#032F62">1</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#B392F0;--1:#6F42C1">./scripts/access-control-parity-demo.sh</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="AC_PARITY_NO_BOOTSTRAP=1 ./scripts/access-control-parity-demo.sh"><div></div></button></div></figure></div>
+<p>The parity script takes longer because Spark starts a JVM for every independent probe.
+That isolation is useful: each query gets the caller’s own Polaris token and a fresh
+Ranger policy view. The output prints every GRANT, REVOKE, policy statement, tag change,
+query, engine result, and assertion. A nonzero exit means the documented behavior did
+not occur.</p>
+<h2 id="what-we-can-honestly-claim">What we can honestly claim</h2>
+<p>SQE and Spark can govern the same Iceberg table from one Ranger Admin without keeping
+two copies of every policy.</p>
+<p>Polaris owns the object gate for both engines. The <code>query</code> and linked <code>tag</code> services own
+fine-grained intent. SQE and Kyuubi independently enforce that intent in their logical
+plans. SQE supplies the SQL management surface; Spark consumes the resulting policy.
+Portable CUSTOM masks, resource row filters, tag projection, role scoping, writes, and
+revocation can be checked live against the same data.</p>
+<p>The remaining differences are not hidden: named mask rendering, keyed hash bytes, and
+resource-versus-tag precedence are explicit parts of the test output. That is the
+standard we want from cross-engine governance. “One policy” is only valuable when the
+behavior is executable, the differences are named, and a future change has nowhere to
+hide.</p>  </div> <nav class="post-nav" data-astro-cid-bvzihdzo> <a href="/blog/2026-08-14-every-acl-we-can-write-and-who-enforces-it/" class="post-nav-link post-nav-prev" data-astro-cid-bvzihdzo> <span class="post-nav-arrow" data-astro-cid-bvzihdzo>&larr;</span> <span class="post-nav-title" data-astro-cid-bvzihdzo>Every ACL we can write, and which system enforces it</span> </a> <a href="/blog/2026-08-06-two-gates-and-the-one-that-answers-first/" class="post-nav-link post-nav-next" data-astro-cid-bvzihdzo> <span class="post-nav-title" data-astro-cid-bvzihdzo>Two gates, and the one that answers first</span> <span class="post-nav-arrow" data-astro-cid-bvzihdzo>&rarr;</span> </a> </nav> <a href="/blog/" class="back-link" data-astro-cid-bvzihdzo> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-bvzihdzo> <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-bvzihdzo></path> </svg>
+All posts
+</a> </article> </main> <footer data-astro-cid-sz7xmlte> <div class="projects" data-astro-cid-sz7xmlte> <a href="https://theartofagents.com/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-sz7xmlte>
+The Art of Agents
+</a> <span class="project-sep" data-astro-cid-sz7xmlte>/</span> <a href="https://neonarcade.net/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-sz7xmlte>
+Neon Arcade
+</a> </div> <div class="social-links" data-astro-cid-sz7xmlte> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Follow on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-sz7xmlte><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-sz7xmlte></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Go to GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-sz7xmlte><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-sz7xmlte></path></svg> </a> </div> <p class="copyright" data-astro-cid-sz7xmlte>&copy; 2026 Jacob Verhoeks</p> </footer> </body></html>

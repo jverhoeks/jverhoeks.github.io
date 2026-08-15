@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-bvzihdzo> <head><!-- Theme: default dark (/echo). Honor saved light preference. --><script>
+	(function () {
+		try {
+			if (localStorage.getItem('theme') === 'light') {
+				document.documentElement.setAttribute('data-theme', 'light');
+			}
+		} catch (e) {}
+	})();
+</script> <!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#071014"><meta name="author" content="Jacob Verhoeks"><meta name="generator" content="Astro v6.4.8"><!-- Google Fonts: Oswald + Spectral + IBM Plex Mono (non-render-blocking) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"></noscript><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/2026-07-22-autonomous-compaction/"><!-- Primary Meta Tags --><title>Autonomous compaction, without a service account</title><meta name="title" content="Autonomous compaction, without a service account"><meta name="description" content="SQE's founding rule is no service account: every query runs as the authenticated user, tokens passed through to Polaris and S3. Background compaction has no user to be. Here is how we gave Iceberg tables a self-healing maintenance path while keeping that rule intact: a structurally isolated principal, deny-by-default grants, and a commit authority that never leaves the coordinator, even when the rewrite itself is distributed across the worker fleet."><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:site_name" content="Jacob's Blog"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jacob.verhoeks.org/blog/2026-07-22-autonomous-compaction/"><meta property="og:title" content="Autonomous compaction, without a service account"><meta property="og:description" content="SQE's founding rule is no service account: every query runs as the authenticated user, tokens passed through to Polaris and S3. Background compaction has no user to be. Here is how we gave Iceberg tables a self-healing maintenance path while keeping that rule intact: a structurally isolated principal, deny-by-default grants, and a commit authority that never leaves the coordinator, even when the rewrite itself is distributed across the worker fleet."><meta property="og:image" content="https://jacob.verhoeks.org/og-image.png"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@jverhoeks"><meta name="twitter:creator" content="@jverhoeks"><meta name="twitter:title" content="Autonomous compaction, without a service account"><meta name="twitter:description" content="SQE's founding rule is no service account: every query runs as the authenticated user, tokens passed through to Polaris and S3. Background compaction has no user to be. Here is how we gave Iceberg tables a self-healing maintenance path while keeping that rule intact: a structurally isolated principal, deny-by-default grants, and a commit authority that never leaves the coordinator, even when the rewrite itself is distributed across the worker fleet."><meta name="twitter:image" content="https://jacob.verhoeks.org/og-image.png"><meta name="theme-color" content="#071014"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Autonomous compaction, without a service account","description":"SQE's founding rule is no service account: every query runs as the authenticated user, tokens passed through to Polaris and S3. Background compaction has no user to be. Here is how we gave Iceberg tables a self-healing maintenance path while keeping that rule intact: a structurally isolated principal, deny-by-default grants, and a commit authority that never leaves the coordinator, even when the rewrite itself is distributed across the worker fleet.","datePublished":"2026-07-22T00:00:00.000Z","author":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org/about"},"publisher":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org"},"keywords":"iceberg, compaction, security, distributed-systems","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacob.verhoeks.org/blog/2026-07-22-autonomous-compaction/"}}</script><link rel="stylesheet" href="/_astro/BaseHead.Rnmzki-c.css"><style>a[data-astro-cid-eimmu3lg]{display:inline-block;text-decoration:none}a[data-astro-cid-eimmu3lg].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-3ef6ksr2]{margin:0;padding:0 1em;background:linear-gradient(180deg,var(--echo-ink-2),var(--bg));border-top:2px solid var(--accent);border-bottom:1px solid var(--echo-hair);min-height:56px;transition:background-color .25s ease,border-color .25s ease}h2[data-astro-cid-3ef6ksr2]{margin:0;font-size:.95em;font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.06em}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2],h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;color:rgb(var(--black))}h2[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover{color:var(--accent)}nav[data-astro-cid-3ef6ksr2]{display:flex;align-items:center;justify-content:space-between;gap:.75rem}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{padding:1em .5em;color:var(--echo-mute);border-bottom:2px solid transparent;text-decoration:none;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover{color:rgb(var(--black))}nav[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2].active{text-decoration:none;color:rgb(var(--black));border-bottom-color:var(--accent)}.social-links[data-astro-cid-3ef6ksr2],.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:flex;align-items:center}.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{color:var(--echo-mute);padding:.5em;border-bottom:none}.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]:hover{color:var(--accent)}.theme-toggle[data-astro-cid-3ef6ksr2]{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;margin-right:.35em;padding:0;border:1px solid var(--echo-hair);border-radius:2px;background:transparent;color:var(--echo-mute);cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease}.theme-toggle[data-astro-cid-3ef6ksr2]:hover{border-color:var(--accent);color:var(--accent)}.icon-sun[data-astro-cid-3ef6ksr2]{display:block}.icon-moon[data-astro-cid-3ef6ksr2]{display:none}:root[data-theme=light] .icon-sun[data-astro-cid-3ef6ksr2]{display:none}:root[data-theme=light] .icon-moon[data-astro-cid-3ef6ksr2]{display:block}@media(max-width:720px){.social-links[data-astro-cid-3ef6ksr2] a[data-astro-cid-3ef6ksr2]{display:none}.social-links[data-astro-cid-3ef6ksr2] .theme-toggle[data-astro-cid-3ef6ksr2]{display:inline-flex}}footer[data-astro-cid-sz7xmlte]{padding:2.5em 1em 5em;background:linear-gradient(180deg,transparent,var(--echo-ink-2));border-top:1px solid var(--echo-hair);color:var(--echo-mute);text-align:center}.projects[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;align-items:center;gap:.5em;margin-bottom:1em;flex-wrap:wrap}.project-link[data-astro-cid-sz7xmlte]{color:rgb(var(--black));text-decoration:none;font-family:var(--font-mono);font-weight:500;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}.project-link[data-astro-cid-sz7xmlte]:hover{color:var(--accent)}.project-sep[data-astro-cid-sz7xmlte]{color:var(--echo-mute);opacity:.5;font-weight:300}.social-links[data-astro-cid-sz7xmlte]{display:flex;justify-content:center;gap:1em;margin-top:.5em}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]{text-decoration:none;color:var(--echo-mute)}.social-links[data-astro-cid-sz7xmlte] a[data-astro-cid-sz7xmlte]:hover{color:var(--accent)}.copyright[data-astro-cid-sz7xmlte]{margin-top:1.25em;font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
+body.echo-blog{background:var(--bg)}
+</style><link rel="stylesheet" href="/_astro/BlogPost.BP_iv8XY.css"></head> <body class="echo-blog" data-astro-cid-bvzihdzo> <header data-astro-cid-3ef6ksr2> <nav data-astro-cid-3ef6ksr2> <h2 data-astro-cid-3ef6ksr2><a href="/" data-astro-cid-3ef6ksr2>Jacob&#39;s Blog</a></h2> <div class="internal-links" data-astro-cid-3ef6ksr2> <a href="/" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Home </a> <a href="/blog" class="active" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Blog </a> <a href="/#books" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Books </a> <a href="/projects" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> Projects </a> <a href="/about" data-astro-cid-3ef6ksr2="true" data-astro-cid-eimmu3lg> About </a> </div> <div class="social-links" data-astro-cid-3ef6ksr2> <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle light mode" title="Toggle light mode" data-astro-cid-3ef6ksr2> <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-3ef6ksr2><circle cx="12" cy="12" r="4" data-astro-cid-3ef6ksr2></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" data-astro-cid-3ef6ksr2></path></svg> <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor" data-astro-cid-3ef6ksr2><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" data-astro-cid-3ef6ksr2></path></svg> </button> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Follow on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-3ef6ksr2></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-3ef6ksr2> <span class="sr-only" data-astro-cid-3ef6ksr2>Go to GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-3ef6ksr2><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-3ef6ksr2></path></svg> </a> </div> </nav> </header>  <script>
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		btn.addEventListener('click', function () {
+			var root = document.documentElement;
+			var isLight = root.getAttribute('data-theme') === 'light';
+			if (isLight) {
+				root.removeAttribute('data-theme');
+				try { localStorage.setItem('theme', 'dark'); } catch (e) {}
+			} else {
+				root.setAttribute('data-theme', 'light');
+				try { localStorage.setItem('theme', 'light'); } catch (e) {}
+			}
+		});
+	})();
+</script> <main data-astro-cid-bvzihdzo> <article data-astro-cid-bvzihdzo> <header class="article-header" data-astro-cid-bvzihdzo> <div class="article-meta" data-astro-cid-bvzihdzo> <time class="article-date" data-astro-cid-bvzihdzo> <time datetime="2026-07-22T00:00:00.000Z"> Jul 22, 2026 </time> </time>  <span class="meta-dot" data-astro-cid-bvzihdzo>|</span> <span data-astro-cid-bvzihdzo>Jacob Verhoeks</span>   <span class="meta-dot" data-astro-cid-bvzihdzo>|</span> <span data-astro-cid-bvzihdzo>11 min read</span>  </div> <h1 class="article-title" data-astro-cid-bvzihdzo>Autonomous compaction, without a service account</h1> <p class="article-description" data-astro-cid-bvzihdzo>SQE&#39;s founding rule is no service account: every query runs as the authenticated user, tokens passed through to Polaris and S3. Background compaction has no user to be. Here is how we gave Iceberg tables a self-healing maintenance path while keeping that rule intact: a structurally isolated principal, deny-by-default grants, and a commit authority that never leaves the coordinator, even when the rewrite itself is distributed across the worker fleet.</p>  <div class="article-tags" data-astro-cid-bvzihdzo> <a href="/blog/tag/iceberg/" class="echo-pill" data-astro-cid-bvzihdzo>iceberg</a><a href="/blog/tag/compaction/" class="echo-pill" data-astro-cid-bvzihdzo>compaction</a><a href="/blog/tag/security/" class="echo-pill" data-astro-cid-bvzihdzo>security</a><a href="/blog/tag/distributed-systems/" class="echo-pill" data-astro-cid-bvzihdzo>distributed-systems</a> </div> </header> <div class="prose" data-astro-cid-bvzihdzo>  <p><em>July 22, 2026</em></p>
+<p>SQE’s founding rule is one sentence: no service account. Every query runs as
+the authenticated user. The coordinator never holds a credential of its own;
+it passes the caller’s bearer token through to Polaris and S3 and lets those
+systems decide what the caller can see. It is the cleanest sovereignty story
+we have, and we have spent a year and a half not breaking it.</p>
+<p>Autonomous compaction breaks it on paper. A background job that rewrites
+small files at 2 a.m. has no session, no bearer token, and no human sitting
+at a terminal. It has to run as something. The question this post answers is
+what that something is, and why it does not reopen the door the founding rule
+closes.</p>
+<h2 id="why-the-door-needed-opening-at-all">Why the door needed opening at all</h2>
+<p>Merge-on-Read Iceberg tables accumulate two kinds of debt. Every streaming
+insert and every <code>MERGE INTO</code> adds a new data file, so file counts climb
+independent of table growth. Every <code>DELETE</code> and every <code>UPDATE</code> adds a
+position or equality delete file that every future read has to apply before
+it can trust a row. Neither kind of debt is visible in the table’s row count.
+Both make every scan slower, file by file, delete by delete, until a query
+that used to take two seconds takes twenty.</p>
+<p>SQE already had the cure. <code>CALL system.rewrite_data_files</code> bin-packs small
+files into larger ones, applies deletes at rewrite time so they stop costing
+anything at read time, and (as of a <code>strategy => 'sort'</code> or <code>zorder(...)</code>
+option) can cluster rows for pruning while it’s in there anyway. <code>CALL system.expire_snapshots</code> and <code>CALL system.remove_orphan_files</code> clean up
+after it. All three are correct, delete-aware, and audited.</p>
+<p>They are also entirely manual. Someone has to notice a table is unhealthy,
+remember the procedure name, and type the <code>CALL</code>. At one table that is a
+minor chore. At the scale a production lakehouse runs, it is a queue of
+chores nobody clears, and the tables that need compaction most are the ones
+too busy for anyone to schedule downtime against. The debt that hurts most is
+the debt nobody has time to look at.</p>
+<h2 id="the-shape-of-the-identity-problem">The shape of the identity problem</h2>
+<p>The obvious fix is a cron job that runs the same <code>CALL</code> on a schedule. The
+obvious fix needs a credential to run as, and every credential SQE has ever
+issued belongs to a human who authenticated through OIDC. Handing a
+scheduler one of those tokens would mean minting a session for nobody, or
+worse, reusing somebody’s. Either way, the query path stops being 100%
+user-identity, and the whole reason SQE exists starts to look negotiable.</p>
+<p>We did not solve this by relaxing the rule. We solved it by keeping the rule
+absolute for the query path and building the maintenance path as a second,
+structurally separate thing that happens to share the same binary.</p>
+<p>The load-bearing decision is where the new credential type lives.
+<code>OidcM2mProvider</code>, the client-credentials grant that authenticates the
+scheduler, is wired through a dedicated <code>[maintenance.principal]</code> config
+block owned solely by the maintenance subsystem. We deliberately did not add
+an <code>M2m</code> variant to the interactive <code>AuthProviderConfig</code> and did not touch
+<code>build_auth_chain</code>. That inversion is the whole compliance argument in one
+sentence: the interactive path cannot accidentally pick up the maintenance
+token, because the code that constructs that token is never reachable from
+any listener. It isn’t gated behind a flag that could be flipped by mistake.
+It is a different object graph.</p>
+<p>Three more layers reinforce the same boundary. The scheduler mints an
+ephemeral <code>Session</code> from the principal’s identity per job and drops it when
+the job ends; that session is never inserted into the <code>SessionManager</code> that
+tracks real user sessions. The scheduler’s only capability is calling the
+maintenance dispatcher, never the SQL query path, so even a compromised
+scheduler cannot run an arbitrary <code>SELECT</code> as the maintenance identity.
+And the config validates itself: it refuses to start in <code>active</code> mode
+without a principal configured, and it warns if the principal’s client ID
+collides with any interactive auth provider’s.</p>
+<h2 id="deny-by-default-opt-in-by-table">Deny by default, opt in by table</h2>
+<p>A structurally isolated identity is necessary but not sufficient. An
+identity that can silently rewrite every table in the warehouse is still a
+service account in spirit, just a well-fenced one. So autonomous compaction
+gates on three independent switches, and all three have to agree before a
+single byte moves:</p>
+<p>A global <code>mode</code>, defaulting to <code>"off"</code>, then <code>"advisory"</code> (report table
+health, touch nothing), then <code>"active"</code> (actually compact opted-in tables).
+A per-table property, <code>sqe.maintenance.enabled = 'true'</code>, set by the table’s
+owner through an ordinary <code>ALTER TABLE</code> that shows up in the table’s own
+history like any other schema change. And a least-privilege Polaris grant on
+the maintenance principal covering exactly <code>TABLE_READ_DATA</code> and
+<code>TABLE_WRITE_DATA</code> on the opted-in namespaces. No <code>CREATE</code>, no <code>DROP</code>, no
+admin surface at all. Polaris enforces this independent of SQE, so a bug in
+our own gating logic still hits a wall at the catalog.</p>
+<p>The failure modes are asymmetric on purpose. A table with the property but
+no grant fails loudly, an audit event and a metric, never a silent skip,
+because a table owner who flipped the switch and got nothing deserves to
+know why. A table with a grant but missing the property is never touched at
+all. Defaulting toward “do nothing and say why” rather than “do something
+and stay quiet” is the same instinct that put row filters above the table
+scan in the security layer: deny by default, and make denial visible.</p>
+<p>Before any of this writes anything, it can just tell you what it would do:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.y0rd3.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame"><figcaption class="header"></figcaption><pre data-language="sql"><code><div class="ec-line"><div class="code"><span style="--0:#F97583;--1:#BF3441">CALL</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#79B8FF;--1:#005CC5">system</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#79B8FF;--1:#005CC5">table_health</span><span style="--0:#E1E4E8;--1:#24292E">(</span><span style="--0:#F97583;--1:#BF3441">table</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#F97583;--1:#BF3441">=></span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">'sales.orders'</span><span style="--0:#E1E4E8;--1:#24292E">);</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="CALL system.table_health(table => &#x27;sales.orders&#x27;);"><div></div></button></div></figure></div>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e"> </span></span><span style="--0:#e1e4e8;--1:#24292e">table          | small_files | avg_file_mb | delete_ratio | eligible_groups | opted_in</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">-----------------+-------------+-------------+---------------+------------------+----------</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e"> </span></span><span style="--0:#e1e4e8;--1:#24292e">sales.orders    |        1842 |        11.4 |          0.31 |               14 | false</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code=" table          | small_files | avg_file_mb | delete_ratio | eligible_groups | opted_in-----------------+-------------+-------------+---------------+------------------+---------- sales.orders    |        1842 |        11.4 |          0.31 |               14 | false"><div></div></button></div></figure></div>
+<p>Fourteen eligible groups and a table that is not opted in is exactly the
+signal an operator needs to make the opt-in decision themselves. Advisory
+mode ships this for free, with zero credentials configured, because
+<code>table_health</code> reads snapshot summaries the coordinator already caches. It
+costs nothing and commits to nothing.</p>
+<p>Turning the engine on is a config block, not a code change:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="toml"><code><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">maintenance</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">mode = </span><span style="--0:#9ECBFF;--1:#032F62">"active"</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">maintenance</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#B392F0;--1:#6F42C1">principal</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">token_endpoint = </span><span style="--0:#9ECBFF;--1:#032F62">"https://idp.example.com/realms/sqe/protocol/openid-connect/token"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">client_id      = </span><span style="--0:#9ECBFF;--1:#032F62">"sqe-maintenance"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">client_secret  = </span><span style="--0:#9ECBFF;--1:#032F62">"${SQE_MAINTENANCE_CLIENT_SECRET}"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">scope          = </span><span style="--0:#9ECBFF;--1:#032F62">"PRINCIPAL_ROLE:sqe_maintenance"</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">maintenance</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#B392F0;--1:#6F42C1">scheduler</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">schedule = </span><span style="--0:#9ECBFF;--1:#032F62">"0 2 * * *"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">lease    = </span><span style="--0:#9ECBFF;--1:#032F62">"catalog"</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">[</span><span style="--0:#B392F0;--1:#6F42C1">maintenance</span><span style="--0:#E1E4E8;--1:#24292E">.</span><span style="--0:#B392F0;--1:#6F42C1">compaction</span><span style="--0:#E1E4E8;--1:#24292E">]</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">target_file_size_bytes = </span><span style="--0:#79B8FF;--1:#005CC5">268435456</span></div></div><div class="ec-line"><div class="code"><span style="--0:#E1E4E8;--1:#24292E">strategy               = </span><span style="--0:#9ECBFF;--1:#032F62">"sort"</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="[maintenance]mode = &#x22;active&#x22;[maintenance.principal]token_endpoint = &#x22;https://idp.example.com/realms/sqe/protocol/openid-connect/token&#x22;client_id      = &#x22;sqe-maintenance&#x22;client_secret  = &#x22;${SQE_MAINTENANCE_CLIENT_SECRET}&#x22;scope          = &#x22;PRINCIPAL_ROLE:sqe_maintenance&#x22;[maintenance.scheduler]schedule = &#x22;0 2 * * *&#x22;lease    = &#x22;catalog&#x22;[maintenance.compaction]target_file_size_bytes = 268435456strategy               = &#x22;sort&#x22;"><div></div></button></div></figure></div>
+<p>Nothing here reads like a query engine growing an admin backdoor, because it
+isn’t one. It is a second, narrower identity, gated three separate ways,
+doing one job.</p>
+<h2 id="the-rewrite-itself-is-a-fleet-job-the-commit-is-not">The rewrite itself is a fleet job, the commit is not</h2>
+<p>Once a table is opted in and due, the actual compaction work, reading data
+files, applying deletes, sorting, encoding new Parquet, is the expensive
+part. Running all of it on the coordinator caps compaction at one node’s CPU
+and NIC while that same node is serving interactive queries. So we
+distributed it, and the split we chose says something about what “the
+coordinator” means in this system.</p>
+<p>Workers do the reading and writing. The coordinator plans groups of files,
+hands each group to a worker over Arrow Flight, and the worker builds a
+<code>StaticTable</code> straight from the metadata location, S3 credentials only, no
+catalog token, no ability to list a namespace or look at any other table.
+It re-derives its own delete-application plan rather than trusting a
+serialized plan from the coordinator, because iceberg-rust marks some of
+those fields skip-serialize, and a plan that silently drops partition
+identity is worse than no plan at all. The worker reads, applies deletes,
+optionally sorts, writes new Parquet directly to the table’s data location,
+and reports back an Avro-encoded description of what it wrote. Bytes flow
+between the worker and S3. What crosses the coordinator-worker channel is
+kilobytes of metadata, the same shape as the existing distributed scan path,
+just applied to the write side this time.</p>
+<p>The coordinator does the one thing no worker is allowed to do: commit. It
+collects every group’s response, re-runs the <code>added_rows &#x3C;= removed_rows</code>
+invariant across the whole job (each worker already checked its own group,
+this is the check that can’t be delegated), and issues exactly one
+<code>RewriteFilesAction</code>. One snapshot, every old file swapped for every new
+file at once. A worker that returns a bad signature, a resurrection-guard
+failure, or a delete-accounting mismatch fails that group; it never gets
+anywhere near table state. Commit authority is a property of the
+coordinator’s code path, not a permission a worker chose not to use.</p>
+<p>That split earns its keep on the retry path too. If a concurrent writer
+commits between the coordinator’s read and its <code>RewriteFilesAction</code>, the
+commit hits Iceberg’s optimistic-concurrency check and fails as a conflict.
+The coordinator re-plans from the new snapshot and re-dispatches every group
+from scratch, rather than trying to patch a stale attempt. The previous
+attempt’s worker output becomes an orphan, unreferenced by any commit, and
+<code>remove_orphan_files</code> reclaims it on its normal age-thresholded sweep. That
+is real transient storage cost at terabyte scale on every conflict, and we
+accept it rather than build a smarter merge, because the alternative is
+trusting a partially-stale plan against a table someone else just changed.</p>
+<h2 id="a-lease-that-is-honest-about-not-being-load-bearing">A lease that is honest about not being load-bearing</h2>
+<p>Production deployments run more than one coordinator for availability. Two
+coordinators both deciding it’s 2 a.m. and both compacting <code>sales.orders</code>
+is not a correctness problem, Iceberg’s optimistic commit already guarantees
+exactly one of them wins and the other retries into a no-op, but it is a
+waste problem: two coordinators each scan, decode, sort, and re-encode the
+same terabytes, and one of those efforts gets thrown away.</p>
+<p>So multi-coordinator deployments claim a lease, a row appended to
+<code>sqe_system.maintenance_log</code>, before dispatching a rewrite. We were careful
+about what we let ourselves say about that lease. It is an efficiency layer,
+not a correctness mechanism, and every failure mode was worked out under the
+assumption that it might not be there at all: <code>lease = "none"</code> is a
+supported, documented config for single-coordinator deployments. If the
+lease claim itself fails, or two coordinators race the very first claim on
+a brand-new table (the one gap in the lease’s own exclusivity, since a
+fresh append has no prior row to compare against), the outcome does not
+change. Exactly one <code>RewriteFilesAction</code> commits. The loser’s commit fails
+a file-existence check against files the winner already removed, and that
+coordinator’s job ends having modified nothing. A holder that crashes
+mid-job leaves the table exactly as it found it, because nothing commits
+until the rewrite is fully planned, dispatched, and validated; the lease
+just times out and the next coordinator picks the table back up on its next
+tick.</p>
+<p>Writing “this is not a correctness mechanism” directly into the design was
+a deliberate choice. A lease that people assume is load-bearing tends to
+grow load-bearing assumptions nobody wrote down, and one of the ways
+distributed systems fail quietly is by discovering years later that a
+liveness optimization was secretly the only thing preventing corruption.
+Ours never was. We’d rather say that once, in one place, than have someone
+rediscover it during an incident.</p>
+<h2 id="what-we-are-not-claiming-yet">What we are not claiming yet</h2>
+<p>The distributed rewrite path is real code with real tests: worker-side
+group rewrite, HMAC-signed requests, the largest-first placement across
+healthy workers, the retry-on-a-different-worker logic for transport
+failures versus the fail-the-whole-job logic for application-level ones.
+What it does not yet have is a validated benchmark run at the scale that
+would prove the distribution pays for itself, real multi-worker rewrites
+against tens of millions of rows, measured wall-clock against the
+coordinator-local path. Our target is a distributed rewrite beating
+coordinator-local by more than 2.5x at that scale, and until that number is
+measured on real data rather than a wiring smoke test, we are treating it
+as a pre-production gate, not a shipped result. We’d rather say that plainly
+than let a design document’s target number quietly become a marketing
+number.</p>
+<h2 id="the-debt-gets-cleaned-without-anyone-typing-a-call">The debt gets cleaned without anyone typing a CALL</h2>
+<p>The payoff, when the gate above clears, is small. A table owner sets one
+property. From then on, small files stop accumulating past the target size,
+delete files stop stacking up past the point where every scan pays for
+them, and the table stays fast without a human remembering to schedule
+downtime for it. None of that required trusting a service account with the
+warehouse. It required building a second identity that structurally cannot
+reach the query path, gating it three separate ways, and keeping the one
+decision that matters, whether a snapshot commits, on the coordinator no
+matter how many workers did the work underneath it.</p>
+<p>The rule survives. No service account still means no service account. What
+changed is that a background job can now do useful work without needing to
+be a person.</p>  </div> <nav class="post-nav" data-astro-cid-bvzihdzo> <a href="/blog/the-psychology-of-ai-assisted-programming-2kmh/" class="post-nav-link post-nav-prev" data-astro-cid-bvzihdzo> <span class="post-nav-arrow" data-astro-cid-bvzihdzo>&larr;</span> <span class="post-nav-title" data-astro-cid-bvzihdzo>The Psychology of AI-Assisted Programming</span> </a> <a href="/blog/2026-07-13-dlt-three-roads-to-polaris/" class="post-nav-link post-nav-next" data-astro-cid-bvzihdzo> <span class="post-nav-title" data-astro-cid-bvzihdzo>One dlt pipeline, three roads to Apache Polaris</span> <span class="post-nav-arrow" data-astro-cid-bvzihdzo>&rarr;</span> </a> </nav> <a href="/blog/" class="back-link" data-astro-cid-bvzihdzo> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-bvzihdzo> <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-bvzihdzo></path> </svg>
+All posts
+</a> </article> </main> <footer data-astro-cid-sz7xmlte> <div class="projects" data-astro-cid-sz7xmlte> <a href="https://theartofagents.com/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-sz7xmlte>
+The Art of Agents
+</a> <span class="project-sep" data-astro-cid-sz7xmlte>/</span> <a href="https://neonarcade.net/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-sz7xmlte>
+Neon Arcade
+</a> </div> <div class="social-links" data-astro-cid-sz7xmlte> <a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Follow on Twitter</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-sz7xmlte><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-sz7xmlte></path></svg> </a> <a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-sz7xmlte> <span class="sr-only" data-astro-cid-sz7xmlte>Go to GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-sz7xmlte><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-sz7xmlte></path></svg> </a> </div> <p class="copyright" data-astro-cid-sz7xmlte>&copy; 2026 Jacob Verhoeks</p> </footer> </body></html>
