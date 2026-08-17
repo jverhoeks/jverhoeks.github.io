@@ -1,0 +1,742 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-tldeq5d5><head><!-- Theme: default dark (/echo). Honor saved light preference. --><script>
+	(function () {
+		try {
+			if (localStorage.getItem('theme') === 'light') {
+				document.documentElement.setAttribute('data-theme', 'light');
+			}
+		} catch (e) {}
+	})();
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#071014"><meta name="author" content="Jacob Verhoeks"><meta name="generator" content="Astro v7.2.2"><!-- Google Fonts: Oswald + Spectral + IBM Plex Mono (non-render-blocking) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"></noscript><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/2026-08-17-local-ai-jungle-of-incomparable-specs/"><!-- Primary Meta Tags --><title>Local AI and the jungle of incomparable specs</title><meta name="title" content="Local AI and the jungle of incomparable specs"><meta name="description" content="AMD, Apple and NVIDIA all sell a 128 GB local-AI box. The TOPS numbers are not comparable. Bandwidth is. Netherlands prices, real decode speeds, what 70B at 512K actually costs in memory, and how Qwen3.8-27B changes the 4/8/16-bit trade-off."><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:site_name" content="Jacob's Blog"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jacob.verhoeks.org/blog/2026-08-17-local-ai-jungle-of-incomparable-specs/"><meta property="og:title" content="Local AI and the jungle of incomparable specs"><meta property="og:description" content="AMD, Apple and NVIDIA all sell a 128 GB local-AI box. The TOPS numbers are not comparable. Bandwidth is. Netherlands prices, real decode speeds, what 70B at 512K actually costs in memory, and how Qwen3.8-27B changes the 4/8/16-bit trade-off."><meta property="og:image" content="https://jacob.verhoeks.org/og-image.png"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@jverhoeks"><meta name="twitter:creator" content="@jverhoeks"><meta name="twitter:title" content="Local AI and the jungle of incomparable specs"><meta name="twitter:description" content="AMD, Apple and NVIDIA all sell a 128 GB local-AI box. The TOPS numbers are not comparable. Bandwidth is. Netherlands prices, real decode speeds, what 70B at 512K actually costs in memory, and how Qwen3.8-27B changes the 4/8/16-bit trade-off."><meta name="twitter:image" content="https://jacob.verhoeks.org/og-image.png"><meta name="theme-color" content="#071014"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Local AI and the jungle of incomparable specs","description":"AMD, Apple and NVIDIA all sell a 128 GB local-AI box. The TOPS numbers are not comparable. Bandwidth is. Netherlands prices, real decode speeds, what 70B at 512K actually costs in memory, and how Qwen3.8-27B changes the 4/8/16-bit trade-off.","datePublished":"2026-08-17T00:00:00.000Z","author":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org/about"},"publisher":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org"},"keywords":"ai, local-llm, hardware, nvidia, apple, amd","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacob.verhoeks.org/blog/2026-08-17-local-ai-jungle-of-incomparable-specs/"}}</script><link rel="stylesheet" href="/_astro/BaseHead.Yu20hq-f.css"><style>a[data-astro-cid-evkijfd6]{text-decoration:none;display:inline-block}a[data-astro-cid-evkijfd6].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-nen7h5rs]{background:linear-gradient(180deg, var(--echo-ink-2), var(--bg));border-top:2px solid var(--accent);border-bottom:1px solid var(--echo-hair);min-height:56px;margin:0;padding:0 1em;transition:background-color .25s,border-color .25s}h2[data-astro-cid-nen7h5rs]{font-size:.95em;font-family:var(--font-display);text-transform:uppercase;letter-spacing:.06em;margin:0;font-weight:600}h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs],h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active{color:rgb(var(--black));text-decoration:none}h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:var(--accent)}nav[data-astro-cid-nen7h5rs]{justify-content:space-between;align-items:center;gap:.75rem;display:flex}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{color:var(--echo-mute);font-family:var(--font-mono);letter-spacing:.12em;text-transform:uppercase;border-bottom:2px solid #0000;padding:1em .5em;font-size:.72rem;text-decoration:none}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:rgb(var(--black))}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active{color:rgb(var(--black));border-bottom-color:var(--accent);text-decoration:none}.social-links[data-astro-cid-nen7h5rs],.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{align-items:center;display:flex}.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{color:var(--echo-mute);border-bottom:none;padding:.5em}.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:var(--accent)}.theme-toggle[data-astro-cid-nen7h5rs]{border:1px solid var(--echo-hair);width:36px;height:36px;color:var(--echo-mute);cursor:pointer;background:0 0;border-radius:2px;justify-content:center;align-items:center;margin-right:.35em;padding:0;transition:background-color .2s,border-color .2s,color .2s;display:inline-flex}.theme-toggle[data-astro-cid-nen7h5rs]:hover{border-color:var(--accent);color:var(--accent)}.icon-sun[data-astro-cid-nen7h5rs]{display:block}.icon-moon[data-astro-cid-nen7h5rs],:root[data-theme=light] .icon-sun[data-astro-cid-nen7h5rs]{display:none}:root[data-theme=light] .icon-moon[data-astro-cid-nen7h5rs]{display:block}@media (width<=720px){.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{display:none}.social-links[data-astro-cid-nen7h5rs] .theme-toggle[data-astro-cid-nen7h5rs]{display:inline-flex}}footer[data-astro-cid-jo6i4kqk]{background:linear-gradient(180deg, transparent, var(--echo-ink-2));border-top:1px solid var(--echo-hair);color:var(--echo-mute);text-align:center;padding:2.5em 1em 5em}.projects[data-astro-cid-jo6i4kqk]{flex-wrap:wrap;justify-content:center;align-items:center;gap:.5em;margin-bottom:1em;display:flex}.project-link[data-astro-cid-jo6i4kqk]{color:rgb(var(--black));font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase;font-size:.72rem;font-weight:500;text-decoration:none;transition:color .2s}.project-link[data-astro-cid-jo6i4kqk]:hover{color:var(--accent)}.project-sep[data-astro-cid-jo6i4kqk]{color:var(--echo-mute);opacity:.5;font-weight:300}.social-links[data-astro-cid-jo6i4kqk]{justify-content:center;gap:1em;margin-top:.5em;display:flex}.social-links[data-astro-cid-jo6i4kqk] a[data-astro-cid-jo6i4kqk]{color:var(--echo-mute);text-decoration:none}.social-links[data-astro-cid-jo6i4kqk] a[data-astro-cid-jo6i4kqk]:hover{color:var(--accent)}.copyright[data-astro-cid-jo6i4kqk]{font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;margin-top:1.25em;font-size:.7rem}
+body.echo-blog{background:var(--bg)}
+</style><link rel="stylesheet" href="/_astro/BlogPost.D-Ux1yxk.css"></head><body class="echo-blog" data-astro-cid-tldeq5d5><header data-astro-cid-nen7h5rs><nav data-astro-cid-nen7h5rs><h2 data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs>Jacob&#39;s Blog</a></h2><div class="internal-links" data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Home</a><a href="/blog" class="active" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Blog</a><a href="/#books" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Books</a><a href="/projects" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Projects</a><a href="/about" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>About</a></div><div class="social-links" data-astro-cid-nen7h5rs><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle light mode" title="Toggle light mode" data-astro-cid-nen7h5rs><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-nen7h5rs><circle cx="12" cy="12" r="4" data-astro-cid-nen7h5rs></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" data-astro-cid-nen7h5rs></path></svg><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor" data-astro-cid-nen7h5rs><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" data-astro-cid-nen7h5rs></path></svg></button><a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-nen7h5rs><span class="sr-only" data-astro-cid-nen7h5rs>Follow on Twitter</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-nen7h5rs><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-nen7h5rs></path></svg></a><a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-nen7h5rs><span class="sr-only" data-astro-cid-nen7h5rs>Go to GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-nen7h5rs><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-nen7h5rs></path></svg></a></div></nav></header><script>
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		btn.addEventListener('click', function () {
+			var root = document.documentElement;
+			var isLight = root.getAttribute('data-theme') === 'light';
+			if (isLight) {
+				root.removeAttribute('data-theme');
+				try { localStorage.setItem('theme', 'dark'); } catch (e) {}
+			} else {
+				root.setAttribute('data-theme', 'light');
+				try { localStorage.setItem('theme', 'light'); } catch (e) {}
+			}
+		});
+	})();
+</script><main data-astro-cid-tldeq5d5><article data-astro-cid-tldeq5d5><header class="article-header" data-astro-cid-tldeq5d5><div class="article-meta" data-astro-cid-tldeq5d5><time class="article-date" data-astro-cid-tldeq5d5><time datetime="2026-08-17T00:00:00.000Z">Aug 17, 2026</time></time><span class="meta-dot" data-astro-cid-tldeq5d5>|</span><span data-astro-cid-tldeq5d5>Jacob Verhoeks</span><span class="meta-dot" data-astro-cid-tldeq5d5>|</span><span data-astro-cid-tldeq5d5>16 min read</span></div><h1 class="article-title" data-astro-cid-tldeq5d5>Local AI and the jungle of incomparable specs</h1><p class="article-description" data-astro-cid-tldeq5d5>AMD, Apple and NVIDIA all sell a 128 GB local-AI box. The TOPS numbers are not comparable. Bandwidth is. Netherlands prices, real decode speeds, what 70B at 512K actually costs in memory, and how Qwen3.8-27B changes the 4/8/16-bit trade-off.</p><div class="article-tags" data-astro-cid-tldeq5d5><a href="/blog/tag/ai/" class="echo-pill" data-astro-cid-tldeq5d5>ai</a><a href="/blog/tag/local-llm/" class="echo-pill" data-astro-cid-tldeq5d5>local-llm</a><a href="/blog/tag/hardware/" class="echo-pill" data-astro-cid-tldeq5d5>hardware</a><a href="/blog/tag/nvidia/" class="echo-pill" data-astro-cid-tldeq5d5>nvidia</a><a href="/blog/tag/apple/" class="echo-pill" data-astro-cid-tldeq5d5>apple</a><a href="/blog/tag/amd/" class="echo-pill" data-astro-cid-tldeq5d5>amd</a></div></header><div class="prose" data-astro-cid-tldeq5d5><p>I opened a product page for a compact AMD box with 128 GB of memory and a claim that it runs 128B models locally. Then I tried to answer a simple question: what does the same job cost on NVIDIA or Apple, in the Netherlands, today.</p>
+<p>Three days later I had a spreadsheet full of TOPS that cannot be added, VRAM that is not VRAM, and a new 27B model that thinks for two thousand tokens before it says hello.</p>
+<p>The specs are not comparable. The workloads are. This post is the comparison I wanted on day one.</p>
+<p>Prices are street or list in the Netherlands, including 21% BTW, mid-August 2026. Token rates are typical llama.cpp / Ollama / MLX / SGLang numbers from vendor notes and community benches, not one lab run. Treat them as bands, not gospel.</p>
+<h2 id="the-trick-in-the-brochure">The trick in the brochure</h2>
+<p>The <a href="https://minisforumpc.eu/products/minisforum-ms-s1-max-mini-pc">Minisforum MS-S1 Max</a> is sold as a 128 GB AI workstation. That number is unified LPDDR5X. You can hand about 96 GB to the Radeon 8060S. It is not 128 GB of dedicated GDDR.</p>
+<p>Apple does the same thing, with a wider bus. NVIDIA sells both: a tiny GB10 box that works like the Minisforum, and discrete cards that do not.</p>
+<p>Once you see that, the market splits in two.</p>
+<p><strong>Same class as the Minisforum.</strong> One soldered SoC. One memory pool the GPU can see. Quiet. Low power. 128 GB on the label.</p>
+<p><strong>Different class.</strong> Discrete NVIDIA VRAM. Faster. Hotter. Much more expensive. And a single <a href="https://tweakers.net/pricewatch/2158196/gigabyte-geforce-rtx-5090-gaming-oc-32g.html">RTX 5090</a> is only 32 GB.</p>
+<p>Most “128 GB VRAM” shopping questions mix those two classes and then compare TOPS.</p>
+<p>Do not compare TOPS.</p>
+<p>NVIDIA quotes sparse FP4. AMD quotes a platform total of GPU plus NPU. Apple’s 38 TOPS is the Neural Engine, which is not what llama.cpp uses. Three numbers, three units, one marketing department each.</p>
+<p>Chat speed is almost entirely memory bandwidth. Prompt ingest is compute. Those are the two axes that matter.</p>
+<h2 id="the-boxes-with-dutch-prices">The boxes, with Dutch prices</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>System</th><th>GPU</th><th>Memory the model can use</th><th>Bandwidth</th><th>NL price</th><th>Where</th></tr></thead><tbody><tr><td>Minisforum MS-S1 Max</td><td>Radeon 8060S, 40 CU</td><td>128 GB unified, ~96 GB as VRAM</td><td>256 GB/s</td><td>€ 3.959</td><td><a href="https://minisforumpc.eu/products/minisforum-ms-s1-max-mini-pc">minisforumpc.eu</a></td></tr><tr><td>ASUS Ascent GX10</td><td>NVIDIA GB10</td><td>128 GB unified</td><td>273 GB/s</td><td>€ 3.400–€ 4.300</td><td><a href="https://tweakers.net/pricewatch/2297322/asus-ascent-gx10-gg0003bn.html">Tweakers Pricewatch 1 TB</a>, <a href="https://tweakers.net/reviews/14328/nvidia-dgx-spark-asus-ascent-gx10-je-eigen-ai-supercomputer-op-je-bureau.html">review</a></td></tr><tr><td>NVIDIA DGX Spark</td><td>NVIDIA GB10</td><td>128 GB unified</td><td>273 GB/s</td><td>€ 5.499</td><td><a href="https://tweakers.net/pricewatch/2280056/nvidia-dgx-spark-founders-edition.html">Tweakers Pricewatch</a></td></tr><tr><td>Mac Studio M4 Max 36 GB</td><td>32-core GPU</td><td>36 GB unified</td><td>410 GB/s</td><td>€ 3.029</td><td><a href="https://tweakers.net/pricewatch/2182528/apple-mac-studio-2025-m4-max-14-core-36gb-ram-32-core-gpu-512gb-ssd.html">Tweakers</a>, <a href="https://www.apple.com/nl/shop/buy-mac/mac-studio">Apple NL</a></td></tr><tr><td>Mac Studio M4 Max 64 GB</td><td>40-core GPU</td><td>64 GB unified</td><td>546 GB/s</td><td>~€ 4.359</td><td><a href="https://tweakers.net/pricewatch/2182588/apple-mac-studio-2025-m4-max-16-core-64gb-ram-40-core-gpu-1tb-ssd.html">Tweakers 64 GB / 1 TB</a></td></tr><tr><td>Mac Studio M4 Max 128 GB</td><td>40-core GPU</td><td>128 GB unified</td><td>546 GB/s</td><td>used ~€ 6.000–€ 7.500</td><td>Apple stopped selling it new</td></tr><tr><td>Mac Studio M3 Ultra 96 GB</td><td>60-core GPU</td><td>96 GB unified</td><td>819 GB/s</td><td>€ 6.119–€ 6.349</td><td><a href="https://tweakers.net/pricewatch/2182068/apple-mac-studio-2025-m3-ultra-28-core-96gb-ram-60-core-gpu-1tb-ssd.html">Tweakers</a>, <a href="https://upgreatest.nl/product/4234/mac-studio-m3-ultra-60x-gpu-96gb-1tb">Upgreatest</a></td></tr><tr><td>RTX 5090 (card only)</td><td>GB202</td><td>32 GB GDDR7</td><td>1.792 GB/s</td><td>~€ 4.899</td><td><a href="https://tweakers.net/pricewatch/2158196/gigabyte-geforce-rtx-5090-gaming-oc-32g.html">Tweakers / Megekko</a></td></tr><tr><td>Workstation + 1× RTX PRO 6000</td><td>Blackwell 96 GB</td><td>96 GB GDDR7</td><td>1.792 GB/s</td><td>€ 18.000–€ 22.000 system, card ~€ 15.000</td><td><a href="https://tweakers.net/pricewatch/2209086/nvidia-rtx-pro-6000-blackwell-workstation-edition.html">Tweakers Workstation Edition</a>, <a href="https://tweakers.net/pricewatch/2290186/nvidia-rtx-pro-6000-blackwell-retail.html">retail</a></td></tr><tr><td>Workstation + 4× RTX 5090</td><td>4× 32 GB</td><td>128 GB split</td><td>1.792 GB/s per card</td><td>€ 24.000–€ 30.000</td><td>four cards plus a board that can feed them</td></tr></tbody></table>
+<p>Apple cut the 128 GB M4 Max and the 256 / 512 GB M3 Ultra configs during the RAM squeeze. New Mac Studios top out at 96 GB. That is why the 128 GB Apple row is a used-market number.</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.t05yi.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">GPU memory bandwidth</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">MS-S1          ████░░░░░░░░░░░░░░░░░░░░  256 GB/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Spark / GX10   ████░░░░░░░░░░░░░░░░░░░░  273 GB/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">M4 Max 128     ████████░░░░░░░░░░░░░░░░  546 GB/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">M3 Ultra 96    ████████████░░░░░░░░░░░░  819 GB/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">5090 / 6000    ██████████████████████████  1792 GB/s</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="GPU memory bandwidthMS-S1          ████░░░░░░░░░░░░░░░░░░░░  256 GB/sSpark / GX10   ████░░░░░░░░░░░░░░░░░░░░  273 GB/sM4 Max 128     ████████░░░░░░░░░░░░░░░░  546 GB/sM3 Ultra 96    ████████████░░░░░░░░░░░░  819 GB/s5090 / 6000    ██████████████████████████  1792 GB/s"><div></div></button></div></figure></div>
+<p>The Minisforum and the Spark are the same machine class. Apple is two to three times the bus. A 5090 is seven times the bus and one quarter of the memory.</p>
+<h2 id="two-speeds-because-there-are-two-jobs">Two speeds, because there are two jobs</h2>
+<p><strong>Decode</strong> is the next token in a chat. The model streams its own weights once per token. Speed tracks bandwidth.</p>
+<p><strong>Prefill</strong> is swallowing the prompt. That is matrix multiplies. NVIDIA compute shows up here. AMD’s 8060S does not.</p>
+<h3 id="decode-dense-70b-q4-35-gb">Decode, dense 70B Q4 (~35 GB)</h3>
+<p>A 70B Q4 does not fit on a 5090. That is the first trap.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>System</th><th>Fits?</th><th>Typical tok/s</th><th>vs MS-S1</th></tr></thead><tbody><tr><td>MS-S1 Max</td><td>yes</td><td>5–8</td><td>1.0×</td></tr><tr><td>Spark / GX10</td><td>yes</td><td>8–18</td><td>~1.5×</td></tr><tr><td>M4 Max 128 GB</td><td>yes</td><td>12–16</td><td>~2×</td></tr><tr><td>M3 Ultra 96 GB</td><td>yes</td><td>25–32</td><td>~4×</td></tr><tr><td>RTX 5090 32 GB</td><td>no</td><td>2–20 offloaded</td><td>often slower than the mini-PC</td></tr><tr><td>RTX PRO 6000 96 GB</td><td>yes</td><td>~32</td><td>~5×</td></tr><tr><td>4× RTX 5090</td><td>yes, split</td><td>80–150</td><td>~15–20×</td></tr></tbody></table>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Dense 70B Q4 decode (midpoint)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">MS-S1          ██░░░░░░░░░░░░░░░░░░░░    6 tok/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Spark / GX10   ████░░░░░░░░░░░░░░░░░░░░   13 tok/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">M4 Max 128     ████░░░░░░░░░░░░░░░░░░░░   14 tok/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">M3 Ultra 96    ████████░░░░░░░░░░░░░░░░   28 tok/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">PRO 6000       █████████░░░░░░░░░░░░░░░   32 tok/s</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">4× 5090        ██████████████████████████  100 tok/s</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="Dense 70B Q4 decode (midpoint)MS-S1          ██░░░░░░░░░░░░░░░░░░░░    6 tok/sSpark / GX10   ████░░░░░░░░░░░░░░░░░░░░   13 tok/sM4 Max 128     ████░░░░░░░░░░░░░░░░░░░░   14 tok/sM3 Ultra 96    ████████░░░░░░░░░░░░░░░░   28 tok/sPRO 6000       █████████░░░░░░░░░░░░░░░   32 tok/s4× 5090        ██████████████████████████  100 tok/s"><div></div></button></div></figure></div>
+<h3 id="decode-32b-q4-18-gb--the-fair-race">Decode, 32B Q4 (~18 GB) — the fair race</h3>
+<p>Everything holds this one.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>System</th><th>Typical tok/s</th><th>vs MS-S1</th></tr></thead><tbody><tr><td>MS-S1 Max</td><td>12–18</td><td>1.0×</td></tr><tr><td>Spark / GX10</td><td>15–22</td><td>~1.2×</td></tr><tr><td>M4 Max 128</td><td>28–40</td><td>~2×</td></tr><tr><td>M3 Ultra 96</td><td>40–55</td><td>~3×</td></tr><tr><td>RTX 5090</td><td>40–55</td><td>~3×</td></tr><tr><td>PRO 6000</td><td>45–70</td><td>~4×</td></tr></tbody></table>
+<p>Same ranking as the bandwidth chart. That is not a coincidence.</p>
+<h3 id="prefill">Prefill</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>System</th><th>Prompt ingest</th><th>vs MS-S1</th></tr></thead><tbody><tr><td>MS-S1 Max</td><td>~300–400 tok/s</td><td>1×</td></tr><tr><td>M4 Max</td><td>~700–1.000</td><td>~2–3×</td></tr><tr><td>M3 Ultra</td><td>~1.000–1.400</td><td>~3–4×</td></tr><tr><td>Spark / GX10</td><td>~1.700–1.900</td><td>~5×</td></tr><tr><td>5090 / PRO 6000</td><td>thousands</td><td>~10–20×</td></tr></tbody></table>
+<p>Paste a long PDF into the AMD box and you wait. Spark eats the prompt, then crawls on the reply at almost the same speed as AMD. Apple is the opposite: slower prefill than Spark, faster chat, because the bus is wider.</p>
+<p>Chat speed follows bandwidth:</p>
+<p><code>MS-S1 (256) → Spark (273) → M4 Max (546) → M3 Ultra (819) → 5090 (1792)</code></p>
+<p>Prompt speed follows compute:</p>
+<p><code>MS-S1 8060S → M4 Max → M3 Ultra → Spark GB10 → 5090 / PRO 6000</code></p>
+<p>A typical turn — 2.000-token prompt, 300-token answer, dense 70B Q4 — lands roughly here:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>System</th><th>First token</th><th>Finish answer</th><th>Total</th></tr></thead><tbody><tr><td>MS-S1 Max</td><td>5–7 s</td><td>40–60 s</td><td>~1 minute</td></tr><tr><td>Spark / GX10</td><td>1–2 s</td><td>15–25 s</td><td>~25 s</td></tr><tr><td>M4 Max 128</td><td>2–3 s</td><td>20–25 s</td><td>~25 s</td></tr><tr><td>M3 Ultra 96</td><td>~2 s</td><td>10–12 s</td><td>~13 s</td></tr><tr><td>PRO 6000</td><td>&#x3C;1 s</td><td>~10 s</td><td>~10 s</td></tr><tr><td>4× 5090</td><td>&#x3C;0.5 s</td><td>2–4 s</td><td>~4 s</td></tr></tbody></table>
+<h2 id="70b-at-512k-context-is-a-memory-problem-first">70B at 512K context is a memory problem first</h2>
+<p>People say “70B with a 512K window” as if that were one more checkbox. It is not. The weights are the small part.</p>
+<p>A Llama-3-70B-class model (80 layers, 8 KV heads, head dim 128) stores this much key/value cache:</p>
+<p><code>2 × layers × kv_heads × head_dim × seq_len × bytes</code></p>
+<p>That is <strong>320 KiB per token</strong> in FP16. At 524.288 tokens (512K):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>KV precision</th><th>Cache alone</th><th>Plus 70B Q4 weights (~40 GB)</th><th>Plus 70B Q8 (~72 GB)</th></tr></thead><tbody><tr><td>Q4 KV</td><td>~40 GB</td><td><strong>~80 GB</strong></td><td>~112 GB</td></tr><tr><td>FP8 / Q8 KV</td><td>~80 GB</td><td><strong>~120 GB</strong></td><td>~152 GB</td></tr><tr><td>FP16 KV</td><td>~160 GB</td><td><strong>~200 GB</strong></td><td>~232 GB</td></tr></tbody></table>
+<p>Add 10–20% for paging waste, CUDA graphs, the OS, and the fact that 128 GB on the box is not 128 GB for the model.</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">70B + 512K: memory you must hold</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Q4 weights + Q4 KV     ████████░░░░░░░░░░░░░░░░   80 GB</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Q4 weights + FP8 KV    ████████████░░░░░░░░░░░░  120 GB</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Q4 weights + FP16 KV   ████████████████████░░░░  200 GB</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Q8 weights + FP16 KV   ███████████████████████░  232 GB</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="70B + 512K: memory you must holdQ4 weights + Q4 KV     ████████░░░░░░░░░░░░░░░░   80 GBQ4 weights + FP8 KV    ████████████░░░░░░░░░░░░  120 GBQ4 weights + FP16 KV   ████████████████████░░░░  200 GBQ8 weights + FP16 KV   ███████████████████████░  232 GB"><div></div></button></div></figure></div>
+<p>Who can actually load it:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Setup</th><th>Usable memory</th><th>70B Q4 + Q4 KV 512K</th><th>70B Q4 + FP16 KV 512K</th></tr></thead><tbody><tr><td>MS-S1 Max</td><td>~96 GB VRAM of 128</td><td>tight, maybe</td><td>no</td></tr><tr><td>Spark / GX10</td><td>128 GB unified</td><td>tight</td><td>no</td></tr><tr><td>M4 Max 128 GB</td><td>128 GB unified</td><td>tight</td><td>no</td></tr><tr><td>M3 Ultra 96 GB</td><td>96 GB</td><td>borderline</td><td>no</td></tr><tr><td>RTX 5090</td><td>32 GB</td><td>no</td><td>no</td></tr><tr><td>PRO 6000</td><td>96 GB</td><td>tight on Q4 KV</td><td>no</td></tr><tr><td>2× PRO 6000</td><td>192 GB</td><td>yes</td><td>barely, with KV quant</td></tr><tr><td>4× 5090</td><td>128 GB split</td><td>only if the runtime shards KV</td><td>no as one pool</td></tr><tr><td>M3 Ultra 256 GB (discontinued)</td><td>256 GB</td><td>yes</td><td>yes</td></tr></tbody></table>
+<p>A 96–128 GB box can hold 70B Q4 at 512K only if you quantise the cache hard and accept the quality hit. Full-quality 512K on a 70B is a 200 GB problem. That is two workstation GPUs or a Mac Apple no longer sells.</p>
+<p>And even when it fits, decode is not the short-context number. Attention cost grows with sequence length. At 512K, expect <strong>roughly 20–40% of the short-context tok/s</strong>, if the stack does not fall over first.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>System</th><th>Short-context 70B Q4</th><th>Expected at 512K, if it fits</th></tr></thead><tbody><tr><td>MS-S1 / Spark</td><td>6–15 tok/s</td><td>2–6 tok/s, if Q4 KV fits</td></tr><tr><td>M4 Max 128</td><td>12–16</td><td>4–8</td></tr><tr><td>M3 Ultra 96</td><td>25–32</td><td>6–12, only with aggressive KV quant</td></tr><tr><td>PRO 6000</td><td>~32</td><td>8–15 with Q4 KV</td></tr><tr><td>2× PRO 6000</td><td>50–80</td><td>15–30</td></tr></tbody></table>
+<p>I would not buy a €4k mini-PC for “70B at 512K”. I would buy it for 70B at 8K–32K, which is what most chat and coding loops actually use.</p>
+<p>If you truly need 512K on a 70B-class dense model, start at 192 GB of GPU memory and a stack that can quantise KV. Or stop pretending and use a model that was built for long context.</p>
+<p>Which is the other half of this post.</p>
+<h2 id="qwen38-27b--the-model-you-can-actually-run">Qwen3.8-27B — the model you can actually run</h2>
+<p>Alibaba shipped <a href="https://huggingface.co/Qwen/Qwen3.8-27B">Qwen3.8-27B</a> in mid-August 2026. Hugging Face lists it as ~28B parameters with embeddings. The name is 27B. Dense, not MoE. Native vision. Hybrid thinking. Multi-token prediction. 256K context, 1M with YaRN.</p>
+<p>It is a different architecture from Llama-70B, and that is why the 512K conversation changes.</p>
+<p>The backbone is 16 blocks of three Gated DeltaNet layers plus one Gated Attention layer. Only <strong>16 attention layers</strong> keep a KV cache, with 4 KV heads and head dim 256. The DeltaNet part is linear in sequence length. The cache is small.</p>
+<p><code>2 × 16 × 4 × 256 = 32.768 elements per token</code></p>
+<p>That is <strong>64 KiB per token</strong> in FP16. About <strong>2.0 GiB at 32K</strong>, which matches the ~2.5 GB people are measuring once you add overhead.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Context</th><th>FP16 KV</th><th>FP8 KV</th><th>Q4 KV</th></tr></thead><tbody><tr><td>32K</td><td>~2.5 GB</td><td>~1.3 GB</td><td>~0.7 GB</td></tr><tr><td>128K</td><td>~10 GB</td><td>~5 GB</td><td>~2.5 GB</td></tr><tr><td>256K native</td><td>~20 GB</td><td>~10 GB</td><td>~5 GB</td></tr><tr><td>512K (YaRN)</td><td>~40 GB</td><td>~20 GB</td><td>~10 GB</td></tr></tbody></table>
+<h3 id="weights-at-4--8--16-bit">Weights at 4 / 8 / 16 bit</h3>
+<p>From the <a href="https://unsloth.ai/docs/models/qwen3.8">Unsloth card</a>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Precision</th><th>Weights</th><th>Plus 32K</th><th>Plus 256K FP16 KV</th><th>Plus 512K FP16 KV</th></tr></thead><tbody><tr><td>4-bit / IQ4 / NVFP4</td><td>17–19 GB</td><td>~20 GB</td><td>~38 GB</td><td>~58 GB</td></tr><tr><td>8-bit</td><td>~31 GB</td><td>~34 GB</td><td>~51 GB</td><td>~71 GB</td></tr><tr><td>BF16 / 16-bit</td><td>~56 GB</td><td>~59 GB</td><td>~76 GB</td><td>~96 GB</td></tr></tbody></table>
+<p>At 256K native context, Qwen3.8-27B lands here:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Weights</th><th>KV (256K)</th><th>Total in GPU memory</th></tr></thead><tbody><tr><td>4-bit ~18 GB</td><td>Q4 KV ~5 GB … FP16 KV ~20 GB</td><td><strong>~23–38 GB</strong></td></tr><tr><td>8-bit ~31 GB</td><td>same</td><td><strong>~41–51 GB</strong></td></tr><tr><td>16-bit ~56 GB</td><td>FP16 KV ~20 GB</td><td><strong>~76 GB</strong></td></tr></tbody></table>
+<p>Every machine in the first table can run 4-bit at 32K. A 5090 can run 4-bit and 8-bit at moderate context, then runs out. BF16 plus a long window needs the 96–128 GB boxes.</p>
+<h3 id="speed-vs-quality-vs-context">Speed vs quality vs context</h3>
+<p>Three knobs. You do not get all three.</p>
+<p><strong>4-bit.</strong> Fastest. 17–19 GB. Fine for chat and most coding. You will feel it on hard reasoning and on tool-call JSON if you hunt for it. NVFP4 on Blackwell is the same size class with better recovery than a naive Q4 — Unsloth reports 92–97% top-1 versus BF16 and about 1.5× BF16 throughput.</p>
+<p><strong>8-bit.</strong> The quality default. Near-lossless for almost everything I care about. 31 GB. A 5090 can hold it until the context grows. The unified 96–128 GB boxes hold it with room for 256K.</p>
+<p><strong>16-bit.</strong> Reference. Fine-tuning, logit-sensitive work, or “I do not want to argue about quant”. 56 GB. Not a 5090. Comfortable on Spark, MS-S1, M3 Ultra, PRO 6000.</p>
+<p>Quality vs speed, Qwen3.8-27B (relative, not a lab plot):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Slower</th><th>Faster</th></tr></thead><tbody><tr><td><strong>Cleaner</strong></td><td>Spark BF16 · M3 Ultra Q8 · MS-S1 Q8</td><td>PRO 6000 Q8 · 5090 NVFP4</td></tr><tr><td><strong>Lossier</strong></td><td>MS-S1 Q4</td><td>Spark NVFP4 · M3 Ultra Q4</td></tr></tbody></table>
+<p>Measured and estimated decode, Q4, short context, batch 1:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>System</th><th>Stack</th><th>tok/s</th><th>vs MS-S1</th></tr></thead><tbody><tr><td>MS-S1 Max</td><td>llama.cpp Vulkan, no MTP</td><td>~10–12</td><td>1.0×</td></tr><tr><td>MS-S1 Max</td><td>Vulkan + MTP=4</td><td>up to <strong>24.5</strong> (AMD, Windows)</td><td>~2×</td></tr><tr><td>Spark</td><td>llama.cpp Q4 + MTP</td><td>24–30</td><td>~2×</td></tr><tr><td>Spark</td><td>SGLang + NVFP4 + MTP</td><td><strong>34–38</strong>, peak ~47</td><td>~3×</td></tr><tr><td>M4 Max 128</td><td>MLX / Metal</td><td>~25–40</td><td>~2–3×</td></tr><tr><td>M3 Ultra 96</td><td>MLX / Metal</td><td>~35–55</td><td>~3–4×</td></tr><tr><td>RTX 5090</td><td>llama.cpp Q4</td><td>~60–90</td><td>~6×</td></tr><tr><td>RTX 5090</td><td>SGLang + NVFP4 + MTP</td><td>~120–200</td><td>~10×</td></tr><tr><td>PRO 6000</td><td>same kernels, more room</td><td>~80–150</td><td>~8×</td></tr></tbody></table>
+<p>AMD’s own day-0 note is the 24.5 figure, on a GMKtec EVO X2, Vulkan, MTP=4. Community Q5 on Strix Halo without that stack is closer to 10 tok/s. Same chip, factor of two, depending on whether speculative decoding is actually on.</p>
+<p>NVFP4 is Blackwell only. Spark, 5090, PRO 6000. Not AMD. Not Apple.</p>
+<h3 id="the-thinking-tax">The thinking tax</h3>
+<p>Thinking is <strong>on by default</strong> (<code>reasoning_effort: xhigh</code>). A short coding answer often burns 2.000–8.000 thinking tokens before the first useful line.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>System</th><th>3.000 thinking tokens</th><th>400 answer tokens</th><th>You wait</th></tr></thead><tbody><tr><td>MS-S1, typical Q5</td><td>~4–5 min</td><td>~30 s</td><td>~5 min</td></tr><tr><td>MS-S1, AMD MTP peak</td><td>~2 min</td><td>~16 s</td><td>~2.5 min</td></tr><tr><td>Spark NVFP4</td><td>~80 s</td><td>~11 s</td><td>~1.5 min</td></tr><tr><td>M3 Ultra Q4</td><td>~70 s</td><td>~9 s</td><td>~1.3 min</td></tr><tr><td>5090 / PRO 6000</td><td>20–40 s</td><td>3–5 s</td><td>~30–45 s</td></tr></tbody></table>
+<p>Turn thinking to <code>low</code> or off for chat and every row gets several times faster. For agent work you want it on. Then raw tok/s is the product.</p>
+<p>Long context on this model is the opposite of 70B. 256K native plus Q4 weights is about 38 GB. That is a Minisforum or a Spark or a Mac, not a science project. 512K with FP16 KV is about 58 GB in 4-bit. Still one box. Quality at 512K will depend more on YaRN than on whether you picked Q4 or Q8.</p>
+<p>Qwen3.8-27B Q4 + FP16 KV versus 70B Q4 + FP16 KV, same context lengths:</p>
+<div class="expressive-code"><figure class="frame"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">              </span></span><span style="--0:#e1e4e8;--1:#24292e">32K     128K     256K     512K</span></div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">Qwen 27B Q4   20 GB    28 GB    38 GB    58 GB</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">              </span></span><span style="--0:#e1e4e8;--1:#24292e">██       ███      ████     ██████</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#e1e4e8;--1:#24292e">70B Llama Q4  50 GB    80 GB   120 GB   200 GB</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#e1e4e8;--1:#24292e">              </span></span><span style="--0:#e1e4e8;--1:#24292e">█████    ████████ ████████████ ████████████████████</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="              32K     128K     256K     512KQwen 27B Q4   20 GB    28 GB    38 GB    58 GB              ██       ███      ████     ██████70B Llama Q4  50 GB    80 GB   120 GB   200 GB              █████    ████████ ████████████ ████████████████████"><div></div></button></div></figure></div>
+<p>The first series is Qwen3.8-27B Q4 plus FP16 KV. The second is 70B Q4 plus FP16 KV. Same context lengths. Different decade of hardware.</p>
+<h2 id="what-i-would-actually-buy">What I would actually buy</h2>
+<p>For <strong>Qwen3.8-27B</strong> as a daily coder, thinking on:</p>
+<ul>
+<li>Cheap and good enough: MS-S1 Max, and turn thinking down when you are iterating.</li>
+<li>Same money, CUDA, faster prompts: <a href="https://tweakers.net/pricewatch/2297322/asus-ascent-gx10-gg0003bn.html">ASUS GX10</a>.</li>
+<li>Quiet and fast enough that thinking does not hurt: <a href="https://tweakers.net/pricewatch/2182068/apple-mac-studio-2025-m3-ultra-28-core-96gb-ram-60-core-gpu-1tb-ssd.html">M3 Ultra 96 GB</a>.</li>
+<li>Interactive with <code>xhigh</code> thinking: a <a href="https://tweakers.net/pricewatch/2158196/gigabyte-geforce-rtx-5090-gaming-oc-32g.html">5090</a> if you stay at 4-bit and moderate context, a <a href="https://tweakers.net/pricewatch/2209086/nvidia-rtx-pro-6000-blackwell-workstation-edition.html">PRO 6000</a> if you want Q8, vision, and 256K at the same time.</li>
+</ul>
+<p>For <strong>70B chat at 8K–32K</strong>: M3 Ultra if you live in macOS, Spark if you need CUDA, MS-S1 if the budget is the point. A lone 5090 loses.</p>
+<p>For <strong>70B at 512K</strong>: do not start from the €4k mini-PC list. You are shopping 192 GB+ or a different model.</p>
+<p>The jungle is the TOPS column. The path out is bandwidth, then whether the weights plus the KV cache fit, then whether you are measuring prefill or decode.</p>
+<p>Everything else is a brochure.</p></div><nav class="post-nav" data-astro-cid-tldeq5d5><span data-astro-cid-tldeq5d5></span><a href="/blog/2026-08-14-every-acl-we-can-write-and-who-enforces-it/" class="post-nav-link post-nav-next" data-astro-cid-tldeq5d5><span class="post-nav-title" data-astro-cid-tldeq5d5>Every ACL we can write, and which system enforces it</span><span class="post-nav-arrow" data-astro-cid-tldeq5d5>&rarr;</span></a></nav><a href="/blog/" class="back-link" data-astro-cid-tldeq5d5><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-tldeq5d5><path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-tldeq5d5></path></svg>All posts</a></article></main><footer data-astro-cid-jo6i4kqk><div class="projects" data-astro-cid-jo6i4kqk><a href="https://theartofagents.com/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-jo6i4kqk>The Art of Agents</a><span class="project-sep" data-astro-cid-jo6i4kqk>/</span><a href="https://neonarcade.net/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-jo6i4kqk>Neon Arcade</a></div><div class="social-links" data-astro-cid-jo6i4kqk><a href="https://twitter.com/jverhoeks" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Follow on Twitter</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" data-astro-cid-jo6i4kqk></path></svg></a><a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Go to GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-jo6i4kqk></path></svg></a></div><p class="copyright" data-astro-cid-jo6i4kqk>&copy; 2026 Jacob Verhoeks</p></footer></body></html>
