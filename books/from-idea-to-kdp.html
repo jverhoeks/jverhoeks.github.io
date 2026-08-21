@@ -1,0 +1,2528 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Jacob Verhoeks" />
+  <meta name="dcterms.date" content="2026-01-01" />
+  <meta name="description" content="For engineers who can run make and have never seen a trim size. A working engineer’s account of taking a book from a first idea to a live Amazon KDP listing: plain text, Pandoc, a story bible, and a crew of AI editors that review each other’s blind spots instead of writing the book for you. One pipeline, six blind reviewers plus a commercial pass, four output files. Every command in the book was run on the machine that wrote it, and where a command misbehaved, the misbehaviour is in the text." />
+  <title>From Idea to KDP</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style type="text/css">html {
+font-family: "TeX Gyre Pagella", Palatino, "Palatino Linotype", Georgia, serif;
+font-size: 18px;
+line-height: 1.38;
+color: #1a1a1a;
+background-color: #faf8f4;
+}
+body { margin: 0 auto; max-width: 38em; padding: 2.4rem 1.4rem 4rem; hyphens: auto; }
+p { margin: 0; text-indent: 1.25em; }
+h1 + p, h2 + p, h3 + p, hr + p, header + p, #TOC + p {
+text-indent: 0; margin-top: 0.7em;
+}
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 600; text-align: center; }
+h1 { font-size: 1.45em; margin: 2.6em 0 1em; }
+h2, h3 { font-size: 1.15em; margin: 2em 0 0.8em; }
+blockquote { margin: 1em 1.5em; font-style: italic; }
+blockquote p { text-indent: 0; }
+#TOC { margin: 2em 0 3em; }
+#TOC ul { padding-left: 1.2em; }
+@media (max-width: 600px) {
+html { font-size: 16px; }
+body { padding: 1.2rem 1rem 3rem; }
+}
+@media print {
+html { background: white; font-size: 11pt; line-height: 1.28; }
+body { max-width: none; padding: 0; }
+p, h2, h3 { orphans: 3; widows: 3; }
+h1, h2, h3, h4 { page-break-after: avoid; }
+}</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">From Idea to KDP</h1>
+<p class="subtitle">Writing a Book with a Crew of AI Editors</p>
+<p class="author">Jacob Verhoeks</p>
+<p class="date">2026</p>
+</header>
+<h1 class="unnumbered" id="from-idea-to-kdp">From Idea to KDP</h1>
+<p><em>Writing a Book with a Crew of AI Editors</em></p>
+<p>Jacob Verhoeks</p>
+<h1 class="unnumbered" id="copyright">Copyright</h1>
+<p>© 2026 Jacob Verhoeks. All rights reserved.</p>
+<p>No part of this book may be reproduced in any form without written
+permission from the author, except brief quotations in a review.</p>
+<p>The commands, scripts, and file templates printed in this book may be
+used freely in your own projects. They are also a working repository,
+<code>ai-book-tutorial</code>, which contains the project scaffold, the
+review-crew definitions, the cover and preflight scripts, and the full
+review archive for this book. The author publishes its location
+alongside this edition; if you are holding a printed copy and cannot
+find it, every file it contains is small enough to type from these
+pages.</p>
+<p>A note on the code in this book: the page is 5.5 inches wide, which
+fits 55 characters of monospaced type. Longer commands are wrapped with
+a trailing backslash and still run as printed. Longer lines of program
+output are wrapped with the continuation indented, and where output is
+abridged the text says so.</p>
+<p>Every command in this book was executed on the machine that produced
+it. Prices, royalty rates, spine calculations, and dashboard wording
+belong to Amazon KDP and change without notice; the book names the
+authority for each one and tells you to check it. Nothing here is legal,
+tax, or financial advice.</p>
+<p><em>This book was produced with the informed, decisive use of AI
+assistance, including drafting and editorial review, under the author’s
+direction. The afterword states exactly what the machine did, what it
+got wrong, and what the author decided. The disclosure answers given to
+Amazon KDP match this page.</em></p>
+<h1 class="unnumbered" id="dedication">Dedication</h1>
+<p>For everyone who has a book in a folder called
+<code>notes</code>.</p>
+<h1 id="part-one-before-you-write-anything">Part One: Before You Write
+Anything</h1>
+<p>Four chapters, three files, and no prose. Everything in this part is
+cheap to change, which is the only reason it comes first.</p>
+<h1 id="ch-chain">Chapter 1: A Book Is a Chain of Documents</h1>
+<!-- Part 1, target 1,100 words -->
+<blockquote>
+<p>The one-sentence model: premise, voice, outline, chapters, review,
+revision, publish, each document worthless until the one before it is
+right. Where AI is strong and where it is dangerous. The separation
+rule. What this book is not. Name the files the reader owns by the end
+of part one.</p>
+</blockquote>
+<p>I wrote three novels in 2026 with AI as the drafting engine and a
+rotating crew of AI editors as the review board. The first took four
+months of thrashing. The third took six weeks of calm, with the same
+tools and the same model. What changed was the order.</p>
+<p>The rest is context. The first book shipped at 95,000 words, the
+second went through eight full drafts, and the third was built from a
+story bible before a single sentence of prose existed. Total spend
+across all three was less than a human editor charges for one manuscript
+review, which is the number people repeat back to me and the least
+interesting thing about the project.</p>
+<p>A book is not one act of writing. It is a chain of documents, and
+each document is worthless until the one before it is right:</p>
+<figure>
+<img role="img" aria-label="The pipeline: seven documents, in order, with every revision feeding back to the premise." src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii01MiAwIDUxMiA0MzAiIHdpZHRoPSI1MTIiIGhlaWdodD0iNDMwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCBkIj4KICA8dGl0bGUgaWQ9InQiPlRoZSBib29rIHBpcGVsaW5lPC90aXRsZT4KICA8ZGVzYyBpZD0iZCI+U2V2ZW4gZG9jdW1lbnRzIGluIG9yZGVyOiBwcmVtaXNlLCB2b2ljZSwgb3V0bGluZSwgY2hhcHRlcnMsIHJldmlldywgcmV2aXNpb24sIHB1Ymxpc2guIEVhY2ggcmV2aXNpb24gZmVlZHMgYmFjayB0byB0aGUgcHJlbWlzZS48L2Rlc2M+CiAgPGRlZnM+CiAgICA8bWFya2VyIGlkPSJhIiB2aWV3Qm94PSIwIDAgMTAgMTAiIHJlZlg9IjkiIHJlZlk9IjUiIG1hcmtlcldpZHRoPSI3IiBtYXJrZXJIZWlnaHQ9IjciIG9yaWVudD0iYXV0by1zdGFydC1yZXZlcnNlIj4KICAgICAgPHBhdGggZD0iTSAwIDAgTCAxMCA1IEwgMCAxMCB6IiBmaWxsPSIjMTIyMTJlIi8+CiAgICA8L21hcmtlcj4KICAgIDxzdHlsZT4KICAgICAgLmIgeyBmaWxsOiAjZmZmZmZmOyBzdHJva2U6ICMxMjIxMmU7IHN0cm9rZS13aWR0aDogMS42OyB9CiAgICAgIC5sIHsgZmlsbDogIzEyMjEyZTsgZm9udC1mYW1pbHk6IEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTZweDsgfQogICAgICAubiB7IGZpbGw6ICM2Yjc0ODA7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDExcHg7IH0KICAgICAgLmMgeyBmaWxsOiAjYTMzYTJhOyBmb250LWZhbWlseTogSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMnB4OyB9CiAgICAgIC5lIHsgc3Ryb2tlOiAjMTIyMTJlOyBzdHJva2Utd2lkdGg6IDEuNjsgZmlsbDogbm9uZTsgbWFya2VyLWVuZDogdXJsKCNhKTsgfQogICAgICAuZiB7IHN0cm9rZTogI2EzM2EyYTsgc3Ryb2tlLXdpZHRoOiAxLjQ7IGZpbGw6IG5vbmU7IG1hcmtlci1lbmQ6IHVybCgjYSk7IHN0cm9rZS1kYXNoYXJyYXk6IDUgNDsgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CgogIDxnPgogICAgPHJlY3QgY2xhc3M9ImIiIHg9Ijk2IiB5PSI4IiAgIHdpZHRoPSIxNTAiIGhlaWdodD0iMzQiIHJ4PSI0Ii8+PHRleHQgY2xhc3M9ImwiIHg9IjE3MSIgeT0iMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnByZW1pc2U8L3RleHQ+CiAgICA8cmVjdCBjbGFzcz0iYiIgeD0iOTYiIHk9IjY2IiAgd2lkdGg9IjE1MCIgaGVpZ2h0PSIzNCIgcng9IjQiLz48dGV4dCBjbGFzcz0ibCIgeD0iMTcxIiB5PSI4OCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+dm9pY2U8L3RleHQ+CiAgICA8cmVjdCBjbGFzcz0iYiIgeD0iOTYiIHk9IjEyNCIgd2lkdGg9IjE1MCIgaGVpZ2h0PSIzNCIgcng9IjQiLz48dGV4dCBjbGFzcz0ibCIgeD0iMTcxIiB5PSIxNDYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPm91dGxpbmU8L3RleHQ+CiAgICA8cmVjdCBjbGFzcz0iYiIgeD0iOTYiIHk9IjE4MiIgd2lkdGg9IjE1MCIgaGVpZ2h0PSIzNCIgcng9IjQiLz48dGV4dCBjbGFzcz0ibCIgeD0iMTcxIiB5PSIyMDQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPmNoYXB0ZXJzPC90ZXh0PgogICAgPHJlY3QgY2xhc3M9ImIiIHg9Ijk2IiB5PSIyNDAiIHdpZHRoPSIxNTAiIGhlaWdodD0iMzQiIHJ4PSI0Ii8+PHRleHQgY2xhc3M9ImwiIHg9IjE3MSIgeT0iMjYyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5yZXZpZXc8L3RleHQ+CiAgICA8cmVjdCBjbGFzcz0iYiIgeD0iOTYiIHk9IjI5OCIgd2lkdGg9IjE1MCIgaGVpZ2h0PSIzNCIgcng9IjQiLz48dGV4dCBjbGFzcz0ibCIgeD0iMTcxIiB5PSIzMjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnJldmlzaW9uPC90ZXh0PgogICAgPHJlY3QgY2xhc3M9ImIiIHg9Ijk2IiB5PSIzNTYiIHdpZHRoPSIxNTAiIGhlaWdodD0iMzQiIHJ4PSI0Ii8+PHRleHQgY2xhc3M9ImwiIHg9IjE3MSIgeT0iMzc4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5wdWJsaXNoPC90ZXh0PgogIDwvZz4KCiAgPGc+CiAgICA8cGF0aCBjbGFzcz0iZSIgZD0iTSAxNzEgNDIgIEwgMTcxIDY0Ii8+CiAgICA8cGF0aCBjbGFzcz0iZSIgZD0iTSAxNzEgMTAwIEwgMTcxIDEyMiIvPgogICAgPHBhdGggY2xhc3M9ImUiIGQ9Ik0gMTcxIDE1OCBMIDE3MSAxODAiLz4KICAgIDxwYXRoIGNsYXNzPSJlIiBkPSJNIDE3MSAyMTYgTCAxNzEgMjM4Ii8+CiAgICA8cGF0aCBjbGFzcz0iZSIgZD0iTSAxNzEgMjc0IEwgMTcxIDI5NiIvPgogICAgPHBhdGggY2xhc3M9ImUiIGQ9Ik0gMTcxIDMzMiBMIDE3MSAzNTQiLz4KICA8L2c+CgogIDxwYXRoIGNsYXNzPSJmIiBkPSJNIDI0NiAzMTUgQyAzMzAgMzE1IDMzMCAyNSAyNDkgMjUiLz4KICA8dGV4dCBjbGFzcz0iYyIgeD0iMzM2IiB5PSIxNjgiPmVhY2ggcmV2aXNpb248L3RleHQ+CiAgPHRleHQgY2xhc3M9ImMiIHg9IjMzNiIgeT0iMTg0Ij5mZWVkcyBiYWNrPC90ZXh0PgoKICA8Zz4KICAgIDx0ZXh0IGNsYXNzPSJuIiB4PSI4OCIgeT0iMzAiICB0ZXh0LWFuY2hvcj0iZW5kIj53aGF0IHRoZSBib29rIGlzIGZvcjwvdGV4dD4KICAgIDx0ZXh0IGNsYXNzPSJuIiB4PSI4OCIgeT0iODgiICB0ZXh0LWFuY2hvcj0iZW5kIj5ob3cgaXQgc291bmRzPC90ZXh0PgogICAgPHRleHQgY2xhc3M9Im4iIHg9Ijg4IiB5PSIxNDYiIHRleHQtYW5jaG9yPSJlbmQiPnRoZSBjb250cmFjdDwvdGV4dD4KICAgIDx0ZXh0IGNsYXNzPSJuIiB4PSI4OCIgeT0iMjA0IiB0ZXh0LWFuY2hvcj0iZW5kIj50aGUgcHJvc2U8L3RleHQ+CiAgICA8dGV4dCBjbGFzcz0ibiIgeD0iODgiIHk9IjI2MiIgdGV4dC1hbmNob3I9ImVuZCI+c2l4IGJsaW5kIHBhc3NlczwvdGV4dD4KICAgIDx0ZXh0IGNsYXNzPSJuIiB4PSI4OCIgeT0iMzIwIiB0ZXh0LWFuY2hvcj0iZW5kIj50aGUgd29yayBwbGFuPC90ZXh0PgogICAgPHRleHQgY2xhc3M9Im4iIHg9Ijg4IiB5PSIzNzgiIHRleHQtYW5jaG9yPSJlbmQiPmZvdXIgZmlsZXMsIG9uZSBsaXN0aW5nPC90ZXh0PgogIDwvZz4KPC9zdmc+Cg==" style="width:78.0%" alt="The pipeline: seven documents, in order, with every revision feeding back to the premise." />
+<figcaption aria-hidden="true">The pipeline: seven documents, in order,
+with every revision feeding back to the premise.</figcaption>
+</figure>
+<p>Read that as a dependency graph, because that is what it is. The
+outline cannot be judged without the premise, since a scene is only
+wrong relative to what the book is for. The chapters cannot be judged
+without the voice guide, since prose is only off-key relative to a key.
+The review cannot be judged without the outline, since pacing is a
+comparison between what a chapter promised and what it delivered. Skip a
+document and you do not save its cost. You move that cost into a later
+stage where it is multiplied by the number of pages already written.</p>
+<h2 id="where-the-machine-is-strong">Where the machine is strong</h2>
+<p>Three jobs, and it is genuinely good at all three.</p>
+<p><strong>Volume with constraints.</strong> Give a model a beat, a
+voice spec, and a canon file, and it will produce 2,800 words of
+on-target prose in a minute. Not finished prose. On-target prose, which
+is a different and more useful thing, because finishing is editing and
+editing comes later.</p>
+<p><strong>Tireless review.</strong> A human editor reads your
+manuscript once and gets tired around chapter twelve. Six agents read it
+six times, in parallel, each one looking at exactly one dimension, at
+four in the morning, for the price of a sandwich. This is the part of
+the pipeline that has no non-AI equivalent at any price I can
+afford.</p>
+<p><strong>Counting.</strong> How many times does the manuscript say
+“almost”? Do the dates in chapter nine agree with chapter three? Is that
+phrase repeated in two chapters forty pages apart? A model with a shell
+is very good at this, and a human is very bad at it.</p>
+<h2 id="where-the-machine-is-dangerous">Where the machine is
+dangerous</h2>
+<p>Two jobs, and it will happily do both if you let it.</p>
+<p><strong>Deciding what the book is.</strong> Ask a model for a premise
+and you get a competent average of every premise in its training data.
+That is exactly the book nobody takes home. The premise is your job. The
+model’s job is to interrogate it.</p>
+<p><strong>Judging its own prose.</strong> A model asked “is this good?”
+will tell you yes, in detail, with reasons. A model asked “count every
+sentence that violates rule four of this style spec, with line numbers”
+will tell you something true. The difference is not the model’s
+intelligence, it is whether the question has a checkable answer.</p>
+<p>Out of that split falls the one rule the rest of this book is built
+on: separate the writing from the editing. You draft with one process,
+one voice, one file open. You review with a crew of specialists, each of
+which checks one thing and never touches the prose. Mixing the two
+produces mush at both ends. The prose gets “improved” into a blender,
+and the reviews turn into taste, which cannot be acted on.</p>
+<h2 id="what-this-book-is">What this book is</h2>
+<p>It is the full background behind a blog post. The post gives you the
+pipeline in twenty minutes. This book gives you the reasoning, the
+failure modes, the files, and the second half that the post compresses
+into three paragraphs: everything that happens between “the manuscript
+is done” and “the paperback is on sale”.</p>
+<p>It is also specific about its own evidence. Every command printed
+here was run on the machine that wrote the book. Where a command
+misbehaved, the misbehaviour is in the text, including the one in
+chapter 6 where the project’s own word count counted 16 words where 7
+existed. Where a fact belongs to Amazon rather than to me, the book
+names the page you check instead of quoting a number that will be stale
+before the paperback ships.</p>
+<h2 id="what-this-book-is-not">What this book is not</h2>
+<p>Not a prompt pack. There are four prompts in it, one each for
+interrogating a premise, extracting a voice, drafting a chapter and
+running the review orbit, and they are long and boring because they are
+specifications rather than magic words.</p>
+<p>Not a marketing book. It covers the listing: the description, the
+categories, the keywords, the price, the disclosure. It stops there.
+Advertising, newsletters, and launch teams are a different craft and I
+have not earned the right to teach them.</p>
+<p>Not a case for unattended AI writing. The pipeline actively prevents
+that, and the prevention is the product. By the end you will have a
+voice guide extracted from your own writing, a review record showing
+every finding and your response to it, and a git history where each
+decision has a name on it. That record is the evidence that the book is
+yours, and the day someone asks you the question, you will want it.</p>
+<p>Not a fiction book or a non-fiction book. The pipeline was built on
+novels, and this book is non-fiction produced by the same pipeline, so
+both paths are described where they diverge, in the chapter where they
+diverge.</p>
+<h2 id="what-you-own-by-the-end-of-part-one">What you own by the end of
+part one</h2>
+<p>Three files, none of them prose, in a folder that will still be there
+in five years:</p>
+<ul>
+<li><code>bible/book-premise.md</code>, which is what the book is for
+and the three cliches it is forbidden to drift into.</li>
+<li><code>bible/reader-and-promise.md</code>, which is who buys it and
+what they were promised.</li>
+<li><code>bible/voice.md</code>, which is the technical spec for prose
+that reads like a person wrote it.</li>
+</ul>
+<p>None of those three is writing. All three are decisions.</p>
+<h2 id="the-decision-this-chapter-closes">The decision this chapter
+closes</h2>
+<p>Whether to work in this order at all. If you are going to draft first
+and decide what the book is later, close the book here and keep the
+fifteen minutes.</p>
+<p>If you are going to work in pipeline order, make the folder before
+you turn the page, and put one file in it: <code>bible/</code> with a
+<code>book-premise.md</code> containing nothing but your three candidate
+ideas, one line each. The next chapter kills two of them.</p>
+<h1 id="ch-premise">Chapter 2: The Idea, and the Premise File That Kills
+Bad Ideas</h1>
+<!-- Part 1, target 900 words -->
+<blockquote>
+<p>An idea is not a premise. The six sections of the premise file and
+why each is a filter rather than a description. The interrogation
+method: the author answers, the AI asks. Worked example on a novel
+one-liner, then the same six sections on this book’s own premise.</p>
+</blockquote>
+<p>Most people arrive with an idea that sounds like this: “an AI
+thriller, but a realistic one.” Or: “a book about writing books with
+AI.” Both are topics. A topic is a direction of travel, and a book needs
+a destination.</p>
+<p>The difference is testable. A premise can be wrong. A topic cannot,
+which is why it feels so comfortable to hold one for three years.</p>
+<p>So the first file you write is a filter, not a description. Six
+sections, and each one is designed to fail your idea while failing is
+still free.</p>
+<h2 id="the-six-sections">The six sections</h2>
+<p><strong>One sentence.</strong> The whole book: who, what pressure,
+what stakes. Not a plot summary. The sentence that makes a stranger take
+the book home. Mine for the third novel:</p>
+<blockquote>
+<p>Twelve days before a Patagonian clearinghouse will settle the largest
+AI-generated zero-day auction yet, a Buenos Aires SRE discovers that its
+supposedly independent witnesses have begun certifying the future.</p>
+</blockquote>
+<p>Count what is doing work in there. A clock: twelve days. A specific
+machine: a clearinghouse that settles auctions for exploits. A specific
+wrongness: witnesses certifying things that have not happened. And a
+protagonist with boots on the ground rather than a job title from a
+movie. Take any one of those four out and the sentence goes soft.</p>
+<p><strong>What makes this different.</strong> My shelf already holds
+fifty AI thrillers. So does yours. Naming the genre is not an answer.
+Name the machine and the market that the other fifty do not have. If you
+cannot, the honest conclusion is that you have a topic and someone else
+has already written the book.</p>
+<p><strong>The door-in.</strong> What ordinary skill walks your
+protagonist into the extraordinary situation? An SRE who maintains the
+boring half of security finds one blade that should be cold and is warm.
+A platform engineer who reads clocks notices a timestamp that cannot
+exist. The door-in is what makes competence plausible, and competence is
+what makes a reader trust the next 300 pages. In non-fiction the same
+question applies to the reader: what do they already know how to do, and
+how does the book enter through that?</p>
+<p><strong>The central question.</strong> One question that only the
+whole book answers. If a chapter answers it, the book is a short story
+with padding. If nothing in the book answers it, you have written a
+mood.</p>
+<p><strong>The real-world anchor.</strong> What exists today that the
+reader recognises, so the fiction feels true before it feels exciting?
+For non-fiction this is the evidence base: the three novels, the public
+template, and KDP’s own forms, in my case.</p>
+<p><strong>Cliche guardrails.</strong> Name the three most obvious ways
+this draft could drift into a book that already exists, and write down
+the rule in this file that forbids each. This section is the one
+everyone skips and the one that pays. A draft drifts toward cliche by
+accident, chapter by chapter, and you will not notice from inside. A
+named cliche with a named rule is a thing a review agent can check
+mechanically in month three.</p>
+<h2 id="the-interrogation-method">The interrogation method</h2>
+<p>Here is the part that inverts what most people do with AI. You do not
+ask the model for a premise. You give it your answers and instruct it to
+attack them.</p>
+<blockquote>
+<p>I am writing the premise file for a book. I will answer six questions
+and you will interrogate the answers. For each one: name the weakest
+word in my answer, name the book on the shelf my answer is already
+describing, and ask the one question I am avoiding. Do not write my
+premise. Do not offer alternatives unless I ask.</p>
+</blockquote>
+<p>The last two sentences matter more than the rest. Without them the
+model writes your premise for you, in the voice of the average of all
+premises, and it will be smooth, and you will accept it because it is
+smoother than yours. Then you spend four months writing a book you did
+not choose. I know how long it takes because I did it on book one.</p>
+<p>Run the interrogation on three ideas at once. It is the cheapest
+comparison you will ever get, and two of the three will die in about an
+hour. Let them. An idea that cannot survive six questions from a model
+that has read everything will not survive 80,000 words and a stranger’s
+twenty minutes in a bookshop.</p>
+<h2 id="the-same-six-sections-non-fiction">The same six sections,
+non-fiction</h2>
+<p>This book went through its own filter, and the file is in the project
+as <code>bible/book-premise.md</code>. Its one-sentence answer:</p>
+<blockquote>
+<p>A working engineer’s account of taking a book from a first idea to a
+live Amazon KDP listing, using plain text, Pandoc, and a crew of AI
+editors that review each other’s blind spots instead of writing the book
+for you.</p>
+</blockquote>
+<p>The “what makes this different” section is where the interrogation
+drew blood. My first answer was “a practical guide to writing with AI”,
+which describes roughly four hundred books published in the last two
+years. The question I was avoiding: what do you have that a prompt-list
+author does not? The answer that survived: the actual files, run against
+three finished books and against this book itself, with the failures
+left in. That answer then changed the book. It is why chapter 6 contains
+a bug report about my own Makefile, and why the afterword is a ledger
+rather than a thank-you note.</p>
+<p>The cliche guardrails did the same job in the other direction. Three
+named drifts: the tool tour, AI triumphalism, and the productivity-guru
+voice. Each one has a rule in the file, and each rule is checkable. No
+command appears without the decision that needed it. Every claim about
+what AI did well is paired with the specific thing it got wrong. No
+word-count challenges, no morning routines, no author brand.</p>
+<h2 id="the-decision-this-chapter-closes-1">The decision this chapter
+closes</h2>
+<p>Write the file. Six sections, your answers, in your words, with the
+interrogation transcript thrown away and only the conclusions kept. Then
+stress it: name the three cliches and the three rules.</p>
+<p>You will notice the file is short, maybe 500 words, and took two
+hours. That ratio is correct and it repeats through part one. These are
+the cheapest words in the project, and every later stage cites them.</p>
+<p>When <code>bible/book-premise.md</code> exists and two of your three
+ideas are dead, you are done here.</p>
+<h1 id="ch-reader">Chapter 3: Who Buys This, Asked Early</h1>
+<!-- Part 1, target 750 words -->
+<blockquote>
+<p>The commercial question belongs at the start. Reader, promise, the
+back-cover claim, the shelf test, and for non-fiction the
+prior-knowledge lists.</p>
+</blockquote>
+<p>Most writing advice puts the audience question at the end, in a
+chapter called marketing, next to a paragraph about social media. That
+ordering is why so many finished manuscripts cannot be sold. By the time
+you ask who this is for, the book has already answered, and it has
+answered “me”.</p>
+<p>Asking early costs one file and about ninety minutes. It changes what
+you write in chapter fourteen.</p>
+<h2 id="the-file">The file</h2>
+<p><code>bible/reader-and-promise.md</code>. In a novel’s bible this
+slot holds the cast list. For non-fiction the cast is the reader, and
+the file holds five things.</p>
+<p><strong>Primary reader.</strong> Not a demographic. A person with a
+situation. Mine:</p>
+<blockquote>
+<p>A software or infrastructure engineer, 30-55, who writes for work and
+wants to write a book. Has a terminal, git, an AI subscription, and
+opinions about text editors. Does not have an agent, a publisher, an
+ISBN, or any idea what a spine width is. Their fear is producing
+something that reads generated, and being found out.</p>
+</blockquote>
+<p>The fear line is the most useful sentence in the file. It told me the
+book needed a voice chapter before the tooling chapters, and it is why
+the review section is four chapters long instead of one.</p>
+<p><strong>Secondary reader,</strong> and what the prose owes them. Mine
+is a working writer who is AI-curious and file-comfortable. What they
+are owed: no paragraph that requires reading a Makefile to understand.
+Every command explained in prose first. That single line has constrained
+every page since.</p>
+<p><strong>Who this is not for.</strong> Say it in the book, early,
+without apology. My chapter 1 tells the prompt-pack reader they are in
+the wrong place. Losing that reader on page 3 is a gift to both of us. A
+reader who feels lied to writes a one-star review that is entirely
+deserved.</p>
+<p><strong>The promise, in the reader’s words.</strong> First person,
+their voice, one sentence:</p>
+<blockquote>
+<p>“By the end I will know exactly which file to open next, at every
+stage from the first idea to a live listing, and I will have a way to
+prove the writing is mine.”</p>
+</blockquote>
+<p>Every chapter of this book is checkable against that sentence. Two
+draft chapters died against it.</p>
+<p><strong>The back-cover claim the promise supports.</strong> Yes, a
+year early. It will change, and drafting it now is still the fastest
+structural test available, because a promise you cannot compress into
+three lines is a promise the book has not made yet.</p>
+<h2 id="the-shelf-test-beats-the-genre-label">The shelf test beats the
+genre label</h2>
+<p>“Contemporary techno thriller” is a label. It tells you nothing about
+whether someone buys the book.</p>
+<p>The shelf test: name three books a bookseller would put yours next
+to, then say in one sentence what a reader gets from yours that they do
+not get from those three. If the answer is “mine is better”, you have
+not done the test. If the answer is “those three are about the crime and
+mine is about the plumbing that made the crime possible”, you have a
+jacket, a category, and probably your keywords.</p>
+<p>For non-fiction, name the three books and the two blog posts. Blog
+posts are competitors in non-fiction and pretending otherwise is how you
+write a 200-page version of something the reader already read for free.
+My shelf test answer: those books teach prompting, and this one ships
+the build system, the review crew, and the publishing half.</p>
+<h2 id="the-two-lists-that-only-non-fiction-needs">The two lists that
+only non-fiction needs</h2>
+<p>At the bottom of the file, two lists. What the prose may assume the
+reader knows, and what it may not.</p>
+<p>Mine, may assume: command line, git basics, Markdown, what a PDF is,
+what an ebook is.</p>
+<p>May not assume: Pandoc, LaTeX, typography, trim sizes, bleed, KDP’s
+dashboard, royalty models, ISBN mechanics, how AI subagents get
+spawned.</p>
+<p>That second list is the most-consulted file in this project. It is
+why chapter 15 explains bleed in a sentence before it explains the cover
+script, and why nothing here explains what a commit is. Without the
+lists you write for a reader whose knowledge drifts to match whatever
+you learned most recently, which reads to everyone else as a book that
+keeps changing its mind about who it is talking to.</p>
+<p>For fiction the equivalent question is what the reader is assumed to
+know about the world before chapter one, and the discipline is the same:
+write it down, or the draft will decide for you, inconsistently.</p>
+<h2 id="the-decision-this-chapter-closes-2">The decision this chapter
+closes</h2>
+<p>Write the file. Five sections and the two lists. Then do one more
+thing, which takes five minutes and saves a year: send the promise
+sentence and the back-cover claim to two people who match the primary
+reader, and ask one question. Not “does this sound good”. Ask: “would
+you have bought this, and what did you think it was about?”</p>
+<p>Their answer to the second half is your real blurb. Keep it in the
+file.</p>
+<p>When <code>bible/reader-and-promise.md</code> exists, the commercial
+question is closed until chapter 14, where a commercial pass reopens it
+with the finished book in hand. The next file is the one that decides
+whether the prose sounds like you.</p>
+<h1 id="ch-voice">Chapter 4: Your Voice, Extracted Before the Machine
+Writes a Word</h1>
+<!-- Part 1, target 900 words -->
+<blockquote>
+<p>The step everyone skips. Build the corpus from your own best writing,
+run the extraction prompt, treat the output as a technical spec. The
+em-dash rule and the 22 exceptions in my own corpus. What to do with no
+corpus. The read-aloud test.</p>
+</blockquote>
+<p>This is the chapter that decides whether your book reads like a
+person wrote it.</p>
+<p>It is also the step every AI writing guide leaves out, and I
+understand why: it produces no prose, it takes an afternoon, and it
+feels like homework. Skip it and you will spend that afternoon anyway,
+later, rewriting chapter after chapter by instinct, wondering why the
+whole thing sounds like a competent stranger.</p>
+<p>The voice guide is a technical spec. Not a mood board, not a list of
+favourite authors. A file a review agent can check a paragraph against,
+mechanically, and report violations with line numbers.</p>
+<h2 id="build-the-corpus-first">Build the corpus first</h2>
+<p>Collect your own best writing. Not everything you have written: your
+best, because the guide extracted from your average will describe your
+average.</p>
+<p>My corpus was 26 published articles from 2022 to 2026, plus the bible
+files from the three novels. Yours might be work documents, incident
+write-ups, long emails, a decade of blog posts. Volume matters less than
+honesty. Ten pieces where you sounded like yourself beat fifty where you
+sounded like your employer.</p>
+<p>Put the corpus in a folder. Then hand it over with an instruction
+that produces a spec rather than a compliment.</p>
+<h2 id="the-extraction-prompt">The extraction prompt</h2>
+<blockquote>
+<p>You are analysing writing samples to extract a reusable voice guide.
+Read every sample. Produce <code>bible/voice.md</code> containing: 1.
+<strong>Who is writing.</strong> The persona, in one paragraph. 2.
+<strong>Sentence patterns.</strong> Quote three short sentences from the
+samples that carry the weight of a paragraph, and show the
+long-then-short cadence this author uses. 3. <strong>Paragraph
+length.</strong> Typical and maximum, and the rule for when a
+single-sentence paragraph is allowed. 4. <strong>Directness.</strong> A
+table: instead of X, this author writes Y. Use real examples from the
+samples. 5. <strong>Transparency about failure.</strong> How dead ends
+and mistakes get stated. 6. <strong>Humour.</strong> When it lands and
+when it is cut. 7. <strong>Forbidden words and patterns.</strong> Exact
+phrases this author never uses. 8. <strong>The test.</strong> One line
+that tells me later whether a paragraph is in this voice. Write the
+guide in the extracted voice itself.</p>
+</blockquote>
+<p>That last instruction is a check on the whole exercise. If the guide
+reads like a style manual, the extraction failed and you run it again on
+a better corpus. If the guide sounds like you, it worked.</p>
+<h2 id="the-two-sections-that-do-the-work">The two sections that do the
+work</h2>
+<p>The <strong>directness table</strong> and the <strong>forbidden
+list</strong> carry more weight than the other six sections combined,
+because they are the two a machine can enforce.</p>
+<p>The forbidden list is where AI-slop vocabulary goes to die. Mine bans
+delve, dive into, unlock, unleash, elevate, supercharge, game-changer,
+seamless, robust as praise, leverage as a verb, journey, landscape,
+realm, tapestry, testament to, it’s worth noting, at the end of the day,
+and about fifteen more. It also bans three patterns, which are harder to
+see and worse: rhetorical questions used as transitions, sentences that
+announce their own structure, and encouragement.</p>
+<p>The directness table is the positive half. One row from mine:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Instead of</th>
+<th>This author writes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The tool may occasionally produce errors</td>
+<td>Three of my review findings were wrong, one factually dangerous</td>
+</tr>
+</tbody>
+</table>
+<p>That is not a word swap. It is a rule about specificity, expressed as
+an example, which is the only form of style instruction a model reliably
+follows.</p>
+<h2 id="the-em-dash-rule-and-my-own-22-violations">The em-dash rule, and
+my own 22 violations</h2>
+<p>The highest-return mechanical edit available:</p>
+<blockquote>
+<p><strong>No em-dashes (U+2014). Ever.</strong></p>
+</blockquote>
+<p>The em-dash is the loudest machine tell in current AI prose. Removing
+it from a generated draft does more for perceived humanity than any
+amount of rewriting, because the reader’s pattern-matcher is calibrated
+on exactly that character. Split the sentence. Use a comma, a colon, or
+parentheses.</p>
+<p>Now the honest part. The corpus this book’s voice guide was extracted
+from contains 22 em-dashes. I checked:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-o</span> <span class="st">&#39;—&#39;</span> blog/write-a-book-with-agent-editors.md <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 22</span></span></code></pre></div>
+<p>The blog predates the rule. The rule applies to book prose from the
+voice file forward, and the book’s own review pass counts em-dashes in
+<code>chapters/</code> and reports zero in prose, with three inside code
+fences where the character is the thing being searched for. Chapter 9
+shows that grep and that distinction. That is the shape of every rule in
+this pipeline: written down, dated, and verified by a command rather
+than by a promise.</p>
+<h2 id="machine-tells-are-a-density-problem">Machine tells are a density
+problem</h2>
+<p>The other tells are rationed rather than banned, because banning them
+is what produces stilted prose. Your voice guide needs the list and the
+ration; it does not need the method. The watch list, the counting method
+and the structural fix are in chapter 9, where you will be holding a
+draft to run them against.</p>
+<p>What belongs in the spec is the ration itself. For each tell, write
+the rate you will tolerate and the unit you will measure it in, and
+write it before you have any prose to be defensive about. Mine says at
+most one contrast structure per chapter, and a blind review pass later
+found three chapters over that line, which is exactly the argument for
+writing the number down while it costs nothing.</p>
+<h2 id="if-you-have-no-corpus">If you have no corpus</h2>
+<p>Then you have three hours of work instead of one.</p>
+<p>Write 2,000 words of something true and unpublished: how a project
+failed, what a place smells like at 6am, why you left a job. Do not
+write it with AI. Then extract the guide from that, plus a list of tells
+you personally hate in other people’s writing, plus your own hard
+lines.</p>
+<p>Do not extract a voice guide from authors you admire. You will get
+their voice, badly, and every review pass afterwards will enforce
+someone else’s rhythm on your book.</p>
+<h2 id="the-test-at-the-bottom-of-the-file">The test at the bottom of
+the file</h2>
+<p>Read a paragraph aloud. If it could have been written by any AI or
+any senior engineer with a content calendar, it is not your voice yet.
+If it sounds like someone who has stared at this specific problem for
+three days and finally figured it out, that is the voice, and that is
+the one line you will use a hundred times.</p>
+<h2 id="the-decision-this-chapter-closes-3">The decision this chapter
+closes</h2>
+<p>Whose rules the prose obeys. When <code>bible/voice.md</code> exists
+and sounds like you, part one is done: nothing you have written is
+prose, and you have already made the three decisions the rest of the
+book only executes.</p>
+<h1 id="part-two-the-scaffold">Part Two: The Scaffold</h1>
+<p>Three chapters. At the end of them a command turns your files into a
+book, and you have personally verified that the command tells you the
+truth.</p>
+<h1 id="ch-scaffold">Chapter 5: Plain Text, Git, and Why the Bible Is
+Separate</h1>
+<!-- Part 2, target 1,100 words -->
+<blockquote>
+<p>Why Markdown and Pandoc rather than a word processor. The project
+layout. The bible is canon and never part of the build. Git as the
+review record. The three fiction files and what replaces them for
+non-fiction.</p>
+</blockquote>
+<p>Your book is going to end up as four files: a web page you can send
+to a reader, an A4 PDF you can annotate, an EPUB for Kindle, and a 5.5
+by 8.5 inch PDF that a printer in Kentucky turns into a paperback. All
+four come from the same source, in one command each, or the pipeline
+does not work.</p>
+<p>That requirement rules out the word processor. Not because word
+processors are bad at writing, they are fine at writing, but because
+they are bad at everything else this project needs.</p>
+<h2 id="what-plain-text-buys-you">What plain text buys you</h2>
+<p><strong>Diffs.</strong> After a review pass you will apply 40 changes
+across 17 chapters, and you will want to see exactly what changed, per
+chapter, in colour. That is <code>git diff</code>, and it is the
+difference between revising and hoping.</p>
+<p><strong>Grep.</strong> Chapter 9’s sweeps are grep. Chapter 12’s
+verification is grep. When a reviewer claims a phrase appears in three
+chapters, you check with a command and get a number, not an impression.
+A manuscript you cannot grep cannot be reviewed mechanically, and
+mechanical review is most of the value in this pipeline.</p>
+<p><strong>One source, four outputs.</strong> Pandoc reads the Markdown
+and the metadata and emits HTML, EPUB, and two PDF geometries.
+Typography lives in metadata files, not in the manuscript, so changing
+the trim size is one line rather than a reflow of 300 pages.</p>
+<h2 id="the-layout">The layout</h2>
+<pre><code>my-book/
+├── metadata.yaml          # title, author, fonts
+├── metadata-print.yaml    # paperback geometry
+├── metadata-a4.yaml       # editorial proof geometry
+├── Makefile             # html / pdf-a4 / epub / print
+├── chapters/            # the manuscript, in order
+├── bible/               # canon, NOT part of the build
+│   └── review/          # every review and response
+├── agents/              # the review crew definitions
+├── scripts/             # install, covers, preflight
+├── templates/style.css  # html and epub look
+└── output/              # generated, gitignored</code></pre>
+<p>You do not have to build that by hand, and this is the point to stop
+reading and create it. The scaffold, the review-crew definitions, the
+cover scripts and the installer are one repository,
+<code>ai-book-tutorial</code>, whose location is on the copyright page
+of this book; clone it once and copy the template for each book you
+write:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="op">&lt;</span>repo named on the copyright page<span class="op">&gt;</span> book-kit</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> book-kit/template ~/books/my-book</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/books/my-book</span></code></pre></div>
+<p>If you would rather not clone anything, every file in the tree is
+small enough to create by hand from this book, and the three that carry
+real content are the Makefile, <code>metadata.yaml</code> and
+<code>metadata-print.yaml</code>.</p>
+<p>Everything in the tree above now exists on disk, including the
+review-crew definitions and the cover scripts. The decision the tree
+leaves you is which bible file to fill first, and part one already
+answered it: premise, then reader, then voice.</p>
+<p>Chapters are ordered by filename, with a two-digit prefix:
+<code>02-ch01.md</code>, <code>03-ch02.md</code>. Inserting a chapter
+between two others is a rename, which git records, and Pandoc simply
+concatenates in sorted order. Do not fight this with clever naming.
+Boring numbers, one file per chapter, no exceptions.</p>
+<h2 id="the-bible-is-canon-and-it-is-not-in-the-book">The bible is canon
+and it is not in the book</h2>
+<p><code>bible/</code> is excluded from every build. It holds the
+compressed truth the manuscript must stay faithful to, and it exists
+because continuity does not survive 80,000 words on memory. It survives
+on a file you reread before every drafting session.</p>
+<p>The rule that makes it work is short: <strong>when a chapter
+contradicts the bible, you fix the chapter.</strong> Not the bible.</p>
+<p>That sounds obvious and it is violated constantly, because fixing the
+bible is one line and fixing the chapter is an afternoon. The one time
+changing the bible is correct is when the draft found something better,
+and then it is a deliberate act with its own commit and its own
+consequence: every earlier chapter that touched the changed fact goes
+back on the list. Chapter 10 covers how to decide. The point here is
+that both paths are visible in git afterwards, and the accident path is
+not available.</p>
+<h2 id="the-fiction-bible-and-its-non-fiction-replacement">The fiction
+bible, and its non-fiction replacement</h2>
+<p>Four files are the same whichever kind of book you are writing:
+premise, voice, master outline, and the one-line glance. Three are
+fiction-only, and the swap for them is the most useful paragraph in this
+chapter.</p>
+<p>A novel’s bible also holds <code>characters.md</code> (continuity
+anchors: age, history, voice markers), <code>world-tech.md</code> (the
+physics of the world, and specifically what the systems
+<strong>cannot</strong> do, which is the interesting half) and
+<code>timeline.md</code> (the day-by-day clock, because a thriller’s
+tension lives there). None of the three means anything for non-fiction.
+This book replaced them with:</p>
+<ul>
+<li><code>reader-and-promise.md</code> instead of the cast list, because
+in non-fiction the reader is the protagonist. Chapter 3 built it.</li>
+<li><code>verified-facts.md</code> instead of the world’s physics,
+holding every fact the book asserts, split into two classes.
+<strong>Class A</strong> is verified on this machine, with the command
+and the date, and may be stated flatly. <strong>Class B</strong> belongs
+to somebody else, changes without notice, and may only appear next to
+the authority you check it against. Every royalty rate and spine
+constant in this book is Class B.</li>
+<li><code>research-notes.md</code> instead of the timeline, holding each
+external fact, its source, and the chapter that uses it, so a reviewer
+can find it.</li>
+</ul>
+<p>That Class A and Class B split is what stops a technical book from
+confidently printing a number that was true in March. It is also the
+rule this book broke: a blind review pass found nine Class A numbers in
+the prose with no row and no date in the file that is supposed to hold
+every one of them, including a warning count the book uses twice to
+justify a permanent change to its own build.</p>
+<h2 id="git-is-the-review-record">Git is the review record</h2>
+<p>Commit granularity that has worked across four books:</p>
+<ul>
+<li>one commit per bible file as it is written</li>
+<li>one commit per drafted chapter, message
+<code>draft: ch07 &lt;title&gt;</code></li>
+<li>one commit per review pass, containing the report files only</li>
+<li>one commit per applied revision batch, referencing the response
+file</li>
+</ul>
+<p>The point is not tidiness. The point is that in month five, when a
+reviewer raises a finding you declined in month three,
+<code>git log</code> plus the response files tell you that you declined
+it and why. Without that record you will re-litigate the same twelve
+arguments every pass, and you will lose about half of them by
+attrition.</p>
+<p>Initialise now and commit the bible first:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add bible metadata<span class="pp">*</span>.yaml Makefile</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&quot;bible: premise, reader, voice, outline&quot;</span></span></code></pre></div>
+<p>The first commit of the project contains no prose. That is the
+correct shape.</p>
+<h2 id="the-decision-this-chapter-closes-4">The decision this chapter
+closes</h2>
+<p>Plain text or a word processor, and where canon lives. The project
+exists, git is initialised, and the bible is committed before a sentence
+of the manuscript.</p>
+<h1 id="ch-toolchain">Chapter 6: The Toolchain, and Verifying Your Own
+Tools</h1>
+<!-- Part 2, target 1,050 words -->
+<blockquote>
+<p>Install pandoc, xelatex, fonts. The five make targets and when each
+runs. Then the real lesson: test the tools that count things. The
+wordcount that reported 16 words where 7 existed, the diagnosis, the
+fix, and make epub failing until a cover exists.</p>
+</blockquote>
+<p>Four programs and one font family. On macOS the template installs all
+of it:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/install-macos.sh</span></span></code></pre></div>
+<p>It walks the chain in order, checking each step before it moves:
+Xcode Command Line Tools, Homebrew, MacTeX without the GUI, pandoc, git,
+ImageMagick, poppler. It ends by asking TeX Live whether the fonts the
+book actually references are there:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kpsewhich</span> texgyrepagella-regular.otf</span></code></pre></div>
+<p>If that comes back empty, the script tells you the exact
+<code>tlmgr</code> command to fix it rather than failing at build time
+with a LaTeX error that names nothing. On Linux the same set comes from
+your package manager: <code>pandoc</code>, <code>texlive-xetex</code>,
+<code>texlive-fonts-extra</code>, <code>git</code>,
+<code>imagemagick</code>, <code>poppler-utils</code>.</p>
+<p>The fonts deserve one paragraph, because it is a trap. This book’s
+metadata references TeX Gyre Pagella and Heros by filename rather than
+by family name, plus DejaVu Sans Mono for code, for a reason chapter 15
+pays for in full. They ship with TeX Live, so xelatex resolves them
+through kpathsea even on a machine where the operating system has never
+heard of them, and the GUST license permits embedding and commercial
+use. Use a font you found online and two things can happen: KDP rejects
+the interior because the font is not embedded, or the license does not
+allow you to sell a book containing it. Neither surfaces until upload
+day.</p>
+<h2 id="the-five-commands">The five commands</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> html        <span class="co"># browser proof, self-contained</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> pdf-a4      <span class="co"># editorial proof, good to annotate</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> wordcount   <span class="co"># prose words, against your target</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> epub        <span class="co"># Kindle ebook (needs a cover)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> print       <span class="co"># KDP paperback interior, at trim</span></span></code></pre></div>
+<p>Which one you run depends on the session. Drafting:
+<code>make html</code> after each chapter, <code>make wordcount</code>
+when the session ends. Reviewing: <code>make pdf-a4</code>, then read it
+on a tablet away from the terminal, because you catch different things
+when you cannot fix them. Publishing: <code>print</code>,
+<code>epub</code>, <code>covers</code>, <code>preflight</code>, in that
+order, and chapter 15 explains why the order is not negotiable.</p>
+<p>Run <code>make html</code> now, before you have written anything. An
+empty book that builds is a scaffold. A full book that has never built
+is a problem you get to discover at the worst possible time.</p>
+<h2 id="now-test-the-tools-that-count-things">Now test the tools that
+count things</h2>
+<p>Here is the chapter’s actual lesson, and it is not about pandoc.</p>
+<p><code>make wordcount</code> exists so you can measure the draft
+against the outline’s targets. Its job is to count prose words, and
+prose means neither the headings, nor the drafting comments, nor the
+outline beat quoted at the top of each chapter file. The recipe in the
+template I had been using for three books did this:</p>
+<pre class="make"><code>cat $(CHAPTERS) | grep -vE &#39;^(&lt;!--|&gt;|#|\\)&#39; | wc -w</code></pre>
+<p>Read it as English: drop every line that starts with a comment
+marker, a blockquote marker, a heading marker, or a backslash. Which is
+not the same sentence as “drop comments”. It drops the line a comment
+<em>starts</em> on.</p>
+<p>I tested it, because writing this chapter required me to state what
+it does. Seven words of prose, one three-line comment, one beat:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Chapter X</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- comment line one</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">hidden words on continuation line</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">end of comment --&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; beat blockquote skipped words</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>Seven real prose words appear right here.</span></code></pre></div>
+<pre><code>$ make wordcount
+16</code></pre>
+<p>Sixteen. Nine words of comment body counted as manuscript. On a real
+chapter with a multi-line note about what still needs research, the
+count drifts up by 20 or 30 words per chapter, which across 17 chapters
+is roughly 400 phantom words. Not a disaster. But it is a measuring
+instrument reading high, and every decision in part three is made
+against that instrument.</p>
+<p>Two honest fixes exist. Keep every drafting comment on one line,
+which is a discipline you will violate by chapter four. Or fix the
+recipe, which is four lines of awk:</p>
+<pre class="make"><code>wordcount:
+    @cat $(CHAPTERS) \
+    | awk &#39;/&lt;!--/{c=1} c{if(/--&gt;/){c=0}; next} 1&#39; \
+    | grep -vE &#39;^(&gt;|#|\\)&#39; | wc -w</code></pre>
+<p>The awk holds one bit of state: inside a comment or not. Same test
+file, after the fix:</p>
+<pre><code>$ make wordcount
+7</code></pre>
+<p>This project does both, and the template in the repository carries
+the fixed recipe now.</p>
+<h2 id="why-this-is-a-chapter-and-not-a-footnote">Why this is a chapter
+and not a footnote</h2>
+<p>Because you are about to spend three months making decisions against
+numbers that your tools report, and some of those tools are 90% right in
+a way that never announces itself. The word count was one. Here is
+another, from the same afternoon:</p>
+<pre><code>$ make epub
+make: *** No rule to make target `assets/cover.jpg&#39;,
+    needed by `epub&#39;.  Stop.</code></pre>
+<p>The EPUB target lists the cover as a prerequisite, and the cover is
+gitignored, so <code>make epub</code> fails on a fresh clone until you
+put an image at <code>assets/cover.jpg</code>. That is arguably correct
+behaviour: shipping an ebook with no cover is worse. It is also a
+five-minute detour on the day you are already nervous, and it belongs in
+the book because I hit it.</p>
+<p>The rule, and it applies to every tool you did not write:</p>
+<blockquote>
+<p>Before you trust a number, feed the tool an input whose answer you
+already know.</p>
+</blockquote>
+<p>Seven words. One comment. Count it. That is a two-minute test and it
+is the difference between a measurement and a guess.</p>
+<p>One refinement, learned late enough on this book to be worth stating
+plainly. A known-answer test proves the tool does what you told it to
+do. It does not prove you told it the right thing. When I later wrote a
+script to count single-sentence paragraphs, it passed its self-test and
+reported that a quarter of the book’s paragraphs were one sentence long,
+which was alarming and wrong: it was counting the one-line stems that
+introduce a code block as paragraphs. The self-test could not catch
+that, because the fixture I wrote for it made the same assumption the
+script did. When a measurement surprises you, read the twenty things it
+counted before you act on the number. Do the same for the crutch-word
+sweep in chapter 9: put four instances of “almost” in a file and confirm
+the script says four. Capitalise one of them, because the first version
+of that sweep was case-sensitive and my all-lowercase fixture made
+exactly the same assumption the script did. Do it for the em-dash grep.
+Do it for anything a review agent will later use as evidence, because
+chapter 12 is about the fact that agents are confidently wrong a small
+percentage of the time, and an agent using a broken counter is wrong
+with a citation attached.</p>
+<h2 id="the-decision-this-chapter-closes-5">The decision this chapter
+closes</h2>
+<p><code>make html</code> produces a book. <code>make pdf-a4</code>
+produces a proof. And you have personally run one test whose answer you
+knew in advance, against the tool you will believe for the next three
+months.</p>
+<p>Commit the toolchain state and move on to the outline.</p>
+<h1 id="ch-outline">Chapter 7: The Outline Is a Contract</h1>
+<!-- Part 2, target 850 words -->
+<blockquote>
+<p>A bad scene costs one line in the outline and the tail of the book in
+chapter 22. The anatomy: locked decisions, spine, per-chapter beat and
+end beat. Word count as part of the skeleton. The at-a-glance companion
+and the edit order.</p>
+</blockquote>
+<p>A bad scene in the outline costs one line to fix. The same bad scene
+in chapter 22 costs you the rest of the book, because everything
+downstream was built on it. That ratio is the entire argument for
+outlining, and it holds for non-fiction at least as strongly: a chapter
+that does the wrong job is a chapter whose three neighbours now
+overlap.</p>
+<p>The outline is not a summary of the book. It is a contract with it.
+Five parts.</p>
+<h2 id="locked-decisions">Locked decisions</h2>
+<p>At the top, before any chapter, the non-negotiables the whole book
+obeys. From a novel of mine:</p>
+<blockquote>
+<p>The climax is a failed root ceremony and a frozen settlement, not a
+machine shutdown.</p>
+</blockquote>
+<p>From this book:</p>
+<blockquote>
+<p>The book is the pipeline, in pipeline order. No chapter arrives out
+of order, even when that would be tidier.</p>
+</blockquote>
+<p>Locked decisions exist to be cited. In month four you will want to
+reorder two chapters for a reason that feels excellent at 11pm. If the
+reorder violates a locked decision, the answer is no, and the file gives
+you a no that does not depend on how tired you are. Eight of them is
+plenty. Thirty means you have written the book in note form and will
+resent it.</p>
+<h2 id="the-one-sentence-spine">The one-sentence spine</h2>
+<p>The premise sentence, aimed at structure instead of at a reader. It
+answers what changes across the whole book, so any chapter can be tested
+against it.</p>
+<h2 id="per-chapter-five-fields">Per chapter: five fields</h2>
+<p>For each chapter, in the master outline:</p>
+<ul>
+<li><strong>POV and place</strong> for fiction, <strong>the
+angle</strong> for non-fiction</li>
+<li><strong>Target word count</strong></li>
+<li><strong>The beat</strong>, which is what happens, in one to five
+sentences</li>
+<li><strong>The end beat</strong>, which is what has changed by the last
+paragraph</li>
+</ul>
+<p>A beat is “a car ignites the grass on the vineyard margin and costs
+them nothing yet”. A beat is not “they drive through the vineyard
+talking”. The test is whether someone else could draft the chapter from
+it and get the same events.</p>
+<p>No prose in the outline. If you write a good line in the outline you
+will spend the drafting session trying to justify it.</p>
+<h2 id="the-end-beat-is-the-rule-that-saves-the-book">The end beat is
+the rule that saves the book</h2>
+<p>Every chapter ends with <strong>changed danger</strong>. No chapter
+ends with everyone going to sleep. If nothing has changed by the last
+paragraph, it is not a chapter, it is a continuation that got a
+heading.</p>
+<p>The non-fiction twin of that rule, which this book follows:
+<strong>by the end of the chapter, a decision is closed and a file
+exists that did not exist before.</strong> A chapter that leaves the
+reader merely better informed has not earned the next page. That rule
+killed two chapters of this book at the outline stage, at a cost of two
+lines each. One was a chapter about choosing a model, which closed no
+decision the reader could act on. The other was a tour of Markdown
+syntax.</p>
+<p>Write the end beats before you write the beats if you can. It is
+harder and it front-loads the structural work into the cheapest possible
+file.</p>
+<h2 id="word-count-is-part-of-the-skeleton">Word count is part of the
+skeleton</h2>
+<p>A 1,500-word action beat and a 3,500-word procedural chapter are
+different animals, and the outline has to know which one it is asking
+for. Put the number in the field. Two things follow.</p>
+<p>You get an honest total before you write, which is how you discover
+at zero cost that your 24-chapter outline is a 60,000-word book and your
+genre expects 90,000. And you get per-chapter drift as a signal during
+drafting: a chapter that comes in at double its target is usually two
+chapters, and a chapter at half is usually missing its complication.</p>
+<h2 id="the-at-a-glance-companion">The at-a-glance companion</h2>
+<p>The master outline is 2,400 words for this book and too long to hold
+in your head. So there is a second file,
+<code>bible/outline-at-a-glance.md</code>, with one line per
+chapter:</p>
+<blockquote>
+<ol start="6" type="1">
+<li><strong>The Toolchain, and Verifying Your Own Tools</strong>
+(1,000): install, five make targets, and the word count that counted 16
+words where 7 existed.</li>
+</ol>
+</blockquote>
+<p>That is the file that sits beside the keyboard while drafting, and it
+is the file you hand a reviewer when you want an opinion on structure
+rather than on prose.</p>
+<p>The two files drift, so the edit order is a rule: <strong>change
+<code>master-outline.md</code> first, then update the glance.</strong>
+Never the other way. When they disagree, the master is right by
+definition, and the glance gets regenerated from it. The review
+consequence is immediate: a reviewer reading the glance and a drafter
+reading the master produce findings that are really just a stale
+one-line summary, and you spend an hour proving it. The line quoted
+above is a live example. Three independent reviewers flagged its word
+count, because for two rounds it was wrong.</p>
+<h2 id="how-much-to-outline-before-drafting">How much to outline before
+drafting</h2>
+<p>All of it, at beat level, for the first book. Every chapter, POV,
+target, beat, end beat, before a word of prose. Once you have done that
+once you will know where you can safely leave a part sketched, and it is
+later than you think.</p>
+<p>The reason has nothing to do with planning temperament. The review
+orbit in part four compares the manuscript against the outline, line by
+line. With no outline, the pacing pass has nothing to measure and
+produces taste. With an outline, it produces a table.</p>
+<h2 id="the-decision-this-chapter-closes-6">The decision this chapter
+closes</h2>
+<p><code>bible/master-outline.md</code> and
+<code>bible/outline-at-a-glance.md</code> both exist. Locked decisions
+at the top, a spine sentence, every chapter with a target and an end
+beat, and no end beat that says nothing changed.</p>
+<p>Commit them. Part two is done, the scaffold builds, and the next
+chapter finally writes prose.</p>
+<h1 id="part-three-drafting">Part Three: Drafting</h1>
+<p>Three chapters, and the first prose in the project. The rules here
+are about protecting the draft from you and from the model, in that
+order.</p>
+<h1 id="ch-drafting">Chapter 8: Drafting, One Chapter Per Session</h1>
+<!-- Part 3, target 950 words -->
+<blockquote>
+<p>Chapter file anatomy and why the build skips the first two parts. The
+full drafting prompt with every constraint’s reason. One chapter per
+session. Never invent canon: stop and update the bible instead. What to
+do with the model’s plot suggestions.</p>
+</blockquote>
+<p>Now you draft, and the first thing to notice is how little of this
+chapter is about prompting.</p>
+<h2 id="the-chapter-file-has-three-parts">The chapter file has three
+parts</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Chapter 1: Basement Duty {#ch-basement-duty}</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Act 1, day 1, target 2,800 words --&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; The outline beat, quoted as a blockquote.</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>Prose starts here, below the beat.</span></code></pre></div>
+<p>Heading, then the drafting note as an HTML comment, then the outline
+beat as a blockquote, then prose. The build strips the comment and the
+blockquote, and so does <code>make wordcount</code>, assuming you fixed
+the recipe in chapter 6.</p>
+<p>That arrangement does one useful thing: the contract travels with the
+chapter. When you open the file in month three, the beat you promised to
+write is at the top of it, and drift becomes visible instead of
+arguable. When a review agent reads the chapter it can compare prose
+against beat without opening the outline. And when you rewrite the
+chapter, the beat is right there to be renegotiated deliberately.</p>
+<h2 id="the-drafting-prompt-in-full">The drafting prompt, in full</h2>
+<p>This is the fiction version, from my third novel. Every line is
+load-bearing.</p>
+<blockquote>
+<p>Write chapter N of the outline. Follow <code>bible/voice.md</code>
+exactly. Follow the chapter beat exactly. Do not invent plot,
+characters, or technology that the bible does not already carry: check
+it against <code>world-tech.md</code>, <code>characters.md</code> and
+<code>timeline.md</code>. Write in close third person, past tense. The
+chapter ends with changed danger. Do not write notes to the author. Do
+not moralise. Do not summarise the chapter’s meaning at the end. After
+the prose, quote my “if you remove a paragraph, the book still works”
+test and give me the three paragraphs you would cut first.</p>
+</blockquote>
+<p>Why each constraint is there:</p>
+<p><strong>“Follow voice.md exactly.”</strong> Without the pointer the
+model uses its house style, which is the average of everything. This is
+the sentence that makes part one pay.</p>
+<p><strong>“Do not invent plot, characters, or technology.”</strong> A
+model that needs a detail will invent one, plausibly, and it will
+contradict chapter 4 in a way you notice in chapter 19. Naming the canon
+files converts invention into lookup.</p>
+<p><strong>“Close third person, past tense.”</strong> Point of view
+drifts across a long chapter otherwise, usually into a paragraph of
+omniscient summary right where the tension should be.</p>
+<p><strong>“Ends with changed danger.”</strong> The end beat, restated
+at the moment of writing.</p>
+<p><strong>“Do not write notes to the author.”</strong> Otherwise you
+get “[Note: consider expanding this scene]” inside your manuscript, and
+one of those survives to the proof copy. Ask me how I know.</p>
+<p><strong>“Do not moralise. Do not summarise the chapter’s
+meaning.”</strong> The two most recognisable AI habits in fiction. The
+model wants to land a closing sentence explaining what the chapter was
+about. That sentence is always the first thing a human editor cuts.</p>
+<p><strong>The cut-three-paragraphs request.</strong> This is the only
+place in the drafting session where the model is asked to judge, and it
+is asked to judge subtractively, which is the one aesthetic question
+models are reliably good at. You will take about one suggestion in
+three, and the exercise tells you where the chapter is padded before you
+have grown attached to it.</p>
+<p>For non-fiction, the same prompt with three substitutions: the canon
+files become <code>reader-and-promise.md</code> and
+<code>verified-facts.md</code>, close third person becomes second person
+for procedure and first person past for evidence, and changed danger
+becomes “the chapter closes a decision and names the file the reader now
+has”. The four negative constraints do not change at all.</p>
+<h2 id="one-chapter-per-session">One chapter per session</h2>
+<p>Not because of context windows. Because of accountability.</p>
+<p>A session that drafts one chapter ends with one file, one
+<code>make html</code>, one wordcount check, and one commit. When the
+review orbit flags that chapter in month three, you can read the diff
+and remember the decision. A session that drafts six chapters ends with
+a blur, and it will contain two chapters you never actually read.</p>
+<p>The session shape that has worked, four books running:</p>
+<ol type="1">
+<li>Reread the beat and the previous chapter’s last two paragraphs.</li>
+<li>Draft.</li>
+<li>Read it, on screen, once, without editing.</li>
+<li><code>make wordcount</code>, compare against the target.</li>
+<li>Commit as <code>draft: chN &lt;title&gt;</code>.</li>
+<li>Stop. Do not start the next chapter because you feel warm.</li>
+</ol>
+<p>Point 3 is the one people skip and it is the reason to keep sessions
+small: the only way an unread chapter reaches a reviewer is if you never
+read it.</p>
+<h2 id="the-draft-never-invents-canon">The draft never invents
+canon</h2>
+<p>The most important rule in part three. When the draft needs a fact
+the bible does not have, you stop drafting.</p>
+<p>You do not let the model decide the surname, the compression
+algorithm, the distance between two towns, or what happens to be true
+about the reader’s toolchain. You add it to the bible, commit that, and
+then continue. It costs two minutes and it is the difference between a
+book with continuity and a book with seventeen small contradictions you
+find in the mechanical review at the worst possible moment.</p>
+<p>This applies with even more force to non-fiction, where the
+equivalent of a continuity error is a false claim. If the chapter needs
+a number, it goes through <code>verified-facts.md</code> first, with the
+command that produced it and the date. If the number belongs to Amazon,
+it goes in as Class B, next to the page you check. No number reaches
+prose without one of those two paths. That rule is why this book prints
+“16 words where 7 existed” and refuses to print a royalty rate.</p>
+<h2 id="what-to-do-with-the-models-plot-suggestions">What to do with the
+model’s plot suggestions</h2>
+<p>They will arrive unrequested, and some of them are good. The test is
+not whether the idea is good. The test is:</p>
+<blockquote>
+<p>Does the suggestion survive being written into the bible?</p>
+</blockquote>
+<p>Open the canon file, write the change as a canon fact, and look at
+what it breaks. If it breaks nothing and improves the beat, take it,
+commit the bible change first, then draft. If it breaks three earlier
+chapters, the honest cost is those three chapters plus the review pass,
+and now you are choosing with the price tag visible.</p>
+<p>What you never do is take the suggestion inside the prose and leave
+the bible alone. That is how a book acquires two contradictory truths,
+both written confidently, forty pages apart.</p>
+<h2 id="the-decision-this-chapter-closes-7">The decision this chapter
+closes</h2>
+<p>Chapter one exists as prose under its beat. <code>make html</code>
+shows it in a browser, <code>make wordcount</code> compares it against
+the outline, and git has it as one commit with your name on it.</p>
+<p>Sixteen more times, and then part four takes it apart.</p>
+<h1 id="ch-human">Chapter 9: Keeping the Prose Human</h1>
+<!-- Part 3, target 1,200 words -->
+<blockquote>
+<p>The two sweeps, run every few chapters. Crutch words with a rate and
+a verdict. AI tells as a density problem, the watch list, and the
+structural fix. The em-dash grep. The two health tests.</p>
+</blockquote>
+<p>Two sweeps, run every three or four chapters, never saved for the
+end. Both take under a minute. Both produce a number and, more
+importantly, a verdict.</p>
+<h2 id="sweep-one-crutch-words">Sweep one: crutch words</h2>
+<p>Crutch words are the softeners that drain force out of a sentence
+without announcing themselves. Ten of them cover most of the damage:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> w <span class="kw">in</span> almost very quite rather somehow slightly <span class="dt">\</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>         really perhaps seemed somewhat<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$w</span><span class="st">: </span><span class="va">$(</span><span class="fu">grep</span> <span class="at">-riwo</span> <span class="st">&quot;</span><span class="va">$w</span><span class="st">&quot;</span> chapters/ <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span><span class="st">&quot;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<p>Note the <code>-i</code>. The first version of that loop did not have
+it, and so it could not see <code>Almost</code> at the start of a
+sentence. One live hedge hid behind that for three revision rounds, in
+this chapter, which is the chapter about sweeps.</p>
+<p>Raw counts are not the output. Two things turn counts into a
+decision.</p>
+<p><strong>A rate.</strong> Counts per 1,000 words, because 40 instances
+of “almost” means something different in 30,000 words than in 90,000.
+Divide by the wordcount from chapter 6, the fixed one.</p>
+<p><strong>A verdict.</strong> Here is my own sweep on an 83,000-word
+manuscript, in full:</p>
+<blockquote>
+<p><code>almost</code> 0.52 per 1000w, <code>very</code> 0.59 per 1000w.
+Both slightly high for a thriller. Not worth your time now; handle at
+copy-edit.</p>
+</blockquote>
+<p>That verdict is the useful artefact. It says the number is imperfect
+and the fix is not due yet, which stops you spending a week on softeners
+while the third act has no antagonist. A sweep that reports “clean”
+saves you the same week. A sweep that reports numbers with no verdict
+guarantees you will fiddle, because numbers on a screen ask to be
+lowered.</p>
+<p>This book’s own sweep is a worked example of why the verdict matters
+more than the count. It reported <code>almost</code> at 0.74 per 1000
+words, high enough to look like a problem. Most of the hits were the
+word being discussed rather than used, in this chapter and in chapters 1
+and 6, because a book about crutch words is full of crutch words in
+quotation marks. Today the sweep finds 13 and 10 of them are quoted,
+which leaves three live hedges at 0.17 per 1000 words. Two earlier ones
+were the same vague phrase describing the same review finding in two
+chapters, and both were replaced with what the finding actually said;
+one hid from the sweep entirely until a blind pass found the
+sentence-initial <code>Almost</code> the case-sensitive loop could not
+see.</p>
+<p>A sweep counts strings. You supply the reading, and you check the
+sweep’s own blind spots before you quote its number. Note also that
+these counts move every time the chapter about them is edited, which is
+why the sentence above gives the reading and not just the figure.</p>
+<p>Test the sweep before you trust it, as chapter 6 insisted: put four
+instances of “almost” in a scratch file and confirm the loop says four.
+Note the <code>-w</code> in that grep. Without it, “almost” matches
+inside other words and “very” matches “every”, and your counts are junk
+in the direction that makes you feel bad.</p>
+<h2 id="sweep-two-ai-tells-which-are-a-density-problem">Sweep two: AI
+tells, which are a density problem</h2>
+<p>This is the sweep that decides whether the book reads generated. The
+critical insight, and it took me a full book to internalise:</p>
+<p>A single instance is fine. Density is the defect.</p>
+<p>“Not X. Just Y.” once in a novel is a rhetorical move a human would
+make. Once a page is a machine signature. Same for every item on the
+watch list from <code>bible/voice.md</code>:</p>
+<ul>
+<li><code>Not X. {Not / Just / But} Y.</code> contrast structures, the
+most recognisable tell</li>
+<li><code>a kind of</code> and <code>some kind of</code> hedges, which
+can usually just be deleted</li>
+<li><code>it was as if</code> and <code>as though</code> similes</li>
+<li><code>something in the [way / voice / set of his shoulders]</code></li>
+<li><code>in the silence that followed</code>, as a transition
+crutch</li>
+<li><code>for a moment</code> and <code>for a long moment</code>,
+temporal hedging</li>
+<li><code>there was a [tension / stillness]</code>, where the noun
+should be doing the verb</li>
+<li><code>the weight of [what she had done]</code></li>
+<li><code>a quiet [noun]</code>, as in “a quiet certainty”</li>
+<li><code>still</code> as an intensifier and <code>just</code> as a
+softener, used as tics</li>
+<li>the staccato three-beat <code>Not X. Not Y. Just Z.</code></li>
+</ul>
+<p>Grep for each, note where the hits cluster, and go to the clusters.
+Three of these inside two paragraphs is the finding. One on page 40 and
+one on page 200 is prose.</p>
+<h2 id="the-fix-is-structural-never-a-word-swap">The fix is structural,
+never a word swap</h2>
+<p>When you find a cluster, the instinct is to swap words: delete “a
+kind of”, replace “for a moment” with “briefly”. That produces prose
+with the same skeleton and slightly different skin, and it will still
+read generated, because the tell was never the vocabulary. The tell is
+the rhythm: stacked short fragments, each carrying one clause, in a
+row.</p>
+<p>The fix is to fold them into one longer sentence that carries a
+subordinate clause.</p>
+<p>Before:</p>
+<blockquote>
+<p>She looked at the panel. Not surprise. Something closer to
+recognition. For a moment she did not move.</p>
+</blockquote>
+<p>After:</p>
+<blockquote>
+<p>She looked at the panel with the flat attention of someone
+recognising a thing she had been told to expect, and she did not
+move.</p>
+</blockquote>
+<p>The second version is longer, more specific, and could not have been
+assembled from fragments. Your long, specific sentences are the human
+signature in current AI prose, and they are the defence. Lean on
+them.</p>
+<h2 id="the-em-dash-grep">The em-dash grep</h2>
+<p>The highest-return single command in the pipeline:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">&#39;—&#39;</span> chapters/<span class="pp">*</span>.md</span></code></pre></div>
+<p>Zero on every file, or you have work to do. The em-dash is the
+loudest machine tell in circulation, and readers who could not name a
+single other pattern are calibrated on that character.</p>
+<p>This book ran that grep as part of its own review. Zero hits in
+narrative prose, which is what the rule governs, and three hits in the
+manuscript as a whole: every one of them inside a fenced code block,
+where the character is the argument to the grep that hunts it. The
+response file records it in those words rather than reporting a clean
+zero.</p>
+<p>An earlier draft of this paragraph claimed two. It was true when
+written and went stale when a later chapter printed the same command,
+and the voice review caught it as the only blocking finding in the
+orbit. A book about verification that prints an unverified number about
+itself is the exact failure this chapter is about, so the correction is
+in the response file rather than quietly applied.</p>
+<p>If you use an AI to draft, expect em-dashes in the first output of
+every chapter and fix them as part of the drafting session, not at the
+end. Splitting a sentence in two, or reaching for a colon, changes the
+rhythm, and rhythm changes are cheap in the drafting session and
+expensive after the pacing review has read the chapter.</p>
+<h2 id="the-two-health-tests">The two health tests</h2>
+<p>From the voice guide, run on any scene that feels wrong but reads
+fine:</p>
+<blockquote>
+<p><strong>Remove the technology nouns.</strong> The scene must still
+contain a person trying to do something, another pressure resisting
+them, a discovery, and a changed choice.</p>
+</blockquote>
+<p>If deleting the machines empties the scene, the scene was a demo. For
+non-fiction, remove the tool names: the paragraph must still hold a
+decision, a reason, and a consequence, or it was a tool tour.</p>
+<blockquote>
+<p><strong>Remove the final interpretive sentence.</strong> If the
+consequence remains legible, leave the sentence out.</p>
+</blockquote>
+<p>Nine times in ten it stays out. The model writes that sentence
+because it is trained to land a point, and the chapter had already
+landed it.</p>
+<h2 id="when-to-run-the-sweeps">When to run the sweeps</h2>
+<p>Every three or four chapters, and once more before the review orbit.
+Not at the end. The reason is not thoroughness, it is calibration: you
+want to catch your own recurring tic in chapter 5 so that chapters 6
+through 17 do not have it. I found a <code>for a moment</code> habit on
+chapter 6 of one book and it cost me an afternoon. Finding it at chapter
+30 would have cost a week.</p>
+<h2 id="the-decision-this-chapter-closes-8">The decision this chapter
+closes</h2>
+<p>Two sweep reports exist, each with a rate and a verdict, saved in
+<code>bible/review/</code>. At least one cluster has been fixed
+structurally rather than by word swap, and the em-dash grep returns
+zero.</p>
+<p>Then back to drafting, until the draft fights back.</p>
+<h1 id="ch-fights-back">Chapter 10: When the Draft Fights Back</h1>
+<!-- Part 3, target 1,050 words -->
+<blockquote>
+<p>The failure modes of a real draft and the response to each. The stuck
+chapter, the sprawling chapter, the draft that wants to leave the
+outline. Editing while drafting and what it costs by chapter 30. Word
+count against target.</p>
+</blockquote>
+<p>Somewhere between chapter 6 and chapter 11 the draft stops
+cooperating. This happens every time, in every book, and none of it is a
+sign that the idea was wrong. Each failure has a shape, and each shape
+has a cheaper response than willpower.</p>
+<h2 id="the-chapter-that-will-not-start">The chapter that will not
+start</h2>
+<p>You reread the beat, you draft, and the output is limp. Three
+attempts and you have three limp openings.</p>
+<p>Almost always the beat is two beats. It contains a discovery and a
+confrontation, or a procedure and its consequence, and the chapter
+cannot decide which one it is about. Splitting it into two chapters
+usually fixes the paralysis inside ten minutes, and the outline absorbs
+the change with one renumbering.</p>
+<p>The second most common cause: the chapter has no pressure in it. The
+character wants nothing this hour, or in non-fiction, the reader has no
+decision to make here. Chapter 7’s rule applies retroactively. If you
+cannot name the decision the chapter closes, the chapter should not
+exist, and the honest fix is a merge with its neighbour rather than a
+better prompt.</p>
+<h2 id="the-chapter-that-sprawls">The chapter that sprawls</h2>
+<p>You aimed for 2,800 words and produced 5,200, and it is not bad, it
+is just not ending.</p>
+<p>A sprawling chapter is a chapter with no end beat. The prose keeps
+going because nothing has told it that the job is done. Reread the end
+beat field in the outline. If it is empty or vague, that is the bug, and
+you write the end beat before you cut a word.</p>
+<p>Do the cutting from the middle, not the end. The end is usually where
+the chapter finally arrives; the middle is where it circled. This is
+exactly what the “give me the three paragraphs you would cut first”
+request in chapter 8 is for, and a sprawling chapter is the one place I
+take that suggestion nearly every time.</p>
+<h2 id="the-draft-that-wants-to-leave-the-outline">The draft that wants
+to leave the outline</h2>
+<p>The interesting failure. Halfway through your chapter 12 the draft
+finds something better than what you planned: a relationship you did not
+design, an argument that belongs three chapters earlier, a machine that
+is more frightening than the one in the bible.</p>
+<p>Do not follow it silently, and do not refuse it on principle. Run the
+test from chapter 8:</p>
+<blockquote>
+<p>Does the change survive being written into the bible?</p>
+</blockquote>
+<p>Open the canon file and write the change as a fact. Then look at what
+it breaks. Three outcomes, all of them fine:</p>
+<p><strong>It breaks nothing.</strong> Take it. Commit the bible change,
+then continue drafting. This is the good case and it happens more than
+you expect, because the outline was written before you knew the
+book.</p>
+<p><strong>It breaks two or three earlier chapters.</strong> Now you
+have a price. Write it down: which chapters, roughly how much work, and
+what the change buys. Then decide, and put the decision in the bible as
+a locked decision with a date. Half the time the answer is yes and half
+the time it is “not in this draft”, and either is fine as long as it is
+written.</p>
+<p><strong>It breaks a locked decision.</strong> The answer is no,
+unless you are willing to reopen the decision explicitly and accept that
+the whole book downstream is now in question. I have done this once, in
+book two, and it cost five chapters. It was correct, and what made it
+survivable was that the reason is in the bible, so the following four
+reviews stopped arguing about the ending.</p>
+<p>The path that ruins books is the fourth one, which is following the
+better idea in the prose while the bible still says the old thing. Then
+you have two truths, both confident, forty pages apart, and neither the
+model nor you will remember which was intended.</p>
+<h2 id="editing-while-drafting-is-the-deadliest-anti-pattern">Editing
+while drafting is the deadliest anti-pattern</h2>
+<p>Write a chapter, then improve it, then write the next one, then
+improve that. Each improvement is defensible. Each one also pulls the
+book a degree off the spine, because you are optimising a chapter
+against your taste this morning rather than against the outline. By
+chapter 30 you are writing three books, and the review orbit will tell
+you so in a way that costs a month.</p>
+<p>The rule is the one from chapter 1, and it is the whole reason the
+pipeline is shaped this way: <strong>draft with one process, review with
+another.</strong> During drafting you may fix a factual error, a name,
+or an em-dash. You may not restructure, you may not rewrite yesterday’s
+chapter, and you may not “just tighten” your chapter 3 because you now
+know how your chapter 9 goes. Write it on a note in the response file
+instead, where part four will find it.</p>
+<p>Same for the model. If your agent offers to revise the previous
+chapter, decline. A revision at drafting time is a revision with no
+report behind it, which means it is untraceable, and untraceable changes
+are what make the review orbit produce findings you cannot explain.</p>
+<h2 id="word-count-against-target-honestly">Word count against target,
+honestly</h2>
+<p>Run <code>make wordcount</code> at the end of every session and
+compare to the running total the outline promised. Two failure modes and
+one correct response each.</p>
+<p><strong>Running short.</strong> A 95,000-word plan that is 68,000
+words on page 300 is not shorter. It is missing scenes a reader paid
+for. When you find yourself 25% under target, the diagnosis is almost
+never prose density. It is that beats are being summarised rather than
+dramatised, or that procedures are being asserted rather than walked
+through. Both are visible per chapter, and both are fixed by writing the
+missing scene rather than by padding the existing one.</p>
+<p><strong>Running long.</strong> Less dangerous. Usually two or three
+chapters carrying double weight, which you already know how to
+diagnose.</p>
+<h2 id="boring-momentum-rules">Boring momentum rules</h2>
+<p>None of these are inspiring, and all four have survived four
+books.</p>
+<ul>
+<li>Draft in the same slot every day, even a short one. The model does
+not care, but the reread does.</li>
+<li>Never end a session mid-chapter. End with a committed chapter or
+with a note about the first sentence of the next one.</li>
+<li>Do not read the whole manuscript while drafting. You will edit, and
+part three forbids it.</li>
+<li>When you are stuck for two sessions, go back to the outline. The
+problem is upstream. It has been upstream every time.</li>
+</ul>
+<h2 id="the-decision-this-chapter-closes-9">The decision this chapter
+closes</h2>
+<p>A complete first draft exists, every chapter is committed, and every
+place the draft left the outline has a written decision in the bible
+with a date on it.</p>
+<p>Nothing has been reviewed yet. That is next, and it is where the book
+actually gets good.</p>
+<h1 id="part-four-review">Part Four: Review</h1>
+<p>Four chapters. The draft is finished and unreviewed, which means it
+is not yet a book. This part turns opinions into a work plan you wrote
+yourself.</p>
+<h1 id="ch-orbit">Chapter 11: The Review Orbit</h1>
+<!-- Part 4, target 1,100 words -->
+<blockquote>
+<p>One agent per dimension, blind. The six dimensions, fiction and
+non-fiction mapping side by side. The shared report anatomy. Why
+blindness is the design. How to run it with subagents and how to run it
+without. The tension ledger.</p>
+</blockquote>
+<p>The review orbit is the part of the pipeline that has no affordable
+non-AI equivalent, and it is the reason my third book took six weeks
+instead of four months.</p>
+<p>The idea is simple enough to state in one sentence: <strong>one
+reviewer per dimension, each blind to the others, each producing its own
+report file.</strong></p>
+<h2 id="the-six-dimensions">The six dimensions</h2>
+<p>Six passes, and each one is forbidden from doing the other five
+jobs.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Report</th>
+<th>Fiction question</th>
+<th>Non-fiction question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tension.md</code> / <code>momentum.md</code></td>
+<td>Does the pressure rise?</td>
+<td>Does each chapter earn the next page?</td>
+</tr>
+<tr>
+<td><code>pacing.md</code></td>
+<td>Rhythm, chapter lengths, scene vs summary</td>
+<td>Same, plus procedure vs explanation</td>
+</tr>
+<tr>
+<td><code>voice.md</code></td>
+<td>Violations of the voice guide, AI tells, em-dashes</td>
+<td>Identical</td>
+</tr>
+<tr>
+<td><code>logic.md</code> / <code>accuracy.md</code></td>
+<td>Causality, plants and payoffs, competence</td>
+<td>Does every command run? Is every claim sourced?</td>
+</tr>
+<tr>
+<td><code>mechanical.md</code></td>
+<td>Everything countable: dates, numbers, names</td>
+<td>Identical</td>
+</tr>
+<tr>
+<td><code>copyedit.md</code></td>
+<td>Line-level prose, cut candidates</td>
+<td>Identical</td>
+</tr>
+</tbody>
+</table>
+<p>Three of those transfer unchanged, which is why the same crew works
+for both kinds of book. Two need a real translation, and the translation
+is the interesting part.</p>
+<p><strong>Tension becomes momentum.</strong> A thriller’s tension pass
+builds a curve of threat. A non-fiction momentum pass builds a ledger:
+for each chapter, what decision does it close, and what does the reader
+leave holding? An empty cell in the decision column is the same defect
+as a flat stretch in a tension curve, and it is just as mechanical to
+spot.</p>
+<p><strong>Logic becomes accuracy.</strong> A novel’s logic pass asks
+whether chapter 9 reacts to evidence chapter 6 established. A
+non-fiction accuracy pass asks whether the command on line 41 actually
+runs, and whether every number has a source with a date. It is the
+harshest pass in the non-fiction orbit, and the one that found most of
+what was wrong with this book.</p>
+<p>The definitions live in <code>agents/</code>, one file per angle, in
+the template. They are plain Markdown, so they drop into Claude Code as
+subagents, into opencode as agents, or into any tool that will read a
+file and follow it.</p>
+<h2 id="why-blind">Why blind</h2>
+<p>Each reviewer gets the manuscript and the bible. Never the other
+reports.</p>
+<p>Blindness buys one thing, and it is worth the extra runs:
+<strong>independent agreement becomes evidence.</strong> When three
+reviewers who have never seen each other’s work all flag chapter 14,
+that is not taste. You cannot dismiss it as one reviewer’s hobby horse.
+When one flags it and the others do not, that is a data point about the
+reviewer as much as about the chapter.</p>
+<p>Show reviewer two what reviewer one said and you get agreement,
+immediately and politely, because that is what these models do. You have
+then paid for six reviews and received one, laundered through five
+confirmations. This failure is silent. It looks like consensus.</p>
+<h2 id="running-the-orbit-with-subagents">Running the orbit with
+subagents</h2>
+<p>In Claude Code, one prompt does it:</p>
+<blockquote>
+<p>Run the full review orbit on the manuscript. Spawn separate
+subagents, one per dimension: momentum, pacing, voice, accuracy,
+mechanical, copyedit. Each agent reads <code>chapters/</code> and
+<code>bible/</code> and never any file in <code>bible/review/</code>.
+Each writes its own report to
+<code>bible/review/&lt;dimension&gt;.md</code> using the shared anatomy:
+verdict, findings grouped Blocking / Should fix / Minor, with file:line
+citations. Do not reconcile yet.</p>
+</blockquote>
+<p>Six agents, running in parallel, on a full manuscript. The last
+instruction matters: reconciliation is a separate act, done in chapter
+12, by you.</p>
+<h2 id="running-the-orbit-without-subagents-and-what-that-costs">Running
+the orbit without subagents, and what that costs</h2>
+<p>You may not have subagents. The workaround is to run the passes
+sequentially, one fresh context per dimension, and enforce blindness by
+hand:</p>
+<ol type="1">
+<li>Start a new session or clear context.</li>
+<li>Load only <code>chapters/</code>, <code>bible/</code>, and one agent
+definition.</li>
+<li>Write the report to
+<code>bible/review/&lt;dimension&gt;.md</code>.</li>
+<li>Discard the context before the next pass.</li>
+</ol>
+<p>What you must not do is run six dimensions in one continuous
+conversation. By dimension four the context holds the first three
+reports and you are back to laundered consensus.</p>
+<p>I can tell you what the sequential version costs, because this book
+ran both. The first orbit was six passes inside one context:
+procedurally blind, since no pass quoted another, but not provably
+blind. It raised 24 findings, two of them blocking, and six of its 23
+countable claims did not survive being counted.</p>
+<p>Then the same manuscript, after two rounds of fixes, went through six
+genuinely isolated agents. That orbit raised 31 findings,
+<strong>nine</strong> of them blocking, and only two of its 29 countable
+claims failed verification. Three of the nine blocking defects were
+things I had introduced myself while fixing the first orbit, which no
+amount of self-review had caught. It also produced something the
+sequential version cannot produce at all: three items flagged
+independently by passes that had never seen each other’s work.</p>
+<p>Sequential passes are worth running. They are not the same
+instrument, and the difference is roughly a factor of three in the
+wrong-finding rate. Note the deviation in your response file, then close
+it when you can.</p>
+<h2 id="the-report-anatomy">The report anatomy</h2>
+<p>Every report, every dimension, same shape:</p>
+<pre><code># {Dimension} review: {Book title}
+## Verdict          (2-3 sentences, rating first)
+## {Dimension-specific tables}
+## Findings
+   Blocking / Should fix / Minor, each one:
+   file:line, then the finding
+## One-line summary for the author</code></pre>
+<p>The uniformity is not neatness. It is what makes reconciliation
+possible in chapter 12: you are merging six documents with the same
+skeleton, so overlaps line up by severity and by citation instead of by
+prose.</p>
+<p>One rule belongs with the anatomy rather than with the argument:
+<strong>no reviewer may rewrite prose.</strong> Findings only, with
+citations. A reviewer that edits is a reviewer whose findings you can no
+longer count, because the evidence has been altered by the witness, and
+the shared report format is what makes findings-only practical.</p>
+<p>The <strong>one-line summary</strong> at the bottom is worth its own
+instruction. Forcing each reviewer to name the single most useful
+sentence it produced is how you find the finding that matters among
+forty that are technically correct.</p>
+<h2 id="the-tension-ledger-the-most-actionable-table-in-the-pipeline">The
+tension ledger, the most actionable table in the pipeline</h2>
+<p>For fiction, one table beats the rest of the orbit combined: one row
+per chapter, with threat present, who is under pressure, a score out of
+ten, and a note. It turns a feeling into a shape you can see.</p>
+<p>Here is what a blind tension pass wrote about my second novel:</p>
+<blockquote>
+<p>The book has two-and-a-half acts of rising pressure and a fourth act
+of falling action mislabelled as a climax sequence.</p>
+</blockquote>
+<p>That single sentence changed the ending of the book, and what made it
+actionable was the table under it: scores of 8, 9, 9 through the middle,
+then 6, 5, 6 across the last four chapters. That is a fact about the
+manuscript, not a preference.</p>
+<p>The non-fiction equivalent is the chapter ledger from the momentum
+pass. On this book it flagged chapters 13 and 14 as a pair reading like
+one chapter split in two, which is not something either chapter can show
+you from the inside. Note what it did not catch: the two chapters this
+book killed for closing no decision died at the outline stage, months
+earlier, killed by the end-beat rule for the price of two lines. The
+ledger is a net for what survives the outline, not a substitute for the
+outline’s own rule.</p>
+<h2 id="when-to-run-it">When to run it</h2>
+<p>Twice, at minimum.</p>
+<p><strong>Early,</strong> on the outline and the first three chapters.
+The findings are cheap to apply and they catch structural problems while
+a structural problem is still one line in a file. This is the run I did
+not do on book one.</p>
+<p><strong>Formally,</strong> on the complete draft, as an event: all
+six dimensions, one reconciliation, one response file, one commit.</p>
+<h2 id="the-decision-this-chapter-closes-10">The decision this chapter
+closes</h2>
+<p>Six report files exist in <code>bible/review/</code>, none of which
+has read another, all with the same anatomy, each with a verdict and a
+one-line summary.</p>
+<p>Do not apply anything yet. Half of what is in those files is wrong or
+already declined, and the next chapter is how you tell which half.</p>
+<h1 id="ch-reconcile">Chapter 12: Reconcile, and Verify the
+Countable</h1>
+<!-- Part 4, target 1,050 words -->
+<blockquote>
+<p>Reviews are input, not verdicts. Merge and mark NEW / STILL UNFIXED /
+PREVIOUSLY REJECTED. Then verify every countable claim before applying
+it. The three findings that did not survive, and the one that would have
+introduced a factual error into a correct book.</p>
+</blockquote>
+<p>Six reports, maybe eighty findings, and a strong temptation to start
+fixing at the top of the first file. Do not. Reconciliation comes first,
+and it is the step where this pipeline earns its keep.</p>
+<p>Two jobs, in order: merge, then verify.</p>
+<h2 id="merge-with-three-labels">Merge, with three labels</h2>
+<p>Every finding across all six reports gets folded into one file,
+<code>bible/review/reconciled.md</code>, grouped by severity, and each
+item gets exactly one of three labels.</p>
+<p><strong>NEW.</strong> Not raised by any previous pass.</p>
+<p><strong>STILL UNFIXED.</strong> Raised by an earlier pass, still
+present, with the earlier file cited. This label is the reason the
+review archive exists. Good advice dies quietly in round five otherwise:
+a reviewer raises it, you are busy, it does not get applied, and it
+never gets raised again because the next pass has different random
+attention. The label converts silence into a visible repeat.</p>
+<p><strong>PREVIOUSLY REJECTED.</strong> Raised before and deliberately
+declined, with the prior reasoning restated. Without this label you
+re-litigate the same twelve arguments every pass, and you lose about
+half of them by attrition, which means your book slowly becomes the
+average of five reviewers’ preferences.</p>
+<p>Consensus and contradiction belong in the merged file too, and they
+are the two entries a later pass will thank you for.</p>
+<p><strong>Consensus.</strong> Where three or more blind reviewers
+flagged the same chapter, mark it. That is your strongest signal in the
+entire pipeline, and it should be at the top of the file regardless of
+what any individual severity rating said.</p>
+<p><strong>Contradictions.</strong> Where two reviewers want opposite
+changes, mark it and say so plainly. The pacing pass asking for
+compression and the momentum pass asking for a scene in the same chapter
+is not noise. It usually means the chapter is doing two jobs, which is
+the chapter 10 diagnosis, and neither reviewer could see it from their
+single dimension.</p>
+<h2 id="then-verify-every-countable-claim">Then verify every countable
+claim</h2>
+<p>This is the part nobody writes about, and it is the part that
+protects the book.</p>
+<p>A review finding that can be counted must be counted before it is
+applied. Not because the models are careless, but because they are
+confidently wrong a small and consistent percentage of the time, and a
+wrong finding arrives with a citation and a plausible severity rating
+attached.</p>
+<p>What countable means in practice:</p>
+<p>Four claims, four commands, four answers, run against this manuscript
+as I write:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-rn</span> <span class="st">&quot;the weight of&quot;</span> chapters/ <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 3, all three inside quoted watch lists.  INVALID</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-rn</span> <span class="st">&quot;2026-03-1&quot;</span> chapters/ <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1, and it is this code block.            INVALID</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">&#39;—&#39;</span> chapters/12-ch09.md</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1, inside a fenced code block.           INVALID</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> wordcount</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># a number, against the outline&#39;s target.  CHECKABLE</span></span></code></pre></div>
+<p>Three of those four claims died on contact with a command, and I did
+not have to be right about anything to kill them. I had to run four
+greps and read twelve lines.</p>
+<p>The rule, and it is absolute: <strong>a finding whose countable claim
+does not verify is marked Invalid in the reconciled file, with the
+evidence, and is not applied.</strong> Not softened, not partially
+applied. You write down what you checked and what you found, and you
+move on.</p>
+<h2 id="three-findings-that-did-not-survive">Three findings that did not
+survive</h2>
+<p>On the eighth-draft orbit of my second novel, three findings failed
+verification. Two were harmless: a claimed repetition that existed once,
+and a claimed timeline contradiction that came from misreading a
+flashback.</p>
+<p>The third was not harmless. A reviewer flagged a technical detail as
+an error and supplied a correction. The correction was wrong, and the
+book was right. Had I applied it on the strength of the citation and the
+confident tone, I would have introduced a factual error into a correct
+book, in a technical thriller whose entire market is readers who would
+catch it.</p>
+<p>That finding is why this chapter exists, and why it comes before the
+revision chapter rather than after it. One in twenty-odd findings, in my
+experience across four books, is wrong in a way that makes the book
+worse. You cannot tell which one by reading it. You can tell by
+counting.</p>
+<h2 id="verification-for-non-fiction-is-harsher">Verification for
+non-fiction is harsher</h2>
+<p>For a novel, verifying the countable means counting words, dates and
+names. For non-fiction, the accuracy pass produces findings about
+commands and claims, and verification means running things.</p>
+<p>On this book, the accuracy pass had to be answered with actual
+output. When it questioned the word-count behaviour, the answer was not
+an opinion. It was a scratch file with seven prose words, one three-line
+comment, and one beat, run through the target twice: 16 before the fix
+and 7 after. Both numbers are in chapter 6 because both numbers were
+produced rather than asserted.</p>
+<p>The equivalent discipline for a claim: every Class A fact in
+<code>bible/verified-facts.md</code> carries the command that produced
+it and the date it was run, and any finding that disputes a Class A fact
+gets the command re-run before anything changes. Every Class B fact,
+meaning anything owned by Amazon or another third party, cannot be
+verified by you at all, which is why the rule is that those never appear
+as flat assertions. A reviewer flagging a Class B number as out-of-date
+is almost certainly right, and the fix is not a new number, it is the
+authority and a check instruction.</p>
+<h2 id="what-reconciliation-is-not">What reconciliation is not</h2>
+<p>It is not a vote. Six reviewers agreeing that your ending is soft is
+strong evidence about the ending. It is not a mandate. They are six
+instances of similar training with similar preferences, and the
+aggregate has a house style of its own. The pipeline’s own bias should
+be visible to you: it likes compression, it likes explicit stakes, it
+likes a closing line that lands. Sometimes your book should not do those
+things.</p>
+<p>It is also not the moment to decide what to do. Reconciliation
+produces a verified, labelled, deduplicated list. The deciding happens
+in the response file, which is the next chapter, and keeping the two
+acts separate is what stops “reconciling” from becoming an afternoon of
+unrecorded editing.</p>
+<h2 id="the-decision-this-chapter-closes-11">The decision this chapter
+closes</h2>
+<p><code>bible/review/reconciled.md</code> exists. Every finding is
+labelled NEW, STILL UNFIXED or PREVIOUSLY REJECTED. Consensus items are
+at the top. Contradictions are named. Every countable claim has been
+counted, and at least one item is marked Invalid with the evidence
+beside it, because if none is, you did not verify, you skimmed.</p>
+<p>Commit it before you change a word of prose.</p>
+<h1 id="ch-response">Chapter 13: The Response File Is the Work Plan</h1>
+<!-- Part 4, target 700 words -->
+<blockquote>
+<p>Three dispositions and no fourth. Why the written refusal is what
+makes it a decision. The verification section as part of the record.
+This book’s own response file.</p>
+</blockquote>
+<p>Every finding that survived verification now gets exactly one of
+three dispositions, written down, in
+<code>bible/review/response.md</code>:</p>
+<p><strong>Applied.</strong> Concretely, with what changed.</p>
+<p><strong>Deliberately not applied.</strong> With the reason.</p>
+<p><strong>Deferred.</strong> Parked for a later pass, which is
+different from declined and should never be used as a polite way of
+declining.</p>
+<p>There is no fourth disposition. In particular there is no “noted”,
+because noted is what you write when you intend to think about it later
+and will not.</p>
+<h2 id="why-the-refusal-is-the-important-one">Why the refusal is the
+important one</h2>
+<p>An unwritten refusal is not a decision. It is a thing you happened
+not to do, and it has no defence. Three passes later a fresh reviewer
+raises the same point, you have no record of having considered it, and
+you either apply it out of guilt or argue it again from scratch.</p>
+<p>A written refusal, from my second book’s response file:</p>
+<blockquote>
+<p><strong>Deliberately not applied.</strong> The Chen depot accusation
+does not escape publicly. Option 2.1(b) is a larger rewrite; this pass
+chose 2.1(a) and 2.1(c) instead.</p>
+</blockquote>
+<p>That entry does three things. It states the decision, names the
+alternative that was rejected, and says which pass made the call. When
+the same finding came back in the next orbit, marked PREVIOUSLY REJECTED
+by the reconciler, the argument took four minutes instead of an
+afternoon.</p>
+<p>A review is advice. You are the editor of last resort, and the only
+way that authority survives contact with five confident reviewers is if
+you write your refusals down at the moment you make them.</p>
+<h2 id="the-verification-section">The verification section</h2>
+<p>The response file does not end with dispositions. It ends with
+evidence:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Verification</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>git diff --check</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>make html epub wordcount</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>source scans for every blocking phrase, and for</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  every locked style-sheet violation</span></code></pre></div>
+<p>Three lines, and each is a command with an output you looked at.
+<code>git diff --check</code> catches whitespace damage from bulk edits,
+which is exactly the kind of thing that survives into a print interior
+as a broken line. The builds prove the manuscript still compiles to all
+four outputs, because a revision that breaks <code>make epub</code>
+breaks it silently until publishing day. And the source scans prove each
+blocking finding is actually gone, phrase by phrase, rather than
+believed to be gone.</p>
+<p>Believed-to-be-gone is the normal state of a revision without this
+section. You applied 40 changes in one sitting, and two of them you
+thought you had made.</p>
+<h2 id="this-books-response-file">This book’s response file</h2>
+<p>The same discipline, on the book you are holding. From
+<code>bible/review/response.md</code>:</p>
+<p>The applied items included the front-matter fix (a fiction disclaimer
+inherited from the novel template, which would have been a strange thing
+to print in a non-fiction book), the word-count recipe, and a corrected
+claim in chapter 9 about its own em-dash count.</p>
+<p>Every entry in that list is a chapter of this book you have already
+read or are about to: the em-dash count from chapter 9, the word-count
+recipe from chapter 6, the font from chapter 15. That is what an applied
+section looks like when the response file is doing its job. It is a
+table of contents for the work rather than an argument for it.</p>
+<p>The deliberately-not-applied section is where the interesting entries
+live, and on this book it held exactly one that no edit could close: the
+first orbit ran as sequential passes in one context rather than as six
+isolated agents. Written down as a deviation, it stayed visible for two
+more rounds until it could actually be fixed, and when it was, the
+isolated orbit found nine blocking defects that the sequential one had
+missed, three of which I had introduced myself while fixing the first
+orbit’s findings.</p>
+<p>That is the argument for the section. A written refusal is a to-do
+item with a reason attached, and it survives you forgetting about
+it.</p>
+<h2 id="the-response-file-is-the-work-plan">The response file is the
+work plan</h2>
+<p>Once it is written, revision is mechanical, which is the entire
+point. You are no longer deciding while editing. You are executing a
+list you already decided, in one sitting, and the list has a
+verification section that tells you when you are done.</p>
+<p>Commit the response file before you apply any of it. The order
+matters: decisions first, then edits, so the git history shows a plan
+followed rather than a plan reconstructed.</p>
+<h2 id="the-decision-this-chapter-closes-12">The decision this chapter
+closes</h2>
+<p><code>bible/review/response.md</code> exists, every surviving finding
+has one of three dispositions, at least one entry is a refusal with a
+reason, and the verification section lists the commands you are about to
+run.</p>
+<p>Now do the work.</p>
+<h1 id="ch-gate">Chapter 14: Revision and the Gate</h1>
+<!-- Part 4, target 750 words -->
+<blockquote>
+<p>Revision is mechanical once the response file exists. Apply, rebuild,
+re-sweep, re-scan. Then the gate as a checklist that passes or does not.
+The commercial review, once, before the gate closes.</p>
+</blockquote>
+<p>Chapter 13 decided what to do. This chapter does it, and then answers
+a different question: is the book finished?</p>
+<p>Revision, with a response file in hand, is four commands and an
+afternoon.</p>
+<ol type="1">
+<li>Apply the Applied items, in file order rather than in severity
+order, so you touch each chapter once.</li>
+<li>Rebuild: <code>make html epub print wordcount</code>.</li>
+<li>Re-run the sweeps from chapter 9. Crutch words, AI tells, the
+em-dash grep.</li>
+<li>Re-scan for every blocking phrase the mechanical and accuracy passes
+flagged, and confirm each one is gone with a command rather than with a
+memory.</li>
+</ol>
+<p>Step 3 exists because revision introduces tells. You rewrote 40
+passages with a model’s help, in a hurry, and some of them came back
+with a “for a moment” and two new em-dashes. The sweep after revision
+catches more than the sweep before it, in my experience every time.</p>
+<p>Then commit the whole batch with a message referencing the response
+file, so the git history reads: reports, reconciled, response, then the
+revision that executed it.</p>
+<h2 id="the-gate">The gate</h2>
+<p>The gate is a checklist, and it either passes or it does not. It is
+deliberately short, and every line is a command or a fact rather than a
+judgement:</p>
+<ul class="task-list">
+<li><label><input type="checkbox"></input>Crutch words inside genre tolerance,
+<strong>with the verdict written down</strong></label></li>
+<li><label><input type="checkbox"></input>Zero em-dashes in narrative prose,
+and any code-block instances explained</label></li>
+<li><label><input type="checkbox"></input>Every review finding dispositioned,
+not silently ignored</label></li>
+<li><label><input type="checkbox"></input><code>git diff --check</code>
+clean</label></li>
+<li><label><input type="checkbox"></input><code>make html</code>,
+<code>make pdf-a4</code>, <code>make epub</code>,
+<code>make print</code> all succeed</label></li>
+<li><label><input type="checkbox"></input><code>make wordcount</code> within
+range of the outline’s target, or the gap explained</label></li>
+<li><label><input type="checkbox"></input>A non-AI human has read the opening
+chapter cold</label></li>
+<li><label><input type="checkbox"></input>The blurb matches the book the
+reviews describe</label></li>
+</ul>
+<p><strong>The human who reads chapter one cold</strong> is not optional
+and cannot be replaced by any number of agents. You are looking for one
+thing: do they keep reading past the end of the chapter without being
+asked. The reason no agent can do this is that an agent has no attention
+to lose. It will always finish.</p>
+<p><strong>The blurb matching the book the reviews describe</strong> is
+a real gate, not a sentiment. Take the one-line summary from each of the
+six reports, then read your back-cover draft. If the reviews say your
+book is a procedural about verification and the blurb promises a
+fast-paced adventure, one of the two is lying, and the reader who finds
+out will say so publicly.</p>
+<h2 id="the-commercial-review-once">The commercial review, once</h2>
+<p>Before the gate closes, run one pass with entirely different eyes,
+defined in <code>agents/commercial-reviewer.md</code>. It does not
+review craft. It asks the questions the dashboard will ask in chapter
+16:</p>
+<ul>
+<li>What shelf is this on, and which three books sit next to it?</li>
+<li>Who buys it, where do they browse, what did they buy last?</li>
+<li>What does the back cover promise, and does the table of contents
+deliver what that promise requires?</li>
+<li>Does chapter 1 make a stranger read to the end of it?</li>
+</ul>
+<p>Run it late, because it is the one pass that benefits from the
+finished book, and run it once, because its findings are marketing
+decisions rather than manuscript defects. On my second book, the
+commercial pass sized the manuscript against its genre shelf and flagged
+two things a gatekeeper would bounce, both of them in the first ten
+pages, neither of them visible to any craft reviewer.</p>
+<p>Publishing blind is how good books end up under honest, boring
+jackets.</p>
+<h2 id="what-a-red-line-means">What a red line means</h2>
+<p>A gate line that fails is not a reason to delay indefinitely. It is a
+reason to do one of two things, both of which are written down.</p>
+<p>Fix it, or accept it in writing. “Word count is 14% under the
+outline’s target because two chapters were merged; accepted” is a
+legitimate gate entry. “Word count is under target” with no note is an
+open wound that will reappear as a one-star review about the book
+feeling thin.</p>
+<h2 id="the-decision-this-chapter-closes-13">The decision this chapter
+closes</h2>
+<p>The gate is green, or you know exactly which line is red and why you
+are shipping anyway. Either way it is written down: the filled checklist
+goes into <code>bible/review/response.md</code> under its own heading,
+with a line per gate item and the verdict beside it. A gate you did not
+record is a gate you will have to re-argue with yourself at 2am on
+upload day.</p>
+<p>The manuscript is finished. Everything after this point is files,
+geometry, and a dashboard, and it is where most first-time authors get
+their unpleasant surprises.</p>
+<h1 id="part-five-publishing-on-amazon-kdp">Part Five: Publishing on
+Amazon KDP</h1>
+<p>Three chapters. The manuscript is done and the surprises are not.
+This part is geometry, a dashboard, and two things you can only learn by
+uploading, both marked where they arrive.</p>
+<h1 id="ch-files">Chapter 15: Four Files From One Source</h1>
+<!-- Part 5, target 1,450 words -->
+<blockquote>
+<p>What KDP wants and the four targets that produce it. Trim in three
+places. The cover script’s arithmetic and why KDP’s calculator is the
+authority. Preflight checks only what it can verify. The tree diagram
+that vanished from the print PDF.</p>
+</blockquote>
+<p>Nothing in this part is specific to non-fiction. A novel’s interior,
+cover wrap, spine arithmetic and dashboard answers are identical to this
+book’s, which is why the same four targets built all three of my
+paperbacks.</p>
+<p>Amazon KDP wants four files, and it wants them separately.</p>
+<p>For the ebook: an EPUB, and a cover image. For the paperback: an
+interior PDF at trim size, and one cover PDF containing the back, the
+spine and the front as a single wrap.</p>
+<p>Four targets produce them from the same Markdown you have been
+writing:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> print      <span class="co"># -&gt; output/book.pdf   interior</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> epub       <span class="co"># -&gt; output/book.epub  Kindle ebook</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> covers     <span class="co"># -&gt; ebook JPG + paperback wrap PDF</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> preflight  <span class="co"># mechanical validation of all of it</span></span></code></pre></div>
+<p>The order is not negotiable, and the reason is in the next section:
+the cover cannot be built until the interior exists, because the spine
+width is a function of the page count.</p>
+<h2 id="trim-size-lives-in-three-places">Trim size lives in three
+places</h2>
+<p>This book is 5.5 by 8.5 inches, which is a common trade paperback
+size and a safe default for a technical book. That number appears in
+exactly three places, and all three must agree:</p>
+<ol type="1">
+<li><code>metadata-print.yaml</code>, as <code>paperwidth</code> and
+<code>paperheight</code></li>
+<li><code>scripts/build-covers.sh</code>, as <code>TRIM_W</code> and
+<code>TRIM_H</code></li>
+<li>the KDP listing, in a dropdown, on upload day</li>
+</ol>
+<p>Disagreement between the first two produces a cover that does not fit
+an interior, which KDP rejects with a message about dimensions.
+Disagreement with the third produces an accepted upload and a printed
+book with the wrong margins. That third failure is the expensive one,
+because you find it holding a proof copy.</p>
+<h2 id="the-interior-and-the-diagram-that-disappeared">The interior, and
+the diagram that disappeared</h2>
+<p><code>make print</code> builds the interior with xelatex at trim
+size, with mirrored margins: 0.8 inch on the inside for the gutter, 0.6
+outside, 0.75 top and bottom. The inside margin is larger because the
+binding eats part of it, and KDP’s minimum gutter grows with page count
+in bands that KDP publishes and this book will not reproduce. Look up
+your final page count in KDP’s margin table and widen <code>inner</code>
+if the table asks for more than the 0.8 inch set here.</p>
+<p>Now the part I did not expect. The first <code>make print</code> of
+this book succeeded, and buried in its output were 71 warnings:</p>
+<pre><code>[WARNING] Missing character: There is no └ (U+2514)
+    in font [texgyrecursor-regular.otf]
+[WARNING] Missing character: There is no ─ (U+2500)
+    in font [texgyrecursor-regular.otf]</code></pre>
+<p>The mono font this template shipped with, TeX Gyre Cursor, has no
+box-drawing glyphs. Every directory tree in chapters 5 and 6 was
+silently dropped from the paperback interior. The HTML and the EPUB were
+fine, because they use system fonts in a browser. The build did not
+fail. It produced a valid, uploadable, 106-page PDF with holes in it
+where the diagrams were.</p>
+<p>The fix was one line in <code>metadata.yaml</code>, switching the
+mono font to DejaVu Sans Mono, which ships with TeX Live and covers
+those code points:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">monofont</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;DejaVuSansMono.ttf&quot;</span></span></code></pre></div>
+<p>Then the warning count is zero, which is the number you check:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> print <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-c</span> <span class="st">&#39;Missing character&#39;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 0</span></span></code></pre></div>
+<p>Two lessons, one specific and one general. The specific one: if your
+book contains box drawings, arrows, or anything outside Latin-1 in a
+code block, verify the font has it before you trust a successful build.
+The general one is chapter 6’s rule again, arriving late and in a new
+costume. A warning is not a failure, and a successful build is not a
+correct book.</p>
+<h2 id="the-covers-and-the-spine-arithmetic">The covers, and the spine
+arithmetic</h2>
+<p><code>make covers</code> does two jobs. It resizes the front art to
+1600 by 2560 pixels for the ebook, which is the 1 to 1.6 ratio Amazon
+prefers, and it builds the paperback wrap.</p>
+<p>The wrap is where the arithmetic lives. <strong>Bleed</strong> is the
+strip of artwork past the finished edge of the page, printed and then
+guillotined off, so that a millimetre of drift in the trimmer shows your
+background instead of a white sliver; KDP requires 0.125 inch of it on
+every outer edge of a cover. The script reads the page count out of the
+interior with <code>pdfinfo</code>, multiplies by a per-page paper
+thickness, and lays back, spine and front onto one canvas with that
+bleed on every side. On this book:</p>
+<pre><code>Pages: 105
+spine: 0.265 in
+wrote output/pdf/paperback-wrap.pdf
+    (11.515000 x 8.750000 in, includes 0.125 in bleed)</code></pre>
+<p>(The script prints the first two on one line, separated by a pipe.
+They are split here so the line survives being quoted inside a Markdown
+table, which is where the mechanical review found it was fragile.)</p>
+<p>Read that width: 5.5 plus 5.5 for the two covers, 0.265 for the
+spine, and 0.25 for bleed on the two outer edges. The height is 8.5 plus
+0.25. The script emits the PDF with an exact media box rather than a
+pixel count, because KDP rejects covers whose dimensions round.</p>
+<p>Then the script prints four instructions, and they are the most
+important output it produces:</p>
+<pre><code>  1. OPEN KDP&#39;s cover calculator for your trim,
+     paper, and 106 pages.
+  2. Compare its spine width to the 0.265 in above.
+  3. Confirm every spine letter sits inside the safe
+     zone of KDP&#39;s template.
+  4. Rebuild if KDP&#39;s spine differs, then order a
+     physical proof.</code></pre>
+<p>The per-page constant in the script is 0.0025 inch, which
+approximates cream 60 pound paper. White paper is thinner. Premium
+colour is different again. <strong>KDP’s own cover calculator is the
+authority, and the script is an approximation that tells you
+so.</strong> This is the Class B rule from chapter 5 applied to
+geometry: a number owned by Amazon never gets asserted flatly by me, in
+a script or in a book.</p>
+<p><strong>The first thing you can only learn by uploading:</strong>
+Amazon does not allow text on the spine below a page-count threshold,
+because a thin spine cannot hold legible type. At 106 pages this book
+clears the line I found, barely. Check the current threshold on KDP’s
+paperback formatting page before you design a spine you cannot use.</p>
+<p>A note about the numbers in that output, and it is the reason they
+are printed rather than described. This chapter has quoted three
+different page counts. The first draft said 80 pages and a 0.200 inch
+spine, which is what the interior measured while three chapters did not
+yet exist. After the draft was finished it was 100 and 0.250. After the
+review pass added eleven paragraphs it was 106 and 0.265, which is what
+you see above, and what the cover in <code>output/pdf/</code> was built
+from.</p>
+<p>Nothing was ever wrong with the arithmetic. The input moved
+underneath a number that had been written down as a fact, three times,
+in a book whose subject is that exact failure. Two consequences, and
+both are load-bearing. The cover target reads the page count out of the
+built PDF rather than out of a variable, so the wrap is never computed
+from a remembered number. And <code>make covers</code> is the last thing
+you run, after the last prose edit, because a spine is a fact about a
+finished manuscript and not about a nearly finished one.</p>
+<h2 id="preflight-which-refuses-to-claim-too-much">Preflight, which
+refuses to claim too much</h2>
+<p><code>make preflight</code> validates what is countable and
+stops:</p>
+<pre><code>PDF: 106 pages, 396 x 612 pts
+EPUB: ZIP container and mimetype valid
+epubcheck not installed; formal EPUB validation
+    still required.
+
+Automated preflight passed. Kindle Previewer and a
+    physical proof are still required.</code></pre>
+<p>Four checks. The interior’s page size in points against the expected
+trim, since 396 by 612 points is exactly 5.5 by 8.5 inches. Every font
+embedded, via <code>pdffonts</code>, because an unembedded font is a
+rejection. The EPUB’s ZIP container and its mimetype. And EPUBCheck, if
+it is installed.</p>
+<p>It was not installed on my machine, and the script says so in one
+line rather than skipping quietly or pretending the check passed. That
+is the whole design philosophy of this pipeline in four words:
+<strong>check what you can verify.</strong> A preflight that claimed
+EPUB validity without EPUBCheck would be worse than no preflight,
+because you would believe it.</p>
+<p>The last line is not decoration either. Kindle Previewer renders your
+EPUB the way a Kindle will, which is the only way to catch a broken
+table or an image that overflows on a small screen. A physical proof
+catches gutter problems, ink bleed-through, and the discovery that your
+chosen font is unreadable at 11 point on cream paper.</p>
+<h2 id="the-decision-this-chapter-closes-14">The decision this chapter
+closes</h2>
+<p>Four files on disk, a passing preflight with its caveats read rather
+than skimmed, a spine number cross-checked against Amazon’s calculator,
+and a warning count of zero on the interior build.</p>
+<p>Next is the dashboard, which is the half of publishing that no
+Makefile can do for you.</p>
+<h1 id="ch-dashboard">Chapter 16: The KDP Dashboard</h1>
+<!-- Part 5, target 1,250 words -->
+<blockquote>
+<p>Account and tax setup first. Title, subtitle, series, description.
+Categories and the seven keyword slots. ISBN and ASIN. Pricing and the
+two royalty models. The AI disclosure questions. Previewers, the proof
+copy, and publish.</p>
+</blockquote>
+<p>The build was the easy half. This is the half where a book that took
+nine months gets described in 150 words, priced in a currency you did
+not expect, and asked three questions about AI.</p>
+<p>Do the boring part first, on a different day than the exciting part:
+create the KDP account and complete the tax interview and the bank
+details. The tax interview is a form about withholding, it takes twenty
+minutes, and until it is done you cannot publish anything. Nobody wants
+to discover that at 11pm with a finished book.</p>
+<h2 id="two-products-one-book">Two products, one book</h2>
+<p>KDP treats the ebook and the paperback as separate products with
+linked listings. You create the ebook, upload the EPUB and the cover
+JPG, then create the paperback from the same title and upload the
+interior PDF and the wrap PDF. The metadata is entered twice, so keep it
+in one file and copy from there. <code>metadata.yaml</code> and
+<code>assets/covers/copy/back.txt</code> are that file in this pipeline,
+which is the point of writing the blurb into the repository rather than
+into a browser tab.</p>
+<h2 id="the-fields-that-matter">The fields that matter</h2>
+<p><strong>Title and subtitle.</strong> Exactly as they appear on the
+cover, character for character. A mismatch between cover and metadata is
+a review-team rejection, and it costs a day.</p>
+<p><strong>Series and author name.</strong> Leave series empty unless a
+second book genuinely exists in the same one, because it is easier to
+add than to remove. Keep the author name identical across both products
+and across every future book, or your Author Central page splits in
+two.</p>
+<p><strong>Description.</strong> This is the back-cover promise from
+chapter 3, at 120 to 150 words, and no other text you write outside the
+book does as much work. It is not a summary. It is the first two minutes
+of the reading experience. Mine lives in
+<code>assets/covers/copy/back.txt</code> so the paperback back cover and
+the Amazon listing cannot drift apart. A description written in the
+browser at midnight will drift from your cover within a week.</p>
+<p>KDP accepts limited HTML in the description. Use a couple of
+paragraph breaks and one bold line at most. A wall of text loses the
+reader on a phone, which is where most of them are.</p>
+<h2 id="categories-and-keywords">Categories and keywords</h2>
+<p>You choose up to three categories and seven keyword slots, and both
+are search positioning rather than description.</p>
+<p>For categories, the shelf test from chapter 3 does the work: the
+three books a browser would put yours next to tell you which categories
+those books are in, and you can look. Choose the most specific category
+that is honestly correct. A niche category where your book is genuinely
+relevant beats a broad one where it is invisible.</p>
+<p>For keywords, seven slots, each a phrase rather than a word. Two
+rules that took me a book to learn. Do not repeat words that are already
+in your title or subtitle, because those are indexed anyway and you are
+wasting a slot. And write the phrase a reader would actually type, not
+the phrase you wish described your book. “write a book with ai” is a
+search. “AI-assisted authorial workflow” is not.</p>
+<p>Concrete beats clever in all seven slots.</p>
+<h2 id="isbn-and-asin">ISBN and ASIN</h2>
+<p>The ebook gets an ASIN, assigned by Amazon. You need no ISBN and
+should not buy one for it.</p>
+<p>The paperback needs an ISBN, and KDP gives you one free. The free one
+is fine, with one consequence: it lists Amazon as the publisher of
+record, and it cannot be used anywhere else. If you plan to sell the
+same paperback through another printer or distributor, buy your own ISBN
+instead. Either way, the rule that matters: <strong>one ISBN per
+binding, per edition, forever.</strong> A paperback and a hardcover are
+two ISBNs. A second edition with new content is a new ISBN. Never reuse
+one, because libraries and retailers key on it, and a reused ISBN is a
+mess you cannot clean up later.</p>
+<h2 id="pricing-and-the-two-royalty-models">Pricing and the two royalty
+models</h2>
+<p>Ebooks have two royalty options, a higher rate inside a price window
+and a lower rate outside it, and the higher one has a delivery charge
+based on file size deducted per sale. Paperbacks pay a percentage of
+list price minus a printing cost that depends on page count, ink, and
+marketplace.</p>
+<p>I am not printing the current rates, the current price window, or the
+current printing cost. They change, this is a book, and a stale royalty
+table is worse than no table. What you do instead, on the day you
+price:</p>
+<ol type="1">
+<li>Open KDP’s printing-cost calculator, enter your trim, page count,
+and ink.</li>
+<li>Note the printing cost. That is your floor: below it the paperback
+loses money per copy, and KDP will refuse the price anyway.</li>
+<li>Check the current royalty bands on KDP’s pricing page and see where
+your intended price sits.</li>
+<li>Look at what the three books from your shelf test charge. That is
+your ceiling, and it is set by your readers, not by your costs.</li>
+</ol>
+<p>For this book, a 106-page paperback, the printing cost is low and the
+practical constraint is the shelf, not the arithmetic. For a 400-page
+novel the arithmetic starts to bite, and it is the reason a lot of
+self-published paperbacks are priced higher than their traditionally
+published neighbours.</p>
+<h2 id="the-three-ai-questions">The three AI questions</h2>
+<p>KDP asks, separately, whether the book contains AI-generated text,
+AI-generated images, and AI-generated translations. It distinguishes
+AI-generated content from AI-assisted content, where you created the
+work and used AI to refine it, and the distinction it draws is the one
+you must read on the form itself, because the wording has already
+changed at least once.</p>
+<p>Answer truthfully. Two reasons, in the order that will actually
+motivate you.</p>
+<p>The dull reason: your answers must be consistent with the copyright
+page of the book you just uploaded. This project’s front matter carries
+a disclosure paragraph, so a “no” in the dashboard would contradict the
+book’s own page 2, and that inconsistency is visible to anyone who
+looks.</p>
+<p>The real reason: you have a review record. The bible, the six
+reports, the reconciled file, the response file, and a git history where
+each decision has a date and an author. You are not in a position where
+the honest answer costs you anything, and that is precisely what the
+pipeline in part four was for.</p>
+<h2 id="previewers-proof-publish">Previewers, proof, publish</h2>
+<p>Before you press publish:</p>
+<ul>
+<li><strong>Kindle Previewer</strong> on the EPUB. Check the table of
+contents, one code block, and one table on a phone-sized screen.</li>
+<li><strong>KDP’s Print Previewer</strong> on the interior. Check the
+first page of a chapter, a code block near a page break, and the
+gutter.</li>
+<li><strong>Order a proof copy.</strong> It costs printing plus shipping
+and takes a few days. Read the first chapter on paper. You will find two
+things: one typo that survived four review passes, and one layout
+problem no previewer showed you.</li>
+</ul>
+<p>Then publish. KDP states its own review window on the confirmation
+screen in front of you, and that screen is the authority rather than
+this sentence.</p>
+<p><strong>The second thing you can only learn by uploading:</strong>
+the paperback and ebook listings appear separately, before Amazon links
+them. For about a day your book exists twice, unconnected, and both
+listings look wrong. Nothing is broken and there is nothing to fix,
+which is impossible to know in advance and unnerving the first time.</p>
+<h2 id="the-decision-this-chapter-closes-15">The decision this chapter
+closes</h2>
+<p>A live listing, a proof copy on the way, categories and keywords
+chosen from the shelf rather than from hope, and three AI answers that
+match the copyright page of the book itself.</p>
+<h1 id="ch-after">Chapter 17: After Publish</h1>
+<!-- Part 5, target 700 words -->
+<blockquote>
+<p>The first week. What a new edition costs for each format. Reviews as
+thin data. The one habit that makes book two faster. What to change
+before the next run.</p>
+</blockquote>
+<p>The book is live. Two things are true at once: nothing will happen
+for a while, and you will check the dashboard nine times before
+lunch.</p>
+<p>Close the tab. The sales report has a reporting delay, the numbers in
+week one are noise, and the only action available to you is one you
+should not take, which is rewriting the description every eleven
+hours.</p>
+<h2 id="new-editions-are-cheap-for-one-format-and-not-the-other">New
+editions are cheap for one format and not the other</h2>
+<p><strong>The ebook</strong> is genuinely easy to update. Fix a typo,
+rebuild the EPUB, upload it to the existing listing, and the corrected
+file replaces the old one within a day. Readers who already bought it
+may or may not get the update automatically, which is a reason not to
+treat this as a substitute for the gate in chapter 14, but a correction
+costs you ten minutes.</p>
+<p><strong>The paperback</strong> is not. Any interior change reflows
+pages, a page-count change changes the spine width, a new spine means
+regenerating the wrap, and a significantly different book needs a new
+ISBN. The realistic policy: batch paperback corrections, and only
+republish when you have enough of them to justify ordering another
+proof.</p>
+<p>This is where the git history pays off in a way that is hard to
+appreciate before you need it. A second edition starts from a clean
+repository with the bible, every review report, and every response file
+intact. You are not reconstructing what you decided. You are reading
+it.</p>
+<h2 id="reviews-are-data-and-the-sample-is-thin-and-biased">Reviews are
+data, and the sample is thin and biased</h2>
+<p>The first ten reviews are not a measurement of your book. They are a
+measurement of who found it early.</p>
+<p>Read them for the vocabulary. When three readers use the same word
+for the same chapter, whether that word is thin, or dense, or exactly
+what I needed, that is a signal about your description as much as about
+the chapter, because the description set the expectation they are
+reporting against. Two of my second novel’s early reviews complained
+about a thing the blurb had promised badly, and the fix was the
+blurb.</p>
+<p>Do not answer reviews. Do not ask friends for reviews. Do not read
+the one-star review twice.</p>
+<h2 id="the-habit-that-makes-book-two-faster">The habit that makes book
+two faster</h2>
+<p>At the end of book one you own something more useful than the book: a
+working method with your name on it. The voice guide is calibrated. The
+agent definitions have been through a real orbit and you know which two
+produce the findings you actually use. You know your own crutch words
+and your own tics, by name and by rate per thousand.</p>
+<p>My third novel took six weeks against the first one’s four months,
+with the same tools and the same model. All of the difference was in
+files that already existed.</p>
+<p>So do this while it is fresh, in the week after publishing, and give
+it an hour:</p>
+<ul>
+<li>Update <code>bible/voice.md</code> with the tells you actually
+caught yourself using, and delete the ones that never fired.</li>
+<li>Update the agent definitions with the checks you ended up asking for
+by hand.</li>
+<li>Write down the one thing that cost you the most time and what would
+have prevented it. Mine, in order across four books: no outline, an
+unverified word count, and a font that silently dropped diagrams from a
+print interior.</li>
+<li>Delete what you did not use. A pipeline with three unused review
+dimensions develops a maintenance cost and a guilt tax.</li>
+</ul>
+<h2 id="what-i-am-changing-before-the-next-run">What I am changing
+before the next run</h2>
+<p>Three things, concretely, so this chapter is a report rather than
+advice.</p>
+<p>An early orbit on the outline and the first three chapters is now
+mandatory, not optional. On this book it would have caught the two dead
+chapters before they were in the outline at all.</p>
+<p>The build gets a warning gate. Any <code>make print</code> that emits
+a warning fails the gate, because a successful build with 71 warnings
+produced a paperback with holes in it and I only found that by reading
+the log.</p>
+<p>And every counting tool gets a known-answer test on the day it is
+written, not on the day a chapter needs to describe it.</p>
+<h2 id="the-decision-this-chapter-closes-16">The decision this chapter
+closes</h2>
+<p>The pipeline is reusable, the review record is archived with the
+book, and you have written down the single thing you will do
+differently. That is the end of the method.</p>
+<h1 id="ch-ledger">Afterword: The Honest Ledger</h1>
+<!-- target 950 words -->
+<blockquote>
+<p>What the machine drafted, what the author decided, what the machine
+got wrong, what the orbit caught, what a human caught. Consistent with
+the copyright page and the KDP answers. No triumphalism, no apology.</p>
+</blockquote>
+<p>This book was produced with the pipeline it describes, which means
+the ledger is available and printing it is the least I can do.</p>
+<p><strong>What AI drafted.</strong> Prose in all 17 chapters, from
+beats I wrote, against a voice guide extracted from my own published
+articles, one chapter per session, following the drafting prompt in
+chapter 8.</p>
+<p><strong>What I decided.</strong> The premise, the reader, the
+promise, the locked decisions, the outline and every end beat, the eight
+rules the book obeys, what to cut, and every disposition in the response
+file. Two chapters in the outline were killed by my own end-beat rule
+before a word of them existed.</p>
+<p><strong>What the machine got wrong here.</strong> Four things, all
+caught by verification rather than by reading, and two of them were
+numbers the book had written down about itself.</p>
+<p>A stale self-referential number. Chapter 9 claimed the em-dash grep
+found one hit in the manuscript, in a code block. By the time later
+chapters printed the same command, that was no longer the count. A book
+about verification printing an unverified number about itself is the
+exact failure it warns against, and the correction is in the response
+file.</p>
+<p>A stale build number. Chapter 15 printed the cover script’s output as
+80 pages with a 0.200 inch spine. True when the chapter was written, and
+wrong by the time the last three chapters existed. The interior went to
+100 pages, then to 106 as the review rounds added paragraphs, and the
+spine with it. The arithmetic was never wrong. The input moved
+underneath a fact, twice, in the same book, which is why chapter 15 now
+explains why <code>make covers</code> reads the page count out of the
+built PDF rather than out of a variable.</p>
+<p>Inherited boilerplate. The front matter carried “This is a work of
+fiction” for a while, because the template came from three novels and
+nobody had told it this book was not one.</p>
+<p>The confident measurement. <code>make wordcount</code> was 90% right
+for three books, and its error was invisible because it always erred in
+the same direction. It took writing a chapter about it to test it.</p>
+<p><strong>What the review orbit caught that I would not have.</strong>
+The chapter ledger showed that chapters 13 and 14 read as one chapter
+split in two, which neither chapter can show you from the inside. The
+voice pass caught the stale em-dash number, the one blocking finding of
+the first orbit. The second orbit, run with six isolated agents instead
+of six passes in one context, caught nine blocking defects, three of
+which I had introduced myself while fixing the first orbit’s
+findings.</p>
+<p><strong>What the orbit did not catch, and I should not credit it
+with.</strong> The missing box-drawing glyphs were mine. I found them in
+<code>make print</code>’s output while writing chapter 15, before any
+review pass existed, which is what the mechanical report means by “fixed
+before this pass”. Two of the six passes then miscounted the book’s own
+structure. One of those wrong counts was hiding a real violation of the
+voice guide. Six of the twenty-three countable findings in this orbit
+did not survive being counted, and a seventh miscount was mine: the
+script I wrote to settle one of them passed its own self-test while
+measuring the wrong thing.</p>
+<p><strong>What I got wrong about my own refusals.</strong> The first
+pass over the reviews produced eight items I declined or accepted as
+facts about the book, each with a written reason. That is the discipline
+this book spends a chapter defending. Then I went back and applied them
+anyway. Seven of the eight were worth doing, and the eighth was a rule
+rather than a defect. The reasons had not been false; they had been
+estimates of cost, made without attempting the work, and a refusal that
+has never been attempted is an estimate wearing a decision’s clothes.
+The rule in chapter 13 stands, with that amendment attached.</p>
+<p><strong>What no agent caught.</strong> That the orbit for this book
+ran as sequential passes in one session rather than as six independent
+blind subagents, which is weaker evidence than the method asks for. I
+know because I ran it. It is in the response file as a deviation, and it
+is the reason chapter 11 documents both ways of running the orbit
+instead of assuming you have subagents.</p>
+<p><strong>What is disclosed where.</strong> The copyright page
+discloses AI drafting and editorial review under my direction. The KDP
+dashboard answers say the same thing. This afterword is the detail
+behind both. The three statements agree because they were written from
+the same file, which is the habit the whole book is arguing for.</p>
+<p>The uncomfortable question at the end of a project like this is
+whether the book is mine. My answer is procedural, and I prefer it to a
+philosophical one. The premise is mine. The voice guide came out of
+writing I published before any of this existed. Every structural
+decision has my name and a date on it in a git history, and every review
+finding was either applied by my decision or declined with my reason. I
+can produce all of it on request.</p>
+<p>That is not a claim about how much of the typing I did. It is a claim
+about who was responsible, and responsibility is the part that a reader
+is actually buying.</p>
+<p>The pipeline is in the repository. Take it, delete the parts you do
+not use, and write the thing you have been keeping in a folder called
+notes.</p>
+</body>
+</html>
