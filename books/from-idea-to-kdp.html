@@ -250,10 +250,10 @@ existed. Where a fact belongs to Amazon rather than to me, the book
 names the page you check instead of quoting a number that will be stale
 before the paperback ships.</p>
 <h2 id="what-this-book-is-not">What this book is not</h2>
-<p>Not a prompt pack. There are four prompts in it, one each for
-interrogating a premise, extracting a voice, drafting a chapter and
-running the review orbit, and they are long and boring because they are
-specifications rather than magic words.</p>
+<p>Not a prompt pack. There are six prompts in it: premise
+interrogation, voice extraction, fiction drafting, non-fiction drafting,
+source-to-prose transformation, and the review orbit. They are long and
+boring because they are specifications rather than magic words.</p>
 <p>Not a marketing book. It covers the listing: the description, the
 categories, the keywords, the price, the disclosure. It stops there.
 Advertising, newsletters, and launch teams are a different craft and I
@@ -1065,12 +1065,12 @@ chapter finally writes prose.</p>
 are about protecting the draft from you and from the model, in that
 order.</p>
 <h1 id="ch-drafting">Chapter 8: Drafting, One Chapter Per Session</h1>
-<!-- Part 3, target 950 words -->
+<!-- Part 3, target 1,750 words -->
 <blockquote>
 <p>Chapter file anatomy and why the build skips the first two parts. The
-full drafting prompt with every constraint’s reason. One chapter per
-session. Never invent canon: stop and update the bible instead. What to
-do with the model’s plot suggestions.</p>
+full fiction and non-fiction drafting prompts, plus a source-to-prose
+contract. One chapter per session. Never invent canon: stop and update
+the bible instead. What to do with the model’s plot suggestions.</p>
 </blockquote>
 <p>Now you draft, and the first thing to notice is how little of this
 chapter is about prompting.</p>
@@ -1133,12 +1133,72 @@ is asked to judge subtractively, which is the one aesthetic question
 models are reliably good at. You will take about one suggestion in
 three, and the exercise tells you where the chapter is padded before you
 have grown attached to it.</p>
-<p>For non-fiction, the same prompt with three substitutions: the canon
-files become <code>reader-and-promise.md</code> and
-<code>verified-facts.md</code>, close third person becomes second person
-for procedure and first person past for evidence, and changed danger
-becomes “the chapter closes a decision and names the file the reader now
-has”. The four negative constraints do not change at all.</p>
+<h2 id="the-non-fiction-prompt-is-not-a-search-and-replace">The
+non-fiction prompt is not a search-and-replace</h2>
+<p>Non-fiction has a different failure mode. Fiction invents a surname.
+Non-fiction invents a plausible result, smooths away a qualification, or
+turns an example into evidence. Give it a source hierarchy and make
+absence visible.</p>
+<blockquote>
+<p>Draft chapter N in <code>[chapter file]</code>. Read
+<code>reader-and-promise.md</code>, <code>voice.md</code>,
+<code>master-outline.md</code>, <code>verified-facts.md</code>,
+<code>research-notes.md</code>, and the previous chapter’s ending.
+Source priority is: verified facts, reader promise, chapter beat,
+research notes. Stop and report conflicts.</p>
+<p>The reader arrives [starting state]. This chapter helps the reader
+decide or do [chapter job]. By the end, [changed state, decision, or
+file] must exist. Use second person for procedure and first person past
+only for evidence the source records. Preserve every command, number,
+qualification, and attribution exactly. Do not invent examples,
+outcomes, quotations, sensory detail, or personal experience. Prefer one
+walked-through mechanism over summary. Follow <code>voice.md</code>,
+including its forbidden patterns.</p>
+<p>Write only the chapter prose. Then report separately: unsupported
+claims, missing evidence, source conflicts, and paragraphs that do not
+help close the chapter’s decision.</p>
+</blockquote>
+<p>The phrase “source priority” is there because files will disagree.
+Without it, the model quietly averages a checked number and an old note
+into a third number. The separate report keeps uncertainty out of the
+manuscript without hiding it from the author.</p>
+<h2 id="turning-manual-text-into-prose">Turning manual text into
+prose</h2>
+<p>Sometimes the input is not an outline. It is a transcript, a
+procedure, field notes, or a rough paragraph you wrote by hand. The
+information is right and the prose is inert. “Make this literary” is a
+bad prompt. It invites decorative language and, worse, decorative
+facts.</p>
+<p>Use a two-pass contract instead:</p>
+<blockquote>
+<p>Transform <code>[source]</code> into a chapter for
+<code>[reader]</code>. Read <code>voice.md</code> and
+<code>reader-and-promise.md</code>. The source is evidence, not a bag of
+phrases.</p>
+<p>First make a private ledger of every factual assertion, number,
+command, quotation, sequence dependency, uncertainty, and caveat.
+Preserve that ledger in the rewrite. Do not add an anecdote, motive,
+quotation, result, sensory detail, or causal link the source does not
+support. Mark a missing bridge as <code>[[SOURCE GAP: question]]</code>
+instead of inventing it.</p>
+<p>The passage’s job is <code>[decision, change, or effect]</code>. Find
+the human pressure already present: what someone needs, what resists
+them, what can fail, and what changes after the procedure or discovery.
+Build the prose around that movement. Use concrete nouns and verbs, vary
+sentence length according to <code>voice.md</code>, and let consequence
+carry emphasis. Do not inflate the diction, add metaphors by quota,
+explain the lesson at the end, or turn every statement into a scene.</p>
+<p>Preserve meaning and technical precision while changing structure,
+rhythm, transitions, and emphasis. Output the rewritten passage, then a
+separate change note: facts preserved, source gaps, material cut as
+repetition, and any sentence whose meaning may have shifted.</p>
+</blockquote>
+<p>That ledger is private working state, not another document to
+publish. Its job is to make a dropped caveat as visible to the agent as
+a broken plot fact. The human pressure clause supplies movement without
+granting permission to fabricate a scene. Literature is not a coat of
+adjectives. It is information arranged so a reader feels why the next
+sentence has to exist.</p>
 <h2 id="one-chapter-per-session">One chapter per session</h2>
 <p>Not because of context windows. Because of accountability.</p>
 <p>A session that drafts one chapter ends with one file, one
@@ -2092,7 +2152,7 @@ this book succeeded, and buried in its output were 71 warnings:</p>
 box-drawing glyphs. Every directory tree in chapters 5 and 6 was
 silently dropped from the paperback interior. The HTML and the EPUB were
 fine, because they use system fonts in a browser. The build did not
-fail. It produced a valid, uploadable, 106-page PDF with holes in it
+fail. It produced a valid, uploadable, 107-page PDF with holes in it
 where the diagrams were.</p>
 <p>The fix was one line in <code>metadata.yaml</code>, switching the
 mono font to DejaVu Sans Mono, which ships with TeX Live and covers
@@ -2120,22 +2180,22 @@ every outer edge of a cover. The script reads the page count out of the
 interior with <code>pdfinfo</code>, multiplies by a per-page paper
 thickness, and lays back, spine and front onto one canvas with that
 bleed on every side. On this book:</p>
-<pre><code>Pages: 105
-spine: 0.265 in
+<pre><code>Pages: 109
+spine: 0.273 in
 wrote output/pdf/paperback-wrap.pdf
-    (11.515000 x 8.750000 in, includes 0.125 in bleed)</code></pre>
+    (11.522500 x 8.750000 in, includes 0.125 in bleed)</code></pre>
 <p>(The script prints the first two on one line, separated by a pipe.
 They are split here so the line survives being quoted inside a Markdown
 table, which is where the mechanical review found it was fragile.)</p>
-<p>Read that width: 5.5 plus 5.5 for the two covers, 0.265 for the
+<p>Read that width: 5.5 plus 5.5 for the two covers, 0.273 for the
 spine, and 0.25 for bleed on the two outer edges. The height is 8.5 plus
 0.25. The script emits the PDF with an exact media box rather than a
 pixel count, because KDP rejects covers whose dimensions round.</p>
 <p>Then the script prints four instructions, and they are the most
 important output it produces:</p>
 <pre><code>  1. OPEN KDP&#39;s cover calculator for your trim,
-     paper, and 106 pages.
-  2. Compare its spine width to the 0.265 in above.
+     paper, and 109 pages.
+  2. Compare its spine width to the 0.273 in above.
   3. Confirm every spine letter sits inside the safe
      zone of KDP&#39;s template.
   4. Rebuild if KDP&#39;s spine differs, then order a
@@ -2149,7 +2209,7 @@ geometry: a number owned by Amazon never gets asserted flatly by me, in
 a script or in a book.</p>
 <p><strong>The first thing you can only learn by uploading:</strong>
 Amazon does not allow text on the spine below a page-count threshold,
-because a thin spine cannot hold legible type. At 106 pages this book
+because a thin spine cannot hold legible type. At 109 pages this book
 clears the line I found, barely. Check the current threshold on KDP’s
 paperback formatting page before you design a spine you cannot use.</p>
 <p>A note about the numbers in that output, and it is the reason they
@@ -2157,9 +2217,10 @@ are printed rather than described. This chapter has quoted three
 different page counts. The first draft said 80 pages and a 0.200 inch
 spine, which is what the interior measured while three chapters did not
 yet exist. After the draft was finished it was 100 and 0.250. After the
-review pass added eleven paragraphs it was 106 and 0.265, which is what
-you see above, and what the cover in <code>output/pdf/</code> was built
-from.</p>
+review pass added eleven paragraphs it was 107 and 0.268. Adding the
+prompt contracts in chapter 8 moved it again, to 109 and 0.273, which is
+what you see above and what the cover in <code>output/pdf/</code> was
+built from.</p>
 <p>Nothing was ever wrong with the arithmetic. The input moved
 underneath a number that had been written down as a fact, three times,
 in a book whose subject is that exact failure. Two consequences, and
@@ -2172,7 +2233,7 @@ finished manuscript and not about a nearly finished one.</p>
 refuses to claim too much</h2>
 <p><code>make preflight</code> validates what is countable and
 stops:</p>
-<pre><code>PDF: 106 pages, 396 x 612 pts
+<pre><code>PDF: 109 pages, 396 x 612 pts
 EPUB: ZIP container and mimetype valid
 epubcheck not installed; formal EPUB validation
     still required.
@@ -2294,7 +2355,7 @@ your intended price sits.</li>
 <li>Look at what the three books from your shelf test charge. That is
 your ceiling, and it is set by your readers, not by your costs.</li>
 </ol>
-<p>For this book, a 106-page paperback, the printing cost is low and the
+<p>For this book, a 107-page paperback, the printing cost is low and the
 practical constraint is the shelf, not the arithmetic. For a 400-page
 novel the arithmetic starts to bite, and it is the reason a lot of
 self-published paperbacks are priced higher than their traditionally
@@ -2462,7 +2523,7 @@ file.</p>
 <p>A stale build number. Chapter 15 printed the cover script’s output as
 80 pages with a 0.200 inch spine. True when the chapter was written, and
 wrong by the time the last three chapters existed. The interior went to
-100 pages, then to 106 as the review rounds added paragraphs, and the
+100 pages, then to 107 as the review rounds added paragraphs, and the
 spine with it. The arithmetic was never wrong. The input moved
 underneath a fact, twice, in the same book, which is why chapter 15 now
 explains why <code>make covers</code> reads the page count out of the
