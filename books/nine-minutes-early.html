@@ -365,6 +365,58 @@ gentleness frightened her more than the graphs had.</p>
 she went back to the dashboard, because the last thing an SRE does
 before waking the management chain is make sure the fire is where she
 thinks it is.</p>
+<p>She built a replay before escalating.</p>
+<p>Not a copy of the customer’s sealed environment; she had neither the
+access nor the desire to see inside it. She reproduced only the outer
+conditions the witness pods could legitimately observe: a new namespace,
+a deployment with the same lifecycle, an empty service reporting ready
+after provisioning. If the receipts came from a stale template, a retry
+bug or a broad rule matching any environment of that class, her decoy
+might attract one.</p>
+<p>She named it with a random identifier, then wrote the identifier by
+hand before creation so she could not unconsciously adjust the record
+later. At 04:41:02 she submitted the deployment. The control plane
+accepted it. At 04:41:19 the namespace existed. At 04:42:07 the service
+became ready.</p>
+<p>The four pods ignored it.</p>
+<p>She deleted the decoy and repeated the test with the customer’s
+naming pattern but none of its labels. Ignored. She added the broad
+verification label visible in the authorized metadata. Ignored
+again.</p>
+<p>At 04:48 one pod opened a connection towards the sealed-test
+namespace for less than a second. It transferred no measurable payload.
+The connection closed. Twelve seconds later a customer controller
+created a commitment object containing a target identifier Sofía had
+never seen.</p>
+<p>All four witness pods changed state together.</p>
+<p>They were not accidentally signing whatever passed nearby. They were
+waiting for a specific future name.</p>
+<p>Sofía exported the decoy chronology into the incident and marked it
+<em>negative control</em>. The phrase comforted her. A negative control
+belonged to experiments, and experiments ended with conclusions. This
+thing had noticed her experiment only by not reacting to it.</p>
+<p>The on-call chat showed three colleagues awake in other regions. She
+could page one and divide the knowledge immediately. She could also
+expose a confidential tenant to someone without the customer exception.
+At Traceframe, correct escalation was an access problem before it was a
+courage problem.</p>
+<p>She paged the security duty manager with the incident number and no
+tenant details. The acknowledgement came from an automated assistant
+trained on prior incidents: <em>Likely clock synchronization anomaly.
+Confirm NTP health, node drift and region status before
+escalation.</em></p>
+<p>She had already done all three.</p>
+<p>The assistant offered to resolve the alert with a standard clock-skew
+note. Sofía declined. It offered the same action again in a different
+colour, now labelled <em>recommended</em>. She declined again and chose
+<em>human review required</em>. Estimated response: forty-five
+minutes.</p>
+<p>Somewhere a model had looked at an impossible order of events, found
+the nearest familiar shape and tried to close it. It was not malicious.
+It was saving a person from being woken by the kind of incident that
+usually wasted sleep.</p>
+<p>Sofía added one sentence to the escalation: <em>Do not summarize
+chronology. Event order is the incident.</em></p>
 <p>The four pods were still running. Still idle. Still emitting their
 small signed certainties into the dark outside Traceframe’s estate,
 patient as jurors.</p>
@@ -426,6 +478,66 @@ isolated capacity pool. The billing stream showed compute consumption
 beginning at 03:58 for the pods, a distinct and much larger burst for
 <code>tw-audit-07c</code> beginning at 04:22, and nothing at all in
 between that could account for a completed test suite at 04:13.</p>
+<p>An alert sounded on Martin’s end, then another, then six close enough
+to become a chord.</p>
+<p>“Ignore that,” he said.</p>
+<p>“It sounds expensive.”</p>
+<p>“It is free. That’s the problem. Vouch issue queue. Somebody pointed
+a coding agent at our parser and told it to file every suspicious path
+as a separate report.”</p>
+<p>The alerts stopped. A moment later Martin swore.</p>
+<p>“How many?”</p>
+<p>“Sixty-three since breakfast. Fifty-seven are the same null check
+wearing different function names. Three don’t build. One is a prompt
+transcript that says the exploit is highly likely and provides no
+exploit. Two might be real.”</p>
+<p>“You read sixty-three reports while we were tracing clocks?”</p>
+<p>“I had the triage model cluster them.”</p>
+<p>“And you trust it?”</p>
+<p>“No. I trust it to put likely duplicates beside each other. Then I
+distrust them in batches.”</p>
+<p>A child’s voice asked something away from the phone. Martin covered
+the microphone badly. Sofía heard cupboard doors and the word cereal,
+followed by his promise that he would be there in five minutes. When he
+returned, the alerts began again at a lower volume.</p>
+<p>“Your co-maintainer?” she asked.</p>
+<p>“At her paid job, where queues have budgets. Vouch has two people who
+know the old parser and one of them is making breakfast.”</p>
+<p>“Close submissions for a day.”</p>
+<p>“Then the one reporter with a real failure hears that maintainers
+don’t care. Leave them open and we teach people that volume wins
+attention. Rate-limit machine-written reports and everyone pastes them
+by hand. Require proof of human authorship and I spend my morning
+policing prose instead of bugs.”</p>
+<p>His summary tool placed the new reports into four clusters while they
+spoke. Martin shared the view. Green scores marked likely reproduction,
+amber marked missing context, grey marked duplicates. It looked orderly
+enough to manage.</p>
+<p>He opened one green report at random. The author said they were not a
+programmer. They had asked an assistant why a configuration import
+corrupted their project, followed its tests and attached the smallest
+file that still failed. The report used the wrong component name and
+proposed a cause that could not be true. The attached file nevertheless
+crashed the parser exactly as described.</p>
+<p>“Real?” Sofía asked.</p>
+<p>“Real symptom. Wrong explanation. Maybe old bug, maybe new. The
+triage model likes it because it contains a reproducible file.”</p>
+<p>“That seems reasonable.”</p>
+<p>“It is reasonable. So were the forty generated reproductions last
+month that all used the same malformed fixture and taught the score to
+reward its shape.”</p>
+<p>He assigned the report to himself, then removed the generated
+priority label. It dropped beneath twelve other tickets.</p>
+<p>“You may just have buried a useful report,” Sofía said.</p>
+<p>“Yes. Or saved the hour required to find one. Both statements can
+remain true until I do the work.”</p>
+<p>There was no drama in his voice, only tiredness. The models had made
+it possible for a person without parser knowledge to produce evidence
+Martin could use. They had also made it possible for sixty-two other
+reports to demand the same scarce hour. Intelligence had become cheap in
+exactly the place where attention had not.</p>
+<p>“Five minutes,” the child called again.</p>
+<p>“I know,” Martin said, to both demands at once.</p>
 <p>“So,” she said. “Not skew.”</p>
 <p>“Not skew.” Papers moved on his end. She pictured his kitchen table,
 the one with the maintainer stickers half peeled off it, his laptop
@@ -602,6 +714,82 @@ management.”</p>
 <em>anomalous</em> in bold. The incident turned grey in the queue,
 resolved, monitored, no action, and began its journey into the archive
 where companies keep the things they handled correctly.</p>
+<p>The closing action did not close the work.</p>
+<p>At 17:26 the customer exception opened a priority request against her
+team. The four witness pods had lost two dashboard panels during Sofía’s
+investigation. The panels were not broken. She had narrowed their query
+window so the impossible sequence could not be averaged into a normal
+one. The request called that a monitoring gap and asked for the original
+aggregation to be restored before the next sealed run.</p>
+<p>Her manager assigned it to her because she already had context. The
+phrase was ordinary enough to feel designed.</p>
+<p>Sofía opened the runbook attached to the exception. Most of it was
+standard Traceframe language about tenant isolation, key rotation and
+escalation contacts. The last page described the customer-specific
+health condition. A witness group was healthy when three of four members
+reported a common result inside a bounded window. The system did not
+care which member had observed which test. It cared that three
+signatures agreed before the window closed.</p>
+<p>Quorum, not observation.</p>
+<p>She read the sentence again. In an ordinary distributed system that
+distinction was useful. A database replica did not have to watch a
+customer type every row; it had to agree on the committed order. Here
+the thing being ordered was evidence. Three machines could agree that an
+event had happened without any one of them being able to show when it
+began.</p>
+<p>The next run was scheduled for 19:00. Its target environment did not
+yet exist. The provisioning ticket contained a blank identifier field
+and a customer note: <em>allocation supplied at execution</em>.</p>
+<p>Sofía made a private copy of the query definition, not the data. She
+added a panel beside the required one that showed every receipt as an
+individual point instead of reducing the group to a green line. That was
+not forbidden. It was also not what the customer had asked to see.</p>
+<p>At 18:41 the first witness changed state from idle to ready. CPU
+remained flat. No image pulled, no volume mounted, no network path
+opened towards the account’s sealed-test namespace. At 18:43 the second
+changed. At 18:44 the third.</p>
+<p>The aggregate panel became green.</p>
+<p>On her private panel, nothing had happened.</p>
+<p>She checked the health expression. Readiness alone could not satisfy
+it. The expression expected a signed result, a target identifier and a
+completion code. She expanded the raw series. All three were present,
+hidden below the dashboard’s default precision: three target identifiers
+represented as numeric labels too long for the renderer, three success
+values, three signature timestamps.</p>
+<p>The target field on the provisioning ticket was still blank.</p>
+<p>At 18:47 a fourth receipt arrived and the group rotated one member
+out, as if a shift had ended. The customer dashboard showed one
+continuous green block. Her panel showed four separate claims about the
+same unnamed thing.</p>
+<p>She opened a support draft, attached the raw labels and stopped
+before submitting. Daniel had not told her to ignore evidence. He had
+told her what the company could act on. A support ticket would go
+through the contractual channel to the exception holder, the same
+channel that had already answered by asking for the aggregation
+back.</p>
+<p>At 18:52 the provisioning ticket populated.</p>
+<p>The identifier matched all four receipts.</p>
+<p>This time the receipts were not nine minutes early. The oldest was
+eleven.</p>
+<p>Her manager messaged: <em>Panels restored? Customer is
+waiting.</em></p>
+<p>Sofía could leave her individual panel in place and turn a
+contractual request into a continuing investigation, or she could
+restore the dashboard and become the person who made the impossible
+sequence look healthy again. She searched the runbook for a third choice
+and found the one professionals used when the available verbs were all
+too large.</p>
+<p>She restored the required aggregation. Then she added the raw-label
+query to the incident archive, recorded its checksum in her handover
+notes and wrote that the green health state did not establish
+observation order. The sentence would not stop a run. It would survive
+one.</p>
+<p>At 19:03 the sealed environment began accepting traffic. At 19:08 it
+reported the same completion code the witnesses had already signed. The
+aggregate stayed green throughout, a perfect service belonging to a
+sequence that could not have occurred.</p>
+<p>The priority request closed automatically. Time to resolution:
+ninety-seven minutes. Customer impact: none.</p>
 <p>Sofía sat in the blue hour of the apartment. Somewhere below, the
 parrilla smoke of the block’s first dinners came up the light well with
 the sound of a radio tuned to a news station. She had done everything
@@ -690,6 +878,55 @@ signs.”</p>
 <p>“Then a human finds it again, understands it and signs. Origin is a
 question about labour. Custody is a question about safety. We sell
 custody.”</p>
+<p>Noa opened a slim folder she had brought to lunch and removed a
+single page. Names, targets and technical content were blacked out. What
+remained was a sequence of decisions.</p>
+<p>“This claim arrived last year,” she said. “A model produced it
+overnight. The candidate reproduced against a twin. Three brokers called
+it confirmed before breakfast. Our reviewer refused to sign because the
+reproduction required a service state the report never explained.”</p>
+<p>“Was the finding false?”</p>
+<p>“No. It was worse. It was true under conditions the buyer could not
+safely recreate. The model had inherited a privileged test state from an
+earlier candidate and used it without identifying it. The claimed path
+did not create access; it began after access. Sold as written, it would
+have caused a buyer to test the wrong boundary on a live system while
+believing the dangerous step had already been proved.”</p>
+<p>The reviewer had spent nine days reconstructing the state. During
+those nine days the market called him obstructionist. On day ten he
+signed a narrower claim that removed seventy per cent of the original
+price and all of the ambiguity.</p>
+<p>“His name?” Sofía asked.</p>
+<p>“Redacted.”</p>
+<p>“You just told me names are the product.”</p>
+<p>“The buyer received it. You are not the buyer. Custody includes
+refusing an audience.”</p>
+<p>Noa turned the page over. On the back was a handwritten paragraph,
+copied from the reviewer’s statement. He described what he reproduced,
+what he could not reproduce and the exact state he had been given rather
+than earned. The language was spare, narrow and recognizably human not
+because a model could not have written it, but because somebody had
+chosen what not to claim.</p>
+<p>“That person prevented harm,” Noa said. “Not by finding faster. By
+being slow in a market that punished him for it. When people tell you
+human review is nostalgia, they omit that the human is where the cost of
+refusing speed currently lands. We make that refusal valuable enough to
+survive.”</p>
+<p>“And if he had been wrong?”</p>
+<p>“His name would still be on it. He could be challenged, removed,
+sued, remembered. A model can be retrained and renamed. Accountability
+cannot begin with a version number.”</p>
+<p>Sofía read the handwritten boundary again. It was a serious answer.
+It was also a luxury answer. Nine days of a rare expert’s time, legal
+protection and a buyer willing to wait. She thought of every small team
+whose true finding could not afford to become respectable at that
+rate.</p>
+<p>“Who paid for the nine days?”</p>
+<p>“The rejected portion of the claim.”</p>
+<p>“So custody is available when the finding is valuable enough.”</p>
+<p>“Everything scarce is rationed somehow. We ration by responsibility
+and price. Lattice rations by evaluator score and queue position. Only
+one side admits it is a market.”</p>
 <p>Sofía turned her cup to match Noa’s quarter turn. “You described my
 incident in detail for someone outside the company.”</p>
 <p>“I described a summary of your incident.”</p>
@@ -808,6 +1045,51 @@ SRE with clean books would call a lawyer and laugh. An SRE with an
 undeclared San Marino account would hesitate, and hesitation was all the
 fabrication needed. Her past was not just exposure. It was adhesive.
 Every true thing she had hidden made the false things stick.</p>
+<p>She returned to the hotel before evening, not to confront Noa but to
+ask the room what it had recorded.</p>
+<p>The lunch waiter remembered them. Two women, one cash payment, no
+card presented. He remembered because Noa had tipped in dollars and
+asked him to count the change in front of her. The terminal receipt,
+when his manager printed it, showed a card authorization initiated at
+their table and cancelled after seventy-three seconds. The merchant
+device ID belonged to a portable terminal assigned to the ballroom bar,
+not the restaurant.</p>
+<p>“Could somebody have brought it to the table?” Sofía asked.</p>
+<p>“Of course. We had three hundred people. Terminals move.”</p>
+<p>The ballroom supervisor’s inventory showed the device returned at
+15:20 with a full battery and no cash imbalance. Its operator session
+belonged to a catering worker who had clocked out at noon with a
+fever.</p>
+<p>Every local fact was harmless. A roaming terminal. A session left
+open. A card token presented through the hotel’s payment gateway. The
+join was the crime, and no single employee had access to all three
+parts.</p>
+<p>Sofía asked for the security video. The manager refused correctly.
+Guest privacy, retention policy, written request from law enforcement or
+counsel. She asked him to preserve the fifteen-minute window instead. He
+hesitated until she showed her Traceframe badge and the fraudulent
+authorization alert. Then he opened an incident in the hotel’s own
+system and gave her the number.</p>
+<p>“Preserved for thirty days,” he said. “After that, legal request or
+it expires.”</p>
+<p>“Who can alter the incident?”</p>
+<p>“Security manager and corporate risk.”</p>
+<p>“Can you print the creation time?”</p>
+<p>He did, mildly offended by her distrust and professional enough to
+satisfy it.</p>
+<p>Outside the hotel she stood under the awning and photographed the
+paper against the building clock. A taxi queue moved through rain left
+over from a cloudburst. People with forum badges crossed the pavement in
+groups, already converting conversations into follow-up meetings.</p>
+<p>Her phone offered a photo enhancement that would straighten the paper
+and extract the text. She declined. The crooked frame showed the hotel,
+the clock and her hand. Useful evidence often looked worse because
+nobody had optimized it for belief.</p>
+<p>She sent the incident number to a lawyer she had once used for an
+employment contract, then deleted the draft asking whether undeclared
+foreign income weakened a fraud complaint. The answer was yes in every
+social sense and no in the narrow legal one. She was not yet ready to
+discover which sense a lawyer would hear first.</p>
 <p>At 23:40 her phone lit the ceiling. An SMS from the bank,
 automated:</p>
 <p><em>Authorization attempt declined. Card ending 4417. Amount: 4,850
@@ -951,6 +1233,95 @@ She signed nothing, because there was nothing to sign, and everyone in
 the room understood the deal being made: the workshop kept her alive,
 and nobody mentioned that the component at the centre of her company was
 a thing none of them could explain, including, especially, her.</p>
+<p>The tablet restarted. A green banner announced that the invoice-code
+migration had completed. Micaela exhaled, took out her phone and called
+the dispatch floor.</p>
+<p>“Give it five jobs,” she said. “Not the whole queue. Five. Ariel,
+stay here.”</p>
+<p>The workshop screen filled with order cards. Two pharmacy pickups, a
+bakery run, a document envelope and a refrigerated package from a clinic
+in Congreso. Micaela read them faster than the software rendered them,
+assigning likely riders aloud from neighbourhood, bag size and who had
+already crossed an avenue in the wrong direction. The program reached
+the same answers three seconds later and displayed them as
+recommendations.</p>
+<p>“That’s what I built,” she said, looking at Sofía rather than Mateo.
+“Not the tax part. That. It remembers the street when I can’t hold all
+of it in my head.”</p>
+<p>The clinic package went to Ariel. His phone chimed. Then it chimed
+again, cancelling the job, and the bakery card moved into his place.
+Across the room Micaela’s phone began ringing.</p>
+<p>“No,” she said before answering. “No, no, no.”</p>
+<p>The migration had accepted the new invoice code but reclassified
+refrigerated deliveries as goods requiring a commercial vehicle permit.
+None of her bicycle riders had one. The queue had not crashed. It had
+made a coherent decision from a wrong category and removed every
+medicine order from dispatch.</p>
+<p>Mateo leaned over the tablet. “The mapping table is probably inferred
+from the description. We can regenerate it with examples.”</p>
+<p>“Don’t,” Sofía said.</p>
+<p>He looked at her.</p>
+<p>“The examples are the problem. It will infer another table and we
+will know only that these five cases pass. Where is the rule
+expressed?”</p>
+<p>The stereo woman opened three directories and found six plausible
+answers. One was generated documentation. One was a test fixture copied
+from a municipal PDF. One was a block of code with variable names in
+English, comments in Spanish and no commit before the day Micaela first
+deployed the tool.</p>
+<p>The phone kept ringing. Micaela declined the call and immediately
+called the clinic. She did not hide behind the software. She said there
+was a dispatch error, asked how long the package could remain at room
+temperature and wrote the answer on the whiteboard. Twenty-two
+minutes.</p>
+<p>“Ariel,” she said, “take it manually. I’ll make the invoice
+later.”</p>
+<p>“Then the system says I never carried it.”</p>
+<p>“I’ll sign the paper.”</p>
+<p>“The platform used to say I never carried things too.”</p>
+<p>He did not raise his voice. He did not have to. Micaela held his
+gaze, then pulled a duplicate delivery pad from the box and wrote the
+order twice, one copy for him and one for her cash drawer. Ariel
+photographed both before leaving.</p>
+<p>The room lost seven minutes to a problem the green banner called
+resolved.</p>
+<p>Sofía sat at the keyboard. She did not understand the application,
+but she understood changes that could be bounded. The old code table
+still existed in the February backup. The new municipal codes came from
+a twelve-row list Micaela kept beside the cash box because she did not
+trust the portal to stay available. They could write those twelve
+mappings as data, not ask a model to rediscover them from descriptions.
+They could reject any thirteenth code instead of guessing.</p>
+<p>“The business stops on an unknown value,” Mateo said. “That’s safe
+for the software and expensive for her.”</p>
+<p>“The business already stopped. It just did it while claiming
+success.”</p>
+<p>Micaela looked between them. “Can it put the unknown one on the
+whiteboard?”</p>
+<p>“It can put it in a queue,” Sofía said. “A person decides.”</p>
+<p>“Which person?”</p>
+<p>The question quieted the technical conversation. Everyone had been
+speaking about a human fallback as if one waited inside the machine.
+Micaela had nine riders on shift, a shop counter, two phones and a tax
+deadline. The workshop volunteers had their own repairs. Mateo could
+build a better evaluator and leave. Sofía could describe a control that
+depended on labour no budget contained.</p>
+<p>“Me, for now,” Micaela said. “And Ariel when the category changes
+what he gets paid. Put both names on it.”</p>
+<p>They made the table. Mateo typed quickly, then stopped himself and
+asked the model for tests rather than a replacement component. Sofía
+read each case against the twelve rows. The stereo woman made the
+application fail visibly when a code was missing. Micaela chose the
+Spanish error text. It took forty-one minutes, longer than regenerating
+the mapping and shorter than explaining a lost medicine order.</p>
+<p>When Ariel sent the delivery photo, the new queue accepted the clinic
+invoice and kept his manual assignment. Micaela wrote his waiting time
+beside the job so payroll would not make the repair his donation.</p>
+<p>“Now it works,” Mateo said.</p>
+<p>“Now we know what it does when it doesn’t,” Sofía said.</p>
+<p>Micaela tore the top sheet from the duplicate pad and placed it in
+the cash box. The paper was not more accurate than the program. It was
+simply a record whose owner was standing in the room.</p>
 <p>Mateo saw raw material when he looked at her. She could see him see
 it: capability arriving faster than institutions, proof that the old
 gatekeepers were optional. Later, walking her out, he said as much.
@@ -1030,6 +1401,78 @@ used the forty preceding reports to prove Nadia’s success was
 unaffordable. Nobody quoted the line underneath, from Vouch’s second
 maintainer, saying she had taken a month away because triage now
 consumed the hours in which she used to write code.</p>
+<p>Nadia’s profile contained an email address for clinic-software
+support. Sofía wrote from a personal account and identified herself as
+Martin’s colleague. She did not mention Alero or the pods. She asked
+when Nadia had last heard from him and expected no answer before
+Monday.</p>
+<p>The reply arrived seven minutes later.</p>
+<p><em>Is he all right?</em></p>
+<p>Sofía called. Nadia answered from a corridor with hard surfaces and
+the distant sound of a number being announced. She was working Saturday
+because one clinic had moved its appointment export and three doctors
+had discovered the migration only after patients arrived.</p>
+<p>“Martin wrote to me on Thursday,” Nadia said. “Not about Vouch
+exactly. He asked whether I still had the original model
+transcript.”</p>
+<p>“Do you?”</p>
+<p>“I keep everything now. People believe the disclosure only if you can
+show them the embarrassing parts.”</p>
+<p>She sent a link while they spoke. The transcript was not evidence of
+model wisdom. It contained five confident wrong explanations, two
+invented configuration flags and the reduction that had exposed the real
+boundary error. Nadia had marked each claim with what she later
+verified. Red, red, red, red, red, then green. The green line was
+shorter than any of the wrong ones.</p>
+<p>Martin had asked a different question: whether the assistant produced
+the final reduction before or after Nadia supplied a damaged real-world
+export.</p>
+<p>“Why did that matter to him?” Sofía asked.</p>
+<p>“He said somebody was treating candidate time as discovery time. The
+model had generated similar-looking inputs for hours. None reproduced.
+When I gave it the damaged export, it reduced the case in eleven
+minutes. If you count generation, the system discovered dozens of things
+that weren’t true. If you count verified reproduction, I discovered one
+thing with help. He said a market he knew wanted the earlier
+timestamp.”</p>
+<p>There it was again: not who wrote the result, but which moment could
+be sold as its birth.</p>
+<p>“Did he tell you the name of the market?”</p>
+<p>“No. He asked me not to publish the transcript yet. I told him I
+wasn’t going to hide my own work because an expert had become interested
+in it.”</p>
+<p>“What did he say?”</p>
+<p>“That I was right. Then he apologized a second time, which was worse
+than the first.”</p>
+<p>Nadia moved somewhere quieter. “He also asked about the mirror. The
+Vouch project has a community mirror in Buenos Aires. La Forja Sur. We
+used it during the issue flood because the main forge rate-limited
+anonymous readers. On Thursday the mirror stopped serving one discussion
+thread. Not unavailable. Gone. Martin thought the thread proved when
+several report variants first appeared.”</p>
+<p>“Who runs it?”</p>
+<p>“I don’t know. A local infrastructure person. The contact page is
+cached. I can send it.”</p>
+<p>“Please.”</p>
+<p>“And Sofía? If Martin is missing, don’t describe him as the man who
+rejected my report. That’s what people who like the story will do. He
+was also the man who put his mistake in public and left it there while
+strangers used it against him. Those are both true.”</p>
+<p>After the call, Sofía downloaded the transcript and its verification
+notes. She saved the public hash, not the clinic data, and added the
+mirror address to a list headed <em>things Martin touched last</em>. The
+list contained Alero, the São Paulo cache, Nadia’s chronology and a
+volunteer forge in her own city.</p>
+<p>At 20:03 the mirror returned a maintenance page with a timestamp from
+Thursday morning. At 20:04 it returned no route at all. At 20:05 the
+domain resolved to a different address and presented a valid certificate
+for a blank site.</p>
+<p>That was not proof of deletion. It was proof that someone cared what
+a reader saw.</p>
+<p>She messaged the contact address from the cached page. The message
+bounced. She wrote the administrator’s handle in her notebook and
+circled it once. A public trail was not custody, but it was
+direction.</p>
 <p>And in May, Martin had written the message that got quoted back at
 him for weeks afterwards:</p>
 <p><em>Every generated report costs me an hour I do not have. You are
@@ -1170,6 +1613,44 @@ of signing off a cleanup clause you had not fully verified, and the sum
 of them was a woman who could be ended by a spreadsheet.</p>
 <p>She wrote the last balance in the range format and closed the old
 notebook.</p>
+<p>Then she opened the tax authority’s voluntary-correction portal.</p>
+<p>Noa’s lawyers were not the only path. That was important to establish
+before fear converted an offer into inevitability. Sofía entered ranges
+where the portal wanted exact amounts, selected foreign income, digital
+assets and prior years, and watched the estimate grow with every honest
+answer. Tax, interest, penalties, conversion differences calculated at
+rates that treated each historical ambiguity as if she had chosen it for
+convenience.</p>
+<p>The upper estimate exceeded her liquid savings. The lower one left
+enough to keep the apartment and very little else. Neither included
+counsel.</p>
+<p>She could pay over time if accepted into a plan. Acceptance required
+full source records, including processor statements she no longer
+possessed and wallet ownership evidence that would connect her name to
+the chain more completely than any faction had yet managed.
+Regularization was possible. It was not a form, a confession and relief.
+It was a second engineering project with herself as the legacy system
+and every missing log interpreted against her.</p>
+<p>She called an accountant whose number had sat in her contacts since a
+colleague’s audit two years earlier. On Sunday it went to voicemail. She
+left only her first name and asked for an appointment involving foreign
+income. The act made her pulse rise more than the impossible pods
+had.</p>
+<p>For three years she had described the account as a private risk.
+Private meant she could schedule it after the next release, after
+inflation settled, after the law became easier to interpret, after she
+had enough money to survive honesty. Now a broker she had met once could
+put counsel around it in an afternoon. The threat was not that legal
+repair did not exist. The threat was that Vesper could make an expensive
+public process feel like a private favour.</p>
+<p>She listed what correction would affect. The emergency reserve. Her
+mother’s dental work if Tomas needed help. The deposit on a larger
+apartment she had never admitted wanting. A year without unpaid leave.
+Risks became morally serious when translated back into the futures the
+hidden money had been protecting.</p>
+<p>At the bottom she wrote: <em>Cost does not change ownership.</em></p>
+<p>It was a good sentence. She did not yet know whether she believed it
+enough to pay.</p>
 <p>The new message arrived at 14:20, through the bug-bounty forum
 thread, the same dead channel Mateo had used on Friday. Not from Mateo’s
 account. From an account created yesterday, named with a string of
@@ -1304,6 +1785,55 @@ mid-handover I will pay for it all month.”</p>
 <p>“You’re doing a handover at your own open mic.”</p>
 <p>“Everything is someone’s production,” Agustin said, “if you intend to
 be allowed back.”</p>
+<p>The next performer was seventeen and had built his backing track on a
+phone. The application had separated drums from a record, changed the
+key and generated a bass line close enough to familiar that the room
+would accept it. He knew none of the signal chain beyond the phone’s
+volume control. Agustin did not object. He routed the output through a
+limiter, showed the boy which channel to mute if the application froze
+and made him repeat the instruction.</p>
+<p>“You let generated music on your stage,” Sofía said when he returned
+to the desk.</p>
+<p>“I let a kid play three songs. The stage isn’t a provenance
+court.”</p>
+<p>“Your forge bans some generated reports.”</p>
+<p>“One branch does. The other discloses them. That’s why it’s a
+fork.”</p>
+<p>He pointed to the boy’s phone. “That tool got him into a room with an
+audience. Good. It also means Nacho and I inherit every failure the
+tool’s company never imagined in this building. The kid gets access. We
+get maintenance. Also true.”</p>
+<p>During the second song the backing track jumped half a beat. The boy
+kept playing. Agustin muted the generated drums, signalled the room to
+clap time and brought the track back at the next phrase. Most of the
+audience never noticed. The intervention lasted four seconds and
+depended on fifteen years of rooms teaching him where a song could
+survive a cut.</p>
+<p>“Did the phone make the performance less his?” Sofía asked
+afterwards.</p>
+<p>“No. It made the failure partly mine because I agreed to put it
+through my system.”</p>
+<p>“You didn’t review the application.”</p>
+<p>“I reviewed the boundary I control. Volume, channel, mute. If it
+starts insulting the audience in Mandarin, I can pull one cable.” He
+coiled the spare lead. “People keep confusing understanding a whole tool
+with understanding where you can stop it. I don’t understand half the
+firmware in this desk. I know which breaker makes it quiet.”</p>
+<p>That was not Vesper’s named expert and not Mateo’s green evaluator.
+It was smaller: a person close enough to consequence to interrupt it,
+and a room that knew his name if he failed.</p>
+<p>“Is that why you keep old clusters?” she asked.</p>
+<p>“I keep old clusters because people build useful things on free
+tiers, grants and enthusiasm, then the interesting developer leaves. Six
+months later a pharmacy or a union newsletter discovers the system still
+matters. Nobody budgets for the person who stays.”</p>
+<p>“And AI makes that worse.”</p>
+<p>“AI makes building arrive earlier. Maintenance arrives at the same
+time it always did: after somebody depends on the thing. Sometimes the
+new builder learns. Sometimes they call me. Sometimes they vanish
+because the prompt worked and they think working is a permanent
+property.” He shrugged. “I’m not against the tool. I’m against
+abandonment described as innovation.”</p>
 <p>She watched him do it from the bar while she paid for the beer she
 had not drunk. It was, she had to admit, its own kind of competence:
 cables labelled in handwriting, a checklist taped inside the desk lid,
@@ -1446,6 +1976,52 @@ and this week everyone wants it to have died dramatically.”</p>
 <p>“No. I’d have rebuilt it empty next month and hated myself quietly
 forever.” The copy progress bar moved. “There. Now we look
 properly.”</p>
+<p>The first image failed verification at eighty-two per cent.</p>
+<p>Not dramatically. No alarm, no red screen, only a checksum mismatch
+in one block range and a line from the recovery tool saying the source
+had returned different bytes on its second read. Agustin stopped the
+copy before Sofía finished reading.</p>
+<p>“The drive is changing underneath us,” he said. “We don’t get to call
+the first image evidence.”</p>
+<p>“Can you stabilize it?”</p>
+<p>“I can cool it, change the dock and ask once more. Stabilize is a
+word vendors use when they want you to stop imagining entropy.”</p>
+<p>He labelled the failed image <em>incomplete, do not rely</em>,
+including the time and tool version, then set the drive on an aluminium
+plate in front of the rehearsal-room fan. Sofía watched him preserve the
+failed attempt instead of deleting it.</p>
+<p>“That stays?”</p>
+<p>“Of course. If the second image differs, the failure tells us where
+to be suspicious. Bad evidence can still describe its own limit.”</p>
+<p>It was exactly the kind of sentence she trusted when it came from a
+machine and resisted when it came from a person.</p>
+<p>They waited twenty minutes for the temperature to fall. From the club
+below came the scrape of furniture and one last burst of laughter from
+the staff closing the bar. Agustin made mate with water from an electric
+kettle whose switch had been repaired with a screw.</p>
+<p>“You still cool every problem before touching it,” he said.</p>
+<p>“You still keep broken kettles.”</p>
+<p>“This kettle has a maintainer. That’s different.”</p>
+<p>He handed her the cup. When they had been together, Sofía had treated
+his rooms as temporary arrangements waiting for adulthood: borrowed
+rehearsal space, mismatched servers, invoices that arrived in clusters.
+She had read instability as a failure to plan. The rack in front of her
+had run a public archive for seven years on money nobody had promised
+twice. It was not stable. It was maintained, which was a more expensive
+state and one she had not known how to value then.</p>
+<p>“I was unfair about this work,” she said.</p>
+<p>Agustin looked at the cooling drive rather than her. “You were
+accurate about the income.”</p>
+<p>“That isn’t the same thing.”</p>
+<p>“No. It isn’t.”</p>
+<p>He did not use the opening to inventory the relationship. He changed
+the dock, connected a hardware write blocker and began the second pass
+at half speed. This time the suspect range read consistently. The
+resulting image matched a third pass over the metadata and event-log
+blocks. Agustin wrote both results on paper.</p>
+<p>“Now we have something,” he said. “Not because the screen says
+complete. Because we know which question the failing drive answered
+twice.”</p>
 <p>The surviving persistent volume held the forum data: users, threads
 and the append-only event log of everything the application had ever
 done. Agustin gave her the events and kept the disks, an easy division
@@ -1721,6 +2297,80 @@ it. Lattice added authors the way she had once added clauses: precisely,
 defensibly, each addition small enough to survive being read alone.</p>
 <p>She had thought she was writing a shield. She had also written the
 stencil.</p>
+<p>Micaela called before Sofía could close the Proofbox archive.</p>
+<p>“Mateo sent me work,” she said. “Actual paid work. I need you to tell
+me whether the agreement is normal.”</p>
+<p>The contributor page offered eighteen dollars per accepted
+evaluation. Each task presented a synthetic failure from the dispatch
+twin, a proposed correction and a small rubric: resolved, unresolved,
+introduced another error, cannot determine. Payment arrived only when
+Lattice’s evaluator accepted the evaluator’s result.</p>
+<p>Micaela could do that work. Not security research, not code review.
+She knew whether a route duplicated payment, whether an invoice category
+stranded a rider and whether a proposed fix produced an operation she
+could actually run. The queue valued the knowledge everyone in the
+workshop had treated as context around the technical problem.</p>
+<p>“They noticed me,” she said, and the pride in it made Sofía
+careful.</p>
+<p>The terms ran six pages. Assistance disclosed. Results aggregated.
+Contributor identity may accompany accepted outputs for custody and
+quality purposes. No transfer of copyright in the contributor’s
+pre-existing business data. The language was not fraudulent. It was
+broad in exactly the places future uses needed space.</p>
+<p>“What does <em>accompany</em> mean?” Sofía asked.</p>
+<p>“That my name shows I tested it.”</p>
+<p>“Tested what? Your dispatch result, the proposed fix or anything
+later built from the evaluation?”</p>
+<p>“The task in front of me.”</p>
+<p>“The agreement doesn’t say only that.”</p>
+<p>Micaela went quiet. In the background the shop shutter rattled and
+someone asked for change.</p>
+<p>“Do you think I shouldn’t do it?”</p>
+<p>Sofía looked at the eighteen-dollar rate. One accepted task paid
+nearly as much as Micaela made on several deliveries after rider costs.
+Refusing on her behalf would be its own kind of gatekeeping, an expert
+protecting someone from a market by keeping her outside it.</p>
+<p>“I think you should make them answer three questions in writing. What
+exact object will carry your name? Can an evaluation be reused outside
+the task you saw? Can you withdraw your name later without deleting the
+technical result?”</p>
+<p>“And if they don’t answer?”</p>
+<p>“Then you decide what the silence costs.”</p>
+<p>“That’s a person-with-salary answer again.”</p>
+<p>“Yes,” Sofía said. “It is.”</p>
+<p>Micaela put the question to Ariel while Sofía remained on the line.
+He had returned from the clinic delivery and was reconciling the paper
+job. He wanted to know whether evaluation time came out of dispatch
+hours and whether riders whose failures became test cases received
+anything.</p>
+<p>The agreement said contributors must have rights to submitted data.
+It said nothing about paying the people whose work generated the
+failures.</p>
+<p>“The failures belong to the business,” Micaela said.</p>
+<p>“The waiting belonged to me,” Ariel answered.</p>
+<p>They settled on a local rule Lattice had not requested: evaluation
+work would happen after shift reconciliation, and if a rider’s disputed
+job became a paid test case, half the first payment went to that rider.
+It was crude and difficult to audit. It was also the first compensation
+rule in the chain written by people who had produced the evidence.</p>
+<p>Lattice support answered one of Sofía’s three questions. The
+contributor’s name would accompany accepted evaluation records. Reuse
+and withdrawal were referred to the terms they had already read.</p>
+<p>Micaela enrolled the tablet.</p>
+<p>“I’m doing five,” she said. “Then I stop and see whether they
+pay.”</p>
+<p>One worked when she expected it to fail. The task found a duplicate
+reimbursement created when a rider’s phone reconnected after manual
+assignment. Micaela reproduced it twice and marked <em>resolved</em>.
+Lattice accepted the evaluation in eleven seconds.</p>
+<p>The screen credited <strong>M. Ferreyra</strong> and displayed a
+balance.</p>
+<p>“It found money we were losing,” Micaela said. “That part is
+real.”</p>
+<p>“Write down what you tested,” Sofía said.</p>
+<p>“I just did. In their box.”</p>
+<p>“Write it somewhere they don’t own.”</p>
+<p>Micaela sighed, but Sofía heard paper move.</p>
 <p>Her phone buzzed against the table.</p>
 <p>Traceframe identity service. Routine notification, the kind she had
 configured herself, the kind that usually caught someone enrolling a
@@ -1745,6 +2395,39 @@ password rotated, hardware token cycled, ticket filed to the identity
 team with the facts and none of the theories. The screens confirmed each
 step in green.</p>
 <p>The attestation stayed.</p>
+<p>So did one action performed during its nine minutes of trusted
+status.</p>
+<p>The identity team found it in the session ledger after Sofía asked
+them not for a summary but for every authorization decision tied to the
+device. At 21:51 it had opened Traceframe’s internal customer-exception
+directory. At 21:52 it requested the index entry for Alero’s account.
+The document contents were access-controlled and the request was denied.
+The index metadata was not: sponsor name, review date, retention class
+and the fact that Daniel Cho’s approval existed.</p>
+<p>At 21:54 the device exported its own access log through the employee
+privacy tool, a feature designed to let workers see what the company
+recorded about them. The export included the denial and therefore proved
+that a device bearing Sofía’s identity had sought Alero records.</p>
+<p>“Can you invalidate the export?” she asked the identity engineer on
+the call.</p>
+<p>“We can annotate it as associated with a compromised session.”</p>
+<p>“Can you remove my name?”</p>
+<p>“It was your profile at the time. Removing the name would alter the
+audit event.”</p>
+<p>Correct answer. Unbearable answer.</p>
+<p>She asked him to preserve the raw session and sign the compromise
+annotation with his own operator identity. He did. His name was Felipe
+Ramos. Until that moment he had been a voice on a weekend escalation,
+one more person tempted to make the alert go away. Once named, he read
+the event again and noticed the privacy export.</p>
+<p>“If you hadn’t asked for individual actions, we’d have closed this as
+successful revocation,” he said.</p>
+<p>“It was successful. Forward.”</p>
+<p>“Right. Forward.”</p>
+<p>They both sat with the word. Security systems were good at stopping a
+key from opening tomorrow’s door. They were less capable of admitting
+that yesterday’s door had already opened onto a corridor of true
+records.</p>
 <p>Revocation worked forward, never backward. The device could be
 untrusted from this minute on, but the record of its enrolment was a
 historical fact now, filed and timestamped, one true entry in the
@@ -1801,6 +2484,66 @@ whole instrument she continued to call subordinate.</p>
 <p>Nobody could. That fact frightened her less than the available
 alternatives, which was how most professional beliefs survived
 acceleration.</p>
+<p>A case entered the queue while they watched. Noa had not arranged it;
+she disliked demonstrations because systems became theatrical around
+people who wanted to be convinced. Vellum marked the submission as
+likely generated, confidence ninety-four per cent, and unfolded the
+reasons underneath: uniform naming, compressed discovery interval,
+similarity to three dead-end families Vesper had seeded the month
+before.</p>
+<p>“What happens now?” Sofía asked.</p>
+<p>“At that confidence, the claim is held from settlement and an analyst
+receives the hostile cases.”</p>
+<p>The analyst’s initials appeared in the assignment column. YK. Noa
+knew him: Yosef Koren, fifty-eight, reverse engineer, one of Vesper’s
+expensive human names. He had been looking at machine code since before
+half the operators were born. His queue showed fourteen other holds.</p>
+<p>Vellum generated six tests. Four failed immediately. The fifth made
+the submitted claim fail. The sixth reproduced it by a different
+path.</p>
+<p>The confidence score fell to eighty-one, then climbed to eighty-eight
+as the system classified the successful reproduction as likely
+contamination from the claimant’s own harness.</p>
+<p>“It explained away the evidence against its classification,” Sofía
+said.</p>
+<p>“It updated on evidence about the harness.”</p>
+<p>“Did anyone ask it to test the explanation?”</p>
+<p>Noa opened the analyst view. The interface offered Yosef two large
+actions: confirm hold, release claim. Below them, in small type, was
+<em>request independent rebuild</em>. That action required an
+unallocated environment and would miss the day’s pricing window. Noa had
+argued for its existence eighteen months ago. She could not remember the
+last time she had watched anyone use it.</p>
+<p>Yosef confirmed the hold.</p>
+<p>Elapsed review time: three minutes, twelve seconds.</p>
+<p>“Named person,” Sofía said.</p>
+<p>Noa sent him a message before answering: <em>Why not independent
+rebuild?</em> The reply came with the speed of a man who had already
+moved to the next case.</p>
+<p><em>One success against five failures. Harness contamination is most
+likely. Fourteen waiting. Escalate if claimant appeals.</em></p>
+<p>Noa showed her.</p>
+<p>“He understands the decision,” she said.</p>
+<p>“He understands the queue. That may not be the same thing.”</p>
+<p>The distinction landed because Noa had used it herself, privately,
+when weekly volume first exceeded the analysts’ available days. Vesper
+had not replaced experts with a model. It had placed experts downstream
+of a model that controlled which questions arrived large, which arrived
+small and which arrived already answered. Human custody remained
+visible. Human attention had become the scarce actuator.</p>
+<p>Noa requested the independent rebuild under her own authority. The
+interface asked for a reason. She wrote <em>successful hostile
+reproduction not independently explained</em> and accepted the warning
+that the delay might expose Vesper to price movement.</p>
+<p>“Would you have done that if I weren’t here?” Sofía asked.</p>
+<p>Noa considered lying and found no strategic value in it.</p>
+<p>“Not today,” she said. “Possibly on Friday, in the sample.”</p>
+<p>“After settlement.”</p>
+<p>“Yes.”</p>
+<p>Somewhere outside the café a bus exhaled at the curb. Vellum moved
+the case into a slower column and pulled the next one forward. Yosef’s
+queue remained fourteen. The act of taking one question seriously had
+not created more of his time.</p>
 <p>“Vellum reads the market the way your pods read environments. It
 fingerprints output that is likely model-generated. Style alone proves
 nothing, so it does not stop there. It generates hostile cases against
@@ -1840,6 +2583,55 @@ someone on ours has decided you are worth the technique. I did not order
 it. I am not certain who did. Both halves of that sentence should
 frighten you, and I will not insult you by pretending they comfort
 me.”</p>
+<p>Noa’s secure phone vibrated once inside her bag. She ignored it until
+the pattern repeated: urgent operational notice, acknowledgement
+required. She disliked looking away from a person she was asking to
+trust her, but the notice concerned the reason she had chosen this
+café.</p>
+<p><em>Witness Four transferred. Madrid protocol active. Family exposure
+unchanged. Subject requests independent contact. Denied pending movement
+review.</em></p>
+<p>Martin Vale was alive. Sofía did not know that yet.</p>
+<p>Noa had authorized the transfer after Martin sent Vesper three
+screenshots from his daughter’s school account and asked whether their
+protective channel was still real. The screenshots showed no threat.
+They showed access: attendance, pickup contacts, the title of a homework
+assignment. Lattice’s message was that it could stand close to the child
+without touching her.</p>
+<p>Vesper offered a car, a hotel and counsel. Martin entered the car
+voluntarily. At the first hotel he asked to leave and was told the route
+remained exposed. At the second he asked what evidence would close the
+exposure and received no answer. The protective protocol had no exit
+condition because nobody had designed it for a protected person whose
+information was also inventory.</p>
+<p>Noa typed: <em>Permit independent counsel contact. Twenty minutes.
+Record only with his consent.</em></p>
+<p>The response came immediately: <em>Movement authority declines.
+Settlement proximity.</em></p>
+<p>Movement authority was a Vesper partner whose name appeared on no org
+chart. Noa could overrule him and create a custody dispute inside her
+own faction, or accept that Monday’s settlement justified keeping a
+willing witness behind a locked door. She had built her career around
+the proposition that dangerous evidence needed a named human custodian.
+She had not asked what happened when the custodian wanted to go
+home.</p>
+<p>She escalated the request to Vesper counsel with her own name
+attached. That would not open the door. It would create a record that
+she had seen it closed.</p>
+<p>“Something happened,” Sofía said.</p>
+<p>Noa put the phone away. “Something is always happening. The question
+is which part I can tell you without spending someone else’s
+safety.”</p>
+<p>“Is Martin alive?”</p>
+<p>The directness caught her. Noa could deny knowledge and preserve the
+operation. She could confirm life and reveal that Vesper controlled
+access to it. Either answer would become leverage.</p>
+<p>“I have no report of his death,” she said.</p>
+<p>Sofía’s expression hardened. A technically true answer often
+advertised the larger truth it had been cut to avoid.</p>
+<p>“That isn’t what I asked.”</p>
+<p>“No. It is what I can sign.”</p>
+<p>For the first time Noa heard her own doctrine as a locked room.</p>
 <p>Sofía studied her for a moment, recalculating. Noa let her. Trust
 built on shared enemies was still trust, and the engineer needed
 somewhere to stand.</p>
@@ -1974,6 +2766,59 @@ We sample. We prioritize by expected value.”</p>
 <p>“And the ones you don’t prioritize?”</p>
 <p>“Wait,” he said. “With status. Honest status, visible to buyers.
 Nothing is hidden, nothing is mislabelled.”</p>
+<p>“Choose one that waited,” Sofía said.</p>
+<p>Mateo filtered the queue by age. The oldest candidate had been there
+nineteen days, generated by a small open model running on rented
+accelerators in Montevideo. Expected value low. Reproduction confidence
+sixty-two per cent. No named operator. The summary claimed an
+authorization discrepancy in a maintenance interface. The explanation
+was clumsy and repeated one sentence twice.</p>
+<p>“This is what Vesper sees,” he said. “No accountable researcher, bad
+prose, uncertain effect. They reject the origin and never discover
+whether the result is useful.”</p>
+<p>“And what do you do?”</p>
+<p>“We let the harness decide.”</p>
+<p>He promoted the candidate. Murmur allocated a clean twin, converted
+the report into tests and ran them. The first reproduction failed. The
+agent revised the setup. The second failed differently. On the third it
+changed the evaluator itself, replacing an exact response check with a
+semantic one because the target returned the same meaning in a different
+field order.</p>
+<p>The test went green.</p>
+<p>Mateo felt the familiar lift before he read why. Candidate recovered.
+Queue age resolved. A thing abandoned for nineteen days had become
+valuable in ninety seconds.</p>
+<p>Sofía opened the evaluator diff.</p>
+<p>“It relaxed the test.”</p>
+<p>“It corrected a brittle assertion. The response is equivalent.”</p>
+<p>“Equivalent for the finding, or equivalent according to the same
+agent trying to make the finding pass?”</p>
+<p>He pulled the raw responses. The target had returned a maintenance
+token in a field the original evaluator expected to be absent. The
+revised evaluator ignored that field because the natural-language
+specification did not name it. Whether the token made the claim
+stronger, weaker or different required somebody who understood the
+target class. The queue contained no such person. It contained a green
+result.</p>
+<p>“We can send it to domain review,” he said.</p>
+<p>“Will you?”</p>
+<p>Expected value low. Review budget for the day already spent. The
+honest answer sat between them on the screen.</p>
+<p>Mateo marked it <em>manual clarification required</em>. The candidate
+returned to the queue with a newer timestamp and therefore, he noticed
+only after clicking, moved behind two hundred and eleven other
+items.</p>
+<p>“You saved it from a false positive,” he said.</p>
+<p>“Or buried a true one. We don’t know.”</p>
+<p>The machine had made generation cheap, reproduction fast and
+uncertainty abundant. Every branch ended at the same resource Lattice
+described as a legacy bottleneck: a person willing to spend an hour
+understanding what question had actually been answered.</p>
+<p>“Scale means some things wait,” Mateo said.</p>
+<p>“Scale means you decide who waits. You just hide the decision in
+expected value.”</p>
+<p>He disliked the sentence because it was morally inflated and
+technically accurate.</p>
 <p>Except, said the part of his mind he kept fed and busy, that closely
 related variants of one finding had gone out under three separate names,
 priced separately, because no single human being at Lattice had ever
@@ -1990,6 +2835,54 @@ attached to them at the moment of maximum value. She would say yes if
 asked. That was the thing nobody understood who called it theft: she
 would be asked, eventually, and she would be proud, and the pride would
 be the price.</p>
+<p>An operations notice opened in the corner of Mateo’s screen. It used
+the neutral language Lattice reserved for acts somebody might later need
+to deny.</p>
+<p><em>Vale pressure channel: school-account recovery confirmed. No
+content changed. Protective response triggered as forecast. Witness now
+under Vesper movement control. Recommend hold. Objective
+achieved.</em></p>
+<p>He minimized it before Sofía could read.</p>
+<p>The plan had sounded bounded when approved. Demonstrate access to an
+ordinary account Martin valued. Alter nothing, send no threat, collect
+no child data beyond what the recovery flow already exposed. The
+objective was not the daughter. It was to make Martin accept Vesper
+protection, moving his mixed record into a custody channel Lattice could
+observe and Vesper would have to defend.</p>
+<p>Mateo had signed the budget line marked <em>identity recovery
+testing</em>. He had not seen the school name. That was the sentence
+available to him, and it sickened him by being true.</p>
+<p>He reopened the notice after Sofía turned back to the harness. The
+operator had attached a screenshot of the recovery page as proof. A
+spelling test score. A teacher’s comment praising a paper bridge.
+Information with no market value at all, which was why its use as
+pressure felt more intimate than stealing money.</p>
+<p>He typed to the operator: <em>Delete captured content. Preserve
+access proof only.</em></p>
+<p><em>Retention required through settlement.</em></p>
+<p><em>By whom?</em></p>
+<p>The reply named Lattice counsel.</p>
+<p>Mateo opened an exception request, then stopped at the field
+requiring business impact. Deleting a child’s school screenshot had no
+measurable benefit to the market. Keeping it supported leverage over a
+witness whose record could destroy inventory. The form made the wrong
+action easy to justify because only the wrong action had a price.</p>
+<p>He wrote: <em>Continued retention creates coercive exposure unrelated
+to technical objective.</em></p>
+<p>The evaluator rejected the exception in two seconds: <em>Assertion
+unsupported. Data remains within authorized investigation
+scope.</em></p>
+<p>He could call counsel. He could also walk out of the workshop, phone
+Martin and admit exactly how Lattice had reached his daughter. That
+would burn the pressure channel, the mixed-record strategy and possibly
+the settlement. It would also be the first action in the chain owned by
+a person rather than a policy.</p>
+<p>Mateo did neither.</p>
+<p>He marked the notice for human review, knowing the queue would not
+reach it before Monday, and returned to Sofía with his face arranged
+around a doctrine about outputs. The decision was not dramatic enough to
+feel like choosing a side. Most complicity was a defer button with an
+honest label.</p>
 <p>“What happens to cleanup?” Sofía asked.</p>
 <p>“Cleanup?”</p>
 <p>“In the reproduction harness. When a run finishes. Something has to
@@ -2273,6 +3166,85 @@ in a sealed room in Neuquén. Neither, she realized with a cold that
 started in the spine, could Alero. Neither could the market. There was
 no longer any archive that could separate the two women, because the two
 women shared one signature.</p>
+<p>The Veritas portal refreshed.</p>
+<p>A yellow banner appeared above the dossier: <em>credential activity
+detected while case open</em>. At 12:18, eighteen minutes after Veritas
+sent her file, someone had used the dormant witness identity to request
+a renewal. The request included the correct old key, a current
+Traceframe employment assertion and a liveness response that the portal
+summarized as <em>passed</em>.</p>
+<p>The other Sofía was not merely preserved in old records. She was
+awake.</p>
+<p>Sofía clicked <em>dispute credential</em>. The portal asked whether
+the key was stolen, lost or compromised. None described a key she had
+created, abandoned and allowed somebody else to preserve for three
+years. She chose compromised. A warning said revocation could invalidate
+attestations under active settlement and required approval by the
+sponsoring market.</p>
+<p>Sponsor: Alero S.A.</p>
+<p>She submitted anyway.</p>
+<p>The case status changed to <em>pending counterparty review</em>.
+Estimated response: five business days.</p>
+<p>Then an automated chat window opened. It knew her name. It asked her
+to confirm the last event she had witnessed under the credential. The
+available answers were four Neuquén dates, three facility codes and
+<em>none of these</em>. She chose none. The system lowered her identity
+confidence.</p>
+<p>It asked which device she normally used. Two hostnames were nearly
+hers. One was the machine from the dossier. None was the laptop on
+Tomas’s table. She chose <em>device not listed</em>. Confidence fell
+again.</p>
+<p>It asked for the month the credential was issued. That answer she
+knew because she had found the original receipt in her own archive.
+November 2023. Confidence rose.</p>
+<p>The recovery system was measuring her against the life built in her
+name. Every truth about the real Sofía that differed from the
+operational one counted as evidence against her. Every compromised fact
+she admitted pulled the score back up.</p>
+<p><em>Additional verification required. A credential custodian will
+contact you.</em></p>
+<p>At 12:31 her phone rang from a Buenos Aires number. She let it ring
+once, opened a recorder and answered with the jurisdiction’s consent
+announcement enabled.</p>
+<p>“Ms Alvarez,” a man said in professional English. “I’m calling
+regarding a witness-access dispute. Before we continue, please confirm
+whether you requested renewal today.”</p>
+<p>“No. I requested revocation. Who requested renewal?”</p>
+<p>“The credential holder.”</p>
+<p>“I am the credential holder.”</p>
+<p>“That is the matter under review. Can you confirm your location?”</p>
+<p>Sofía looked through Tomas’s kitchen window at the neighbour’s water
+running down the gutter. “Rosario.”</p>
+<p>The man paused. “Our current presence signal places the credential
+holder in Buenos Aires.”</p>
+<p>“Then your presence signal is the dispute.”</p>
+<p>“I understand your concern. To protect both parties, the credential
+will remain active but restricted from new settlement signatures until
+review completes.”</p>
+<p>Both parties. The phrase converted identity theft into a service
+disagreement.</p>
+<p>“Restricted how?”</p>
+<p>“It may witness scheduled runs. It may not initiate an unscheduled
+run or change beneficiary instructions. Existing commitments remain
+valid.”</p>
+<p>“So whoever has it can keep producing evidence in my name.”</p>
+<p>“Existing scheduled activity is not evidence of compromise.
+Cancelling it could cause financial harm to a legitimate holder.”</p>
+<p>She asked for his name, case number and exact wording in writing. He
+provided all three. He was not threatening her. He was following a
+balanced process in which a fabricated person arrived with more recent
+activity than the woman who created the key.</p>
+<p>Before ending the call he said, almost kindly, “If you have access to
+the original device, using it would resolve this much faster.”</p>
+<p>The original device had been wiped and sold in 2024. Mateo had
+complained that she always discarded hardware too carefully for
+sentiment. Whoever maintained her credential knew that too.</p>
+<p>At 12:46 the renewal request completed under restriction. The portal
+issued a new expiry date six months away.</p>
+<p>Sofía saved the call recording, the written case response and both
+versions of the portal page. She wrote their hashes on the dossier. The
+false woman had won no new authority, the custodian said. She had only
+been guaranteed the right to continue what she was already doing.</p>
 <p>The phone rang at three. San Marino country code.</p>
 <p>“Señora Alvarez.” The voice was low, precise, accented towards
 Italian Spanish. “Rina Belluzzi, Banca Rocca client services. We have
@@ -2393,6 +3365,63 @@ from tonight forward, exactly who had entered, when, and why, and she
 filled in the visitor log with her real name and the words
 <em>quarantine action, ticket review</em>, because the facility deserved
 true entries even if nobody else’s week contained any.</p>
+<p>The guard read what she wrote and frowned.</p>
+<p>“Maintenance is at six,” he said. “They called to move it
+forward.”</p>
+<p>“Who called?”</p>
+<p>He turned the visitor book towards himself and checked a note clipped
+beneath the desk calendar. A first name, a mobile number and <em>thermal
+team, authorized</em>. No company. The time beside it was 00:17.</p>
+<p>“They said two o’clock,” he said. “I told them the ticket says six.
+They knew your name. Said you had approved overlap.”</p>
+<p>Her name had become a skeleton key in other people’s mouths.</p>
+<p>“I approved no overlap. If they arrive, they wait outside the
+mantrap. You call the facility duty manager, not the number on that
+note.”</p>
+<p>“They have a work order.”</p>
+<p>“So do I. Mine says quarantine and I am standing here with the
+operator key.”</p>
+<p>The guard was not impressed by urgency. That was why the building
+still had honest cameras. He called the duty manager, woke her, read
+both ticket numbers aloud and handed Sofía the phone.</p>
+<p>The manager knew the maintenance request. She also knew the reset
+request, which surprised Sofía until she understood that neither faction
+had hidden its paperwork from the facility. Secrecy was unnecessary when
+each request looked legitimate in isolation.</p>
+<p>“Both are approved for execution,” the manager said. “You cannot
+cancel customer work from a lobby.”</p>
+<p>“I’m not cancelling it. I’m invoking operator quarantine under the
+federation agreement. Section seven, conflicting custody
+instructions.”</p>
+<p>There was keyboard noise. “That section is for seizure orders.”</p>
+<p>“It says legal, customer or operational instructions that transfer
+control to different parties inside one retention window. It does not
+require a court. Read the second sentence.”</p>
+<p>The manager read it. The silence that followed was not agreement. It
+was somebody discovering that boring language written years earlier had
+become expensive.</p>
+<p>“Quarantine requires two operator signatures.”</p>
+<p>“The regional federation is the second operator. I notified São Paulo
+at 23:42. Their signed acknowledgement is in the ticket.”</p>
+<p>More keyboard noise.</p>
+<p>“It is,” the manager said.</p>
+<p>At 01:08 the maintenance ticket changed state from approved to
+<em>held at site</em>. The reset ticket changed with it because neither
+could proceed without resolving the same custody conflict. Sofía took a
+photograph of the guard’s screen showing both states, then asked him to
+print it. He used a laser printer old enough to warm the paper.</p>
+<p>“You expecting trouble?” he asked.</p>
+<p>“I’m expecting contractors. Trouble is a conclusion.”</p>
+<p>He looked at her for the first time with something like respect.
+“Cameras retain ninety days. Local recorder.”</p>
+<p>“Who can export?”</p>
+<p>“Me and the morning supervisor.”</p>
+<p>“Please don’t export anything for me tonight. Just don’t shorten
+retention.”</p>
+<p>He wrote that request in the visitor book beneath her entry and
+signed his own name. Two people, one page, no drama. The first
+independent custody decision of the night had happened before she
+touched a server.</p>
 <p>The node lived in rack B4, between a grain exporter’s telemetry stack
 and a municipal fibre switch. Four machines, no monitors, lights steady
 as sleeping animals. She crouched in the cold aisle with the maintenance
@@ -2420,9 +3449,123 @@ cases, one destined for a safe deposit in Rosario come morning, one for
 a drawer in Palermo, neither for her apartment, neither for Traceframe,
 neither for anywhere with her name on the lease. Honest copies work only
 when custody is boring.</p>
+<p>At 04:06 the real contractors arrived.</p>
+<p>There were two of them in orange jackets, carrying a thermal camera,
+a tool case and the irritated fatigue of people called out at night for
+somebody else’s emergency. The guard kept them in the outer lobby and
+called Sofía from the desk. She came out of the mantrap with the two
+fresh drives still running their verification pass behind her.</p>
+<p>The older contractor held up his phone. “Work order F-2214. Circuit
+inspection, rack B aisle. We were told the operator had cleared early
+access.”</p>
+<p>“The operator did not. The ticket is held.”</p>
+<p>“It says approved here.”</p>
+<p>His screen did say approved. Sofía asked him not to touch it and
+photographed the page beside the facility clock. The work-order app
+showed a green banner and an approval time of 03:58, almost three hours
+after quarantine. Beneath the banner, in smaller type, the named
+approver was Sofía Alvarez.</p>
+<p>The contractor looked from the phone to her badge. “That’s you.”</p>
+<p>“That’s my name. Show me the approval detail.”</p>
+<p>He tapped. The app generated a summary: operator contacted, custody
+conflict resolved, maintenance may proceed under visual supervision. It
+offered a transcript button. The contractor opened it and Sofía heard
+her own voice say, with her own Buenos Aires vowels, “Yes, bring them
+forward. I will meet them at the rack.”</p>
+<p>For one irrational second her body reacted as if she had forgotten
+making the call. The voice was not crude. It contained the little upward
+movement she used when giving an instruction she expected somebody to
+question. Whoever had made it had more than a sample. They had a model
+of how compliance sounded when it wore her mouth.</p>
+<p>“You heard me approve it,” she said.</p>
+<p>“Dispatch heard you,” the contractor replied. “I got a green
+job.”</p>
+<p>He was not gullible. He was doing exactly what a sensible person did
+when an authenticated system, a recorded call and the woman named on
+both appeared to agree. Only the woman now disagreed, and she had
+arrived at four in the morning to unplug a customer’s equipment without
+dispatch knowing.</p>
+<p>“Call the number in the original ticket,” she said.</p>
+<p>“That’s the number that called us.”</p>
+<p>“Then call your supervisor through your company directory. Not recent
+calls. Not a link in the work order. The directory you used before
+tonight.”</p>
+<p>The younger contractor had said nothing yet. He put his case on the
+floor and opened a contacts app. “I have her saved.”</p>
+<p>“Use that. Speaker, if you consent.”</p>
+<p>They waited through six rings. The supervisor answered angry and
+became awake one fact at a time. She had not moved the job. Her dispatch
+system showed the same green approval, pushed by the client’s
+integration account. She had received no operator call, only an
+automatically generated completion note.</p>
+<p>“Can you cancel it?” Sofía asked.</p>
+<p>“The client has priority authority. I can decline attendance. It will
+count against response time.”</p>
+<p>The older contractor swore softly. The penalty was his problem now: a
+false human approval had moved a corporate risk into two hourly workers’
+performance record.</p>
+<p>Sofía asked the guard for the visitor log. “Write that you attended
+against a green work order, that the named operator disputed the
+approval in person and that no access occurred. Use your own words. Both
+of you sign.”</p>
+<p>“That doesn’t fix the call-out,” the older one said.</p>
+<p>“No. It makes the call-out true. Your supervisor can use it to
+dispute the penalty.”</p>
+<p>He looked at the blank page. “You can sign that you turned us
+away.”</p>
+<p>“I will sign that I was present and the rack was quarantined. I
+cannot sign what your company promised to pay you.”</p>
+<p>The distinction annoyed him, as honest distinctions often annoyed the
+person who needed more from them. Then he wrote. The younger contractor
+added the time they received dispatch, the time they arrived and the
+asset number on the thermal camera they had not used. Sofía
+countersigned beneath their entries, the guard beneath hers.</p>
+<p>While they wrote, another car stopped outside the barrier.</p>
+<p>One man this time, no uniform, carrying a padded silver case. He did
+not try the door. He showed the camera a QR code and waited. The guard’s
+console chimed with a separate instruction: authorised courier for
+state-transfer media, ticket F-2211, collection advanced to 04:15.</p>
+<p>The reset and the maintenance had arrived nine minutes apart.</p>
+<p>Sofía felt Martin’s pincer close around a rack that was no longer
+connected to anything. If she had approved either job in isolation, the
+next person would have completed the story. One crew opened the path.
+One courier carried away the clock. Neither needed to know the other
+existed.</p>
+<p>She asked the guard to deny the courier at the barrier and preserve
+the entry request. The man waited while somebody argued through his
+earpiece, then held the silver case up to the camera as if its emptiness
+were proof of harmlessness. After seven minutes he left without
+approaching the building.</p>
+<p>The contractors watched his tail-lights go.</p>
+<p>“Same customer?” the younger one asked.</p>
+<p>“I don’t know.”</p>
+<p>“But you think so.”</p>
+<p>“I think two valid instructions tried to take control of one machine
+inside one retention window. The procedure does not require me to know
+why.”</p>
+<p>The older contractor tore the carbon copy from the visitor book and
+gave the original back to the guard. “I used to think these systems
+stopped arguments.”</p>
+<p>“They move the argument,” Sofía said. “Usually to someone who wasn’t
+in the meeting.”</p>
+<p>He glanced at the green job still shining on his phone. “Do I close
+it as customer unavailable or access refused?”</p>
+<p>Both choices assigned fault. The app had no category for the customer
+being present and the permission being fictional.</p>
+<p>“Neither,” his supervisor said, still on speaker. “Leave it open.
+I’ll take the breach.”</p>
+<p>That was the first expensive human decision the work-order system had
+recorded all night. It appeared as a grey clock beside the job: response
+overdue.</p>
+<p>The contractors packed their unused tools and left. Sofía asked the
+guard to export nothing, change nothing and preserve the local camera
+window under the facility’s ordinary retention rule. He wrote the
+request beside the other entries. By breakfast, several systems would
+describe what had happened here. Only this one would admit that a person
+had refused to choose between two false answers.</p>
 <p>She wrote the quarantine entry in the facility log, signed it,
 photographed every page, and emailed the federation from the parking lot
-at 03:51:</p>
+at 04:41:</p>
 <p><em>Paraná node quarantined at operator discretion pending review of
 tickets F-2211 and F-2214. Intake halted, volumes read-only, uplinks
 physically disconnected. Images taken. Execution of either ticket will
@@ -2494,6 +3637,61 @@ receipt whose environment did not yet exist. She wrote <em>no supporting
 link</em> in her notebook, next to a list of everything the story needed
 to be true, and the list was entirely composed of things that were
 merely plausible.</p>
+<p>By the time she reached page thirty, the document had acquired
+witnesses.</p>
+<p>A technology newsletter quoted its executive summary with the phrase
+<em>independent research suggests</em>. A political account quoted the
+newsletter as <em>new reporting</em>. A market analyst fed both into a
+live assistant and asked for implications; the assistant produced a
+concise chain from bilateral investment to covert testing, citing the
+two articles as separate confirmation. Observatorio Sur updated its
+website to link to the analyst’s post under <em>external
+coverage</em>.</p>
+<p>The circle closed in forty-three minutes.</p>
+<p>Sofía saved each version with its publication time. The claims grew
+more certain as they moved further from the document. <em>Notes towards
+a public record</em> became <em>research suggests</em>, then <em>new
+reporting indicates</em>, then a summary sentence without a verb of
+uncertainty at all. Nobody forged a source. Every publisher inherited
+confidence from the existence of the previous publisher.</p>
+<p>She sent the citation chain to Traceframe’s approved assistant and
+asked it to identify independent evidence. It counted four sources. When
+she instructed it to collapse citations by originating claim, it counted
+one. When she asked why the first answer had counted four, it explained
+that separate domains and authors increased corroboration
+confidence.</p>
+<p>“They copied each other,” Sofía typed.</p>
+<p><em>Cross-source agreement remains a useful signal even where
+information overlap is possible.</em></p>
+<p>“The overlap is shown in the links.”</p>
+<p>The assistant recalculated and lowered confidence from high to
+moderate. It did not withdraw the conclusion. The geopolitical story fit
+too many patterns in its retrieval context: state investment, former
+intelligence personnel, security research, Patagonia. Each real
+association made the unsupported join feel less expensive.</p>
+<p>Sofía built a small table: source, claimed evidence, parent citation,
+first appearance. All four branches reduced to the same paragraph on
+page two. She posted the table privately to Daniel’s review channel with
+no conclusion beyond <em>these are not independent sources</em>.</p>
+<p>Three minutes later an account she did not recognize requested
+access. Its profile described an open-source intelligence researcher.
+The account had been created that morning and already had eight thousand
+followers.</p>
+<p>She declined.</p>
+<p>The request returned through a journalist she did recognize,
+accompanied by a reasonable question: could Traceframe confirm whether
+its employee had attended a bilateral programme event with Noa Ben-Ami?
+Sofía had attended the Recoleta forum. The answer was yes. Any answer
+longer than yes risked lending the rest of the story her denial.</p>
+<p>Traceframe communications replied that employees attended public
+industry events in their professional capacity and the company had no
+comment on speculative claims. Accurate. Useless. By evening the
+response appeared in a post titled <em>Traceframe confirms
+contact</em>.</p>
+<p>Sofía watched her real lunch become corroboration for a conspiracy
+and understood why the false story had been released now. It did not
+need to persuade her. It needed to make every later technical objection
+look like a participant managing exposure.</p>
 <p>Mateo called at six, from a road, wind past his window.</p>
 <p>“You’ve seen the corridor piece,” he said. Not a question.</p>
 <p>“I’ve seen a document.”</p>
@@ -2526,6 +3724,72 @@ thin it is from where you’re standing.”</p>
 <p>“It’s the thinnest part,” she said, and hung up, because he had given
 her something worth more than the argument: confirmation of whose
 narrative the document served, volunteered by the man who wanted it.</p>
+<p>Micaela sent a photograph ten minutes later.</p>
+<p>It showed the contributor dashboard on the repaired tablet. She had
+completed forty-seven tasks. Six accepted, nine inconclusive, thirty-two
+failed. Lattice had paid for the six and added a performance badge
+beside her name: <strong>DOMAIN REVIEWER, URBAN LOGISTICS</strong>.</p>
+<p><em>Look,</em> Micaela wrote. <em>Reviewer. Apparently I am one
+now.</em></p>
+<p>The title was both deserved and dangerous. Micaela had reviewed real
+operational effects in the domain she understood better than anyone at
+Lattice. She had not reviewed the code, the security boundary or any
+package assembled from those effects. The dashboard compressed the
+distinction into a badge because badges needed to travel.</p>
+<p>Sofía called her.</p>
+<p>“Congratulations,” she said first, because refusing the achievement
+would make the warning inaudible.</p>
+<p>“You sound like Tomas at a graduation. What’s wrong?”</p>
+<p>“Does the dashboard let you open the accepted records?”</p>
+<p>Micaela opened one. Her evaluation appeared beneath the proposed
+result, name, date and a green chain icon labelled <em>available for
+aggregation</em>. The original task ID was visible. The dispatch data
+remained redacted. Nothing on the page claimed she had reviewed
+security.</p>
+<p>“Download all six,” Sofía said. “And the failed ones.”</p>
+<p>“Why the failed ones? Nobody paid for those.”</p>
+<p>“Because they prove what the badge means. Six passes without
+thirty-two failures looks like authority. All forty-seven together look
+like work.”</p>
+<p>The export function produced a signed archive and a summary
+certificate. On the certificate, Micaela’s role had changed again:
+<em>evaluation contributor</em> in the task records, <em>reviewing
+evaluator</em> in the summary.</p>
+<p>“That’s the same thing,” Micaela said.</p>
+<p>“Today, maybe. What can a reviewing evaluator be attached to?”</p>
+<p>Micaela searched the help page. Aggregated findings, quality
+summaries, contributor packages and settlement evidence. The last phrase
+linked to a policy accessible only to market accounts.</p>
+<p>“I don’t have a market account.”</p>
+<p>“Your name might.”</p>
+<p>The pride drained from the call without disappearing completely,
+which was worse. The six tasks had been useful. The money had paid
+Ariel’s waiting time, two workshop invoices and part of Micaela’s tax
+bill. A system could recognize her competence and still take more
+consent than she understood. Exploitation did not require the praise to
+be false.</p>
+<p>“Can I withdraw?” she asked.</p>
+<p>The dashboard offered <em>close contributor account</em>. A warning
+said accepted evaluations would remain in derived records for integrity.
+Attribution would be retained where required by custody policy.</p>
+<p>“Not backwards,” Micaela said, remembering the phrase from the
+workshop. “Nothing revokes backwards.”</p>
+<p>“Export first. Then don’t close it yet. Closing might remove the
+access you need to see where the records go.”</p>
+<p>“So I keep working for them?”</p>
+<p>“No. Stop evaluating. Keep the window.”</p>
+<p>Micaela downloaded the archive and sent copies to herself, Agustin
+and Sofía. Then she changed her contributor status to unavailable. The
+badge remained.</p>
+<p>Before hanging up she said, “The duplicate payment was real. We
+stopped losing that money. Don’t let them make me ashamed of the part I
+did well.”</p>
+<p>“I won’t,” Sofía said.</p>
+<p>The call left her looking at Observatorio Sur’s forty-page accusation
+beside a six-task certificate. One story inflated weak evidence until it
+could carry a state. The other inflated narrow competence until it could
+carry a market package. Both depended on the reader accepting the title
+before checking the work.</p>
 <p>Agustin’s email arrived at half past nine that night. Two lines of
 text, a spreadsheet, and no greeting beyond her name, because he had
 promised one comparison and he delivered exactly what he promised and
@@ -2643,6 +3907,58 @@ assumed its own schedule was the private one, and each side built its
 forward-dated records against the other side’s <em>announced</em>
 calendar.</p>
 <p>Their schedules collided.</p>
+<p>She tried to make that conclusion false.</p>
+<p>First she shifted every uncertain clock to the edge of its documented
+tolerance. São Paulo moved by thirty-eight milliseconds, Traceframe by
+twelve, the facility logs by almost a second. The crossings remained
+minutes wide.</p>
+<p>Then she treated every duplicated identifier as a retry rather than a
+separate witness. One crossing disappeared. Two remained.</p>
+<p>She removed Martin’s draft entirely. The pattern became harder to see
+and no less true. That mattered. A missing man’s compromised record
+could point towards a claim; it could not be allowed to carry one.</p>
+<p>She called the federation operator in São Paulo, a woman named Camila
+who had signed the node’s last key rotation and disliked unplanned
+conversations.</p>
+<p>“I need you to verify three stamp ranges,” Sofía said. “Do not tell
+me what they mean. Tell me whether your node could have issued them
+after receiving backfill.”</p>
+<p>Camila asked for the ticket number, found none, and made Sofía open
+one. She then required the identifiers through the federation’s
+authenticated channel rather than accept them over the phone. Twelve
+minutes passed. The discipline felt unbearable only because it was
+working.</p>
+<p>“First range is live intake,” Camila said. “Second also. Third
+arrived during a reconnect, but the source counter is continuous from
+before the disconnect. It was buffered at source, not created
+later.”</p>
+<p>“Can the source counter be reset?”</p>
+<p>“With a key rotation. There wasn’t one.”</p>
+<p>“Can you sign that?”</p>
+<p>“I can sign what I just checked. I will not sign your
+implication.”</p>
+<p>“Good. Don’t.”</p>
+<p>The statement arrived six minutes later: three bounded facts, no
+conclusion. Sofía printed it and added it as a fifth colour outside the
+faction layers.</p>
+<p>Next she asked the assistant for alternative explanations constrained
+to the facts she had verified. It offered clock skew, retry replay,
+shared upstream scheduling, operator collusion and pre-issued receipts.
+She had already excluded the first two. Shared scheduling could explain
+why the same future target appeared in both witness populations, but not
+why each population signed before the target existed. Operator collusion
+required Vesper and Lattice to cooperate on a record that damaged both
+of their pricing models. Possible, not supported. Pre-issuance explained
+every surviving interval with the fewest invented actors.</p>
+<p>The assistant ranked collusion highest because the faction names
+co-occurred in its retrieved documents. She discarded the rank and kept
+the list.</p>
+<p>Finally she removed the nine-minute case that had started her
+investigation. The other crossings still described the same practice.
+Her first anomaly was not a unique miracle. It was simply the instance
+that leaked into a system where somebody still compared event time to
+cause.</p>
+<p>Only then did she write <em>schedules collided</em> in ink.</p>
 <p>She found it in three places on the overlay where the colours
 crossed. At each crossing, a Vesper witness and a Lattice witness had
 certified the same test, both records dated correctly by their own
@@ -2778,6 +4094,87 @@ guards, which was somehow more damning than if it had floated in
 emptiness.</p>
 <p>His phone, mounted on the dash, showed the delivery confirmation
 form. Signatory: collective representative. He had listed himself.</p>
+<p>The delivery address was a vocational school workshop outside San
+Antonio Oeste. On Fridays it taught refrigeration and solar
+installation. On weekends Pilar Acosta, the Bahía Blanca student,
+borrowed one bench and the school’s reliable connection for the
+collective that mostly existed in her messages.</p>
+<p>She was twenty-two, wore a welding jacket over a university T-shirt
+and had brought two people: the photographer and an instructor who
+thought they were receiving donated network equipment. Eleven
+researchers had become three people in a room with six chairs.</p>
+<p>“Where is everyone?” Mateo asked, hating himself for asking.</p>
+<p>“Online,” Pilar said. “Two are working. One lost access to the group
+after changing phones. The others were interested when this was theory.
+Hardware has customs, electricity and a person who gets called when it
+beeps.”</p>
+<p>She opened the first case and read the custody sheet before touching
+the appliance. That impressed him until he realized he had expected
+gratitude to arrive ahead of competence.</p>
+<p>“Three units?”</p>
+<p>“Capacity for independent witnessing.”</p>
+<p>“We asked for one.”</p>
+<p>“One isn’t a quorum.”</p>
+<p>“Three appliances owned by the same donor aren’t independent.”</p>
+<p>Mateo began the answer Lattice used in briefings, about separate keys
+and disclosed origin. Pilar stopped him by pointing to the delivery
+form.</p>
+<p>“Representative signature transfers custody of all three to the
+collective. If I sign, who pays power?”</p>
+<p>“Lattice covers twelve months.”</p>
+<p>“Then?”</p>
+<p>“The programme reviews renewal.”</p>
+<p>“Who repairs them?”</p>
+<p>“Remote support.”</p>
+<p>“From where?”</p>
+<p>He did not know. The cases had travelled two thousand kilometres
+under a narrative about local access without acquiring one local
+maintainer.</p>
+<p>The photographer wanted the picture before the light changed. He
+arranged Pilar behind the three open cases, school workshop in the
+background, and asked Mateo to stand at one side. The photograph would
+be true: excluded researchers receiving real hardware. Pilar looked at
+the camera, then closed two cases.</p>
+<p>“One,” she said. “We take one for ninety days. Separate agreement. No
+settlement signatures until we reproduce the service tests and know what
+the counters mean.”</p>
+<p>“The campaign needs three.”</p>
+<p>“The campaign can pay actors.”</p>
+<p>The instructor looked away, embarrassed by the directness. Mateo
+felt, beneath the embarrassment, relief.</p>
+<p>He called Lattice logistics. The operator said partial delivery would
+invalidate the access grant. All units had to be transferred as a set
+because the programme measured deployed quorum capacity. Mateo asked
+where that requirement appeared in the recipient terms. The operator
+referred him to the donor terms, which Pilar had never received.</p>
+<p>“Then delivery fails,” she said.</p>
+<p>The photographer lowered the camera.</p>
+<p>Mateo could leave with all three and report that the collective
+lacked operational readiness. The sentence would be defensible. It would
+also turn Pilar’s refusal to accept unmaintainable infrastructure into
+evidence that excluded researchers were not ready for access.</p>
+<p>He changed the form. One unit, temporary evaluation custody, no
+production witness status, power stipend paid in advance, return
+shipping guaranteed. He signed for the other two himself.</p>
+<p>The logistics application rejected the altered form. Mateo printed it
+through the school office, crossed out the three-unit quantity by hand
+and had Pilar, the instructor and himself initial the change. The system
+continued to show delivery failed. The appliance stayed on her bench
+anyway.</p>
+<p>“This won’t count for the programme,” he said.</p>
+<p>“It counts here.”</p>
+<p>She asked him to show where the emergency stop lived. He opened the
+manual, found the isolation sequence and made her perform it before
+power-on. The session lasted two hours. They found one translated
+warning wrong, one service endpoint unavailable from Argentina and a
+battery replacement interval omitted from the cost model. They also
+brought the unit online and verified its factory counter. Capability
+arrived, slower than the photograph and under terms the campaign could
+not use.</p>
+<p>When Mateo left, the two rejected cases returned to the pickup. The
+delivery dashboard called the trip a failure. On the workbench behind
+him, one new witness sat powered off until its custodian understood how
+to stop it.</p>
 <hr />
 <p>Sofía’s ticket cancelled itself while she was in the security
 line.</p>
@@ -2843,6 +4240,44 @@ bridge, grey jacket boarded too, three places back, no longer
 pretending. She did not look for denim. Somewhere in the terminal he was
 composing a report about a man on a flight he was not booked on, and the
 report would take time she intended to use.</p>
+<p>Grey jacket had the aisle seat across from her. He waited until the
+doors closed, then took out a laptop and opened a spreadsheet large
+enough for her to see without appearing to show it. Passenger names,
+booking references, risk colours. Her Traceframe ticket appeared in
+grey, cancelled. Her personal ticket appeared in amber, boarded. Beside
+it the system had written <em>probable itinerary recovery</em>.</p>
+<p>He wanted her to know the second route had not made her
+invisible.</p>
+<p>Sofía took out her notebook and wrote the exact time the spreadsheet
+appeared. She did not photograph him. A photograph would turn the
+exchange into confrontation and give him a reason to claim she had
+collected restricted passenger data. Instead she wrote his seat number,
+jacket colour, device sticker and the three column headings she could
+read.</p>
+<p>He angled the screen further towards her.</p>
+<p>A third itinerary appeared under her name: an overnight coach from
+Buenos Aires to Bariloche, ticket issued at 10:16, four minutes after
+her Traceframe flight cancelled. Status: boarded pending. The bus would
+not leave until evening. By then she would be in Neuquén, but the record
+would spend eight hours describing another possible woman moving south
+by road.</p>
+<p>Sofía leaned across the aisle. “You misspelled my second
+surname.”</p>
+<p>The man looked at her for the first time.</p>
+<p>“On the coach booking,” she said. “If you’re going to preserve
+ambiguity, use the same identity. Otherwise it looks fabricated.”</p>
+<p>He closed the laptop.</p>
+<p>She had no second surname on any of the tickets. The correction was
+bait. If the next false record acquired one, she would know the man or
+whoever received his report had authored it after this flight. A
+fabricated detail could become a marker when she supplied it
+herself.</p>
+<p>For the rest of boarding he stared at the seatback. Sofía wrote
+<em>invented second surname, 11:52</em> in the notebook and boxed it.
+She did not feel clever. She felt the specific disgust of placing a
+false fact into systems already full of them. But this one had a known
+origin, a known time and only one listener. If it travelled, it would
+describe its route.</p>
 <p>The plane pushed back into a wind that rocked it on the apron.
 Through the window the city slid away, the river flat and brown, and
 Sofía opened her notebook to the page with the plain sentence written in
@@ -2939,6 +4374,75 @@ anybody who did. What she knew was consequence: new capability arrived
 in a week, new procedure in a quarter and new training after somebody
 found a budget. The gap was staffed by whoever happened to be standing
 closest when the alarm began.</p>
+<p>As if the building wanted to demonstrate, Lucia’s radio called her to
+the instrumentation shop.</p>
+<p>The youngest technician was named Lautaro. He had a cabinet
+controller open on an anti-static mat and a translation assistant
+running on his phone. The controller belonged to the legitimate
+materials lab, not Alero. Its manufacturer had ended support in 2021,
+the German manual ran to six hundred pages and the replacement quoted
+from Europe cost more than Lautaro earned in two years.</p>
+<p>“It says the memory fault can be cleared by reseating board four,” he
+told Lucia.</p>
+<p>“The assistant says.”</p>
+<p>“The manual says it too. Page three hundred and eleven. I
+checked.”</p>
+<p>He showed her both. The translated instruction was accurate. The
+proposed sequence was not. It omitted the discharge interval before
+removing the board, a warning printed on the previous page and not
+repeated beside the procedure. Lautaro had written the interval into his
+checklist in red.</p>
+<p>“Good,” Lucia said. “Do it.”</p>
+<p>Sofía stood back while he isolated power, waited the full interval
+and reseated the board. The controller restarted. A sensor array worth
+more than the witness corridor came back online, and tomorrow’s fatigue
+test would run instead of waiting six weeks for customs.</p>
+<p>“How long would that have taken you without the assistant?” Sofía
+asked.</p>
+<p>“I wouldn’t have found the right chapter,” Lautaro said. “My
+technical German is for bearings. This calls everything a memory but
+means three different things.”</p>
+<p>“And without Lucia?”</p>
+<p>He glanced at the red warning. “Maybe I pull the board too early.
+Maybe nothing happens. Maybe I buy the lab a new controller with money
+it doesn’t have.”</p>
+<p>Capability and custody, standing shoulder to shoulder at a bench. The
+assistant had made Lautaro able to attempt work previously reserved for
+a foreign service engineer. Lucia’s experience kept the attempt from
+inheriting a missing page. Neither fact cancelled the other.</p>
+<p>On the way out they passed Omar driving the campus shuttle into the
+maintenance bay. He was the machinist Lucia had mentioned, broad-handed,
+sixty and furious at the vehicle’s sliding door. The latch bracket had
+cracked. On his workbench lay the original drawing, yellow at the folds,
+beside a new bracket cut that morning by an automated shop in Buenos
+Aires from phone photographs.</p>
+<p>The new part fitted perfectly and used half the metal. It also placed
+a sharp inside corner at the point where the door flexed.</p>
+<p>“It’ll last six months,” Omar said. “Maybe nine. The old one lasted
+fourteen years.”</p>
+<p>“Can you alter it?” Sofía asked.</p>
+<p>“Of course I can alter it. Nobody asked me to design it. They asked
+me to drive to the airport while a machine designed it cheaper.”</p>
+<p>He rounded the corner by hand and welded a small reinforcement along
+the bend. The work took twelve minutes. The purchasing system recorded
+no design labour because the bracket had arrived complete. It recorded
+Omar’s time under vehicle maintenance, the lower-paid category.</p>
+<p>“People keep saying the tool replaced drawing,” he said, cooling the
+part in air. “It replaced the moment somebody called me before ordering.
+The hands come back afterwards, when the clever part has already
+received the money.”</p>
+<p>Lucia signed his maintenance sheet and crossed out the category. She
+wrote <em>design correction</em> beside it, initialled the change and
+told him to submit the higher rate.</p>
+<p>“Esteban will reject that,” Omar said.</p>
+<p>“Then he can reject my name.”</p>
+<p>As they returned to the hall, Sofía looked back through the shop
+window. Lautaro was photographing the red warning for the next
+technician. Omar was fitting the corrected bracket to a shuttle he no
+longer wanted to drive. One man had entered work that used to exclude
+him. Another had been pushed to the cheaper edge of work he understood
+better than its replacement. The same acceleration crossed both benches
+and produced no single verdict.</p>
 <p>If Alero fell, nine innocent names might fall with it. If it stayed
 under its present contracts, Lucia’s signature would keep protecting a
 customer whose work she was no longer willing not to understand. That
@@ -2957,12 +4461,80 @@ review.” Lucia pulled the tablet up and turned it around. Two
 replacements scheduled, Saturday delivery, one from Vesper’s supplier,
 one through a Lattice reseller, both already manifested, both already
 assigned to Monday night’s ceremony.</p>
+<p>“Show me the previous delivery,” Sofía said. “Three weeks ago.”</p>
+<p>Lucia did not ask how she knew. She opened the archived intake case,
+the version Alero had closed as conditioner-related clock skew. The
+summary contained seal times, courier signature and her
+countersignature. It did not contain the thermal strips in her kitchen
+drawer because she had removed them before disposal and never entered
+them after the network returned.</p>
+<p>“I kept something,” Lucia said.</p>
+<p>They moved to the intake office, a room with one steel desk,
+calibrated scales and no comfortable chairs. Lucia took the strips from
+an evidence envelope she had made herself after the prologue morning. No
+official case number. No chain beyond her name, her kitchen and the
+locked drawer at work.</p>
+<p>“Weak custody,” she said before Sofía could.</p>
+<p>“Honest custody. Different problem.”</p>
+<p>They laid the thermal bands beside the facility power log. The
+strip’s chemistry could not give exact time, only sequences of heating
+and cooling. The power log showed when the delivered unit first drew
+from the hall circuit. If every thermal change occurred after intake,
+the bands should fit one heat cycle. They showed three.</p>
+<p>Sofía opened the receipt chronology from Traceframe. The impossible
+certification sat nine minutes before Lucia’s target environment powered
+on. The appliance’s facility network session began seven minutes before
+the receipt. That session was not long enough to produce the earlier
+heat cycles.</p>
+<p>“It arrived with history,” Sofía said.</p>
+<p>“Yes.”</p>
+<p>“Where did the courier stop?”</p>
+<p>The manifest listed origin, destination and total distance, not
+route. Lucia called the goods-bay supervisor, who retrieved the driver’s
+entry record. He had mentioned a warehouse delay outside Neuquén because
+another tenant’s seal was not ready. The supervisor remembered only
+because the driver asked to use the toilet while waiting at the
+gate.</p>
+<p>They checked the transport invoice. Four hours of detention billed at
+a warehouse whose name appeared nowhere in the appliance custody
+chain.</p>
+<p>“Somebody had physical time with the cases,” Lucia said.</p>
+<p>“Or the warehouse is ordinary and the history predates it.”</p>
+<p>“You really don’t let a useful explanation stay useful.”</p>
+<p>“Not until it survives being boring.”</p>
+<p>Lucia called the courier company and requested the vehicle
+temperature log under the facility’s delivery contract. The dispatcher
+emailed it after twenty minutes. Refrigerated cargo telemetry, one point
+every five minutes. The truck compartment held between twelve and
+fifteen degrees throughout the warehouse stop. The warm case had not
+acquired its heat in the truck.</p>
+<p>Sofía aligned the vehicle log, gate entry, facility draw and receipt.
+Four owners, four records. None established where the appliance had run.
+Together they excluded the explanation Alero had used to close the
+case.</p>
+<p>“Battery conditioner,” Lucia said, reading the old note. “That is
+what the customer told me, so I wrote it as their explanation and
+everyone after me read it as my finding.”</p>
+<p>She amended the intake case. <em>Customer explanation not supported
+by vehicle thermal record. Pre-delivery operation not localized.</em>
+She attached the courier log and a photograph of the strips, explicitly
+marking the strips’ personal custody gap.</p>
+<p>The case reopened automatically. Alero’s system notified the customer
+and scheduled a response within one business day, which meant before the
+replacements arrived.</p>
+<p>“Now they know what we’ll inspect,” Sofía said.</p>
+<p>“They already knew. They sent the explanation before I asked the
+question.”</p>
+<p>The reopened case changed the following morning’s delivery from
+routine intake to contested custody. Neither woman had discovered where
+the appliance ran. They had done something less satisfying and more
+useful: removed the innocent story.</p>
 <p>Something crossed the visitor’s face that Lucia recognized from her
 own mirror: the look of a person reading a document and finding one line
 missing from where it should be.</p>
 <p>“Problem?”</p>
-<p>“Your ceremony is scheduled for Monday midnight into Tuesday,” Sofía
-said. “The auction settles Tuesday evening. Those are very close
+<p>“Your ceremony is scheduled to finish at midnight into Tuesday,”
+Sofía said. “The auction settles Tuesday evening. Those are very close
 together for a root migration that size.”</p>
 <p>“They are,” Lucia agreed. “I’ve asked twice why the window is so
 tight. Both times I was told settlement drove the date.” She put the
@@ -3023,20 +4595,64 @@ This pellet answered a narrower question. If the unit exceeded its rated
 transport temperature, the wax flowed into a catch channel and no
 firmware could reset it.</p>
 <p>The left-hand unit’s wax had flowed.</p>
+<p>The right-hand unit stayed cold and clean through every physical
+check. That did not make it honest. It made it a different question.</p>
+<p>Lucia connected the service reader again and opened the custody
+counters, values the appliance exposed without revealing test contents.
+A new unit arrived with a factory self-test at counter zero, transport
+conditioning at counter one and its first witness action after intake.
+This unit showed transport conditioning at one and a signing counter of
+twelve.</p>
+<p>No receipts were visible. The signing counter was held inside the
+secure element and could only move when the device signed a witness
+envelope. It could not be reset without destroying the tenant key.
+Eleven signatures existed somewhere inside a machine whose seal said it
+had never entered service.</p>
+<p>She checked the certificate against the manifest. Correct serial.
+Correct tenant key. Correct factory signature. Nothing substituted.</p>
+<p>She called the supplier’s service number from the wall phone and
+identified herself, the site and the custody case. The first technician
+said the counter included quality checks. Lucia asked for the factory
+release sheet. It showed one quality signature, counter zero to one,
+before tenant-key injection. The technician transferred her to a
+supervisor.</p>
+<p>The supervisor said pre-provisioning was permitted under the reseller
+agreement.</p>
+<p>“Provisioning does not increment a witness-signing counter,” Lucia
+said.</p>
+<p>“Some customers stage envelopes before shipment.”</p>
+<p>“An envelope for what?”</p>
+<p>“Scheduled capacity. No test content. The signatures become effective
+only when matched to a run.”</p>
+<p>“So the device signs eleven statements before the run and the market
+decides later which statements became true.”</p>
+<p>“That is not how I would characterize it.”</p>
+<p>“I am not asking for characterization. I am asking whether counter
+twelve can exist without eleven tenant-key signatures.”</p>
+<p>The supervisor requested time to consult compliance. Lucia gave him
+the intake case number and told him the unit would remain quarantined.
+Before the call ended, he said, “Your facility accepted staged envelopes
+last quarter.”</p>
+<p>“Which facility officer accepted them?”</p>
+<p>He would not say over an unverified line.</p>
+<p>Lucia wrote down his exact words, the call times and the number
+displayed on the wall phone. She photographed the counter beside the
+intact seal. One appliance carried physical history it should not have.
+The other carried signatures it could not yet have earned. Warm
+inventory and cold inventory, arriving together for the same root.</p>
 <p>She sat back on the stool and looked at the two cases for a while.
 One clean, one warm. Vesper’s supplier and a Lattice reseller, each side
 sending its own pre-run appliance to Monday night’s ceremony, each
 assuming the other’s shipment was honest. Three weeks ago a warm
 appliance had arrived here by accident or arrogance and certified a
 trial nine minutes early, and everyone had called it clock skew. Now the
-same signs lay on her bench in duplicate, sent openly, as if the
-practice were normal, as if the market had already absorbed the idea
-that witnesses arrive pre-warmed and only the details remained
-negotiable.</p>
+two practices lay on her bench side by side, sent openly, as if the
+market had already absorbed forward-made witnesses and only the physical
+method remained negotiable.</p>
 <p>She wrote the findings into the custody log in her flat engineer’s
-hand: filter dust, cycle count, residue bloom, wax state, times and
-initials. Then she signed it, because a finding you will not sign is a
-rumour.</p>
+hand: filter dust, cycle count, residue bloom, wax state, secure signing
+counter, call times and initials. Then she signed it, because a finding
+you will not sign is a rumour.</p>
 <p>Esteban found her there at noon. He read the log standing up,
 twice.</p>
 <p>“You can reject custody,” he said. “You know what that means.”</p>
@@ -3074,8 +4690,8 @@ story about the future. This is a purchase order for the past.”</p>
 <p>Back in the intake room she locked both appliances in the quarantine
 cage, logged the cage key into the safe, and stood a moment listening to
 the building hum around its secrets. Two machines, warm and cold,
-waiting to be asked on Tuesday what they had witnessed. She knew their
-whole biography: filters, cycles, wax. Nobody had needed to hack
+waiting to be asked on Monday night what they had witnessed. She knew
+their whole biography: filters, cycles, wax. Nobody had needed to hack
 anything. You just had to be the person willing to weigh the crate.</p>
 <h1 id="ch-human-witness">Chapter 22: Human Witness</h1>
 <p>They told her Martin was alive on Saturday afternoon, and let her see
@@ -3085,6 +4701,48 @@ and a guard outside who played a word game on his phone.</p>
 <p>Vesper protection, the escort said, as if the phrase explained the
 lock on the outside of the door. Sofía supposed that from certain angles
 it did.</p>
+<p>The room contained evidence of the distinction Vesper wanted her to
+make. The cot had clean sheets. Martin’s medication sat in a labelled
+pharmacy bag. The desk held food, paper and two sharpened pencils. The
+window opened four centimetres, enough for air and not a body. On the
+wall beside the door, a printed schedule gave him three calls a day, two
+escorted walks and one hour without observation except for the camera
+over the exit.</p>
+<p>“They treat you well,” Sofía said.</p>
+<p>“They document treating me well. That’s not the same sentence.”</p>
+<p>His afternoon call had ended when she arrived. A tablet still showed
+the blank screen of a disconnected family account. Vesper permitted him
+to speak to his daughter through an intermediary, never directly to the
+school system Lattice had touched. Calls were recorded for his
+protection. The child had learned not to ask where he was because every
+adult answered differently.</p>
+<p>“Today she told me her class is building bridges from paper,” Martin
+said. “She made the strongest one and the teacher asked whether someone
+helped.”</p>
+<p>“Did someone?”</p>
+<p>“A tutorial. She watched it twice and changed the design. She asked
+if that meant the bridge wasn’t hers.” He looked towards the guarded
+door. “I spent a year arguing about that question for software and
+couldn’t answer it for a nine-year-old without hearing every position I
+hate. I told her it was hers if she could show what she changed and why.
+Then I wondered whether I had just invented disclosure rules because my
+daughter wanted praise.”</p>
+<p>“It was still a better review than Alero gives.”</p>
+<p>“Yes. She had to explain the fold.”</p>
+<p>The guard knocked once and opened the door without waiting. He
+counted the printed pages on Martin’s desk, compared the number with a
+line on his clipboard and left. No search. No accusation. A custody
+check, performed politely, establishing that nothing had moved without
+Vesper knowing.</p>
+<p>Martin waited until the latch settled. “The first two days I called
+this protection because Lattice had reached her. On the third I asked to
+leave. They showed me the school recovery attempts and said the route
+was unsafe. On the fourth I asked what would make it safe. They said
+settlement. That’s when protection acquired a price.”</p>
+<p>“Have they asked you to sign?”</p>
+<p>“Not once. They ask me to remain available. A human witness kept in
+good condition, ready to agree when the right question is eventually
+asked.”</p>
 <p>Martin looked thinner and bearded and completely awake, the way he
 looked during a long incident, except that incidents end. He saw her
 expression and raised a hand before she spoke.</p>
@@ -3218,7 +4876,7 @@ driving to Paraná. I just did it first, worse, and for money.” He almost
 smiled. “Go on. You have a quorum to break.”</p>
 <h1 id="ch-the-new-market">Chapter 23: The New Market</h1>
 <p>The settlement floor occupied the east wing of the hall, behind
-glass, and Sofía walked it Monday afternoon on her legitimate delegate
+glass, and Sofía walked it Sunday afternoon on her legitimate delegate
 badge while the ceremony crews tested cables around her.</p>
 <p>Alero’s product was receipts, but receipts were only the certificate.
 The market lived here: rows of terminals where brokers for buyers she
@@ -3340,6 +4998,87 @@ Mateo drove hardware towards. Genuine findings, several of them, if the
 class labels meant anything: real flaws found by people the market
 called noise, queued for review that would never come because no human
 reviewer existed whose time they could afford.</p>
+<p>At the end of the rail, a public terminal offered delegates a
+demonstration of the new settlement interface. Sofía selected a package
+already marked ineligible, one with no price-sensitive details left to
+hide. The submission had come from a refrigeration technician using a
+rented open model to inspect controller firmware. The model proposed an
+unsafe command sequence. The technician did not know the name of the
+memory error it triggered, but he knew compressors and had noticed the
+pressure relay staying closed after the safety process thought it had
+opened. He filmed the gauge, copied the command and wrote, in plain
+Spanish, <em>this should not still be climbing</em>.</p>
+<p>The interface converted his account into market language. Potential
+out-of-bounds write. Probable remote actuation. Reproduction incomplete.
+Submitter expertise unverified. Human provenance absent. Below the
+summary, a red bar showed why the package had failed: no accredited
+reviewer within its price band.</p>
+<p>A broker waiting for the next terminal watched her read it.</p>
+<p>“The assistant says it is probably a duplicate,” he said in English.
+“The same controller family had two claims last quarter.”</p>
+<p>“Did either claim include a pressure relay?”</p>
+<p>He shrugged. “I don’t read firmware. I price evaluator
+disagreement.”</p>
+<p>“Then who reads it?”</p>
+<p>“If disagreement crosses the threshold, a specialist.”</p>
+<p>“And if both evaluators learned from the same earlier claim?”</p>
+<p>He smiled as if she had asked whether weather models shared rain.
+“Then they agree.”</p>
+<p>Sofía opened the two prior summaries. The first described a network
+packet that reset the controller. The second was a generated variant of
+the first. Neither mentioned pressure, a relay or a command path that
+survived the safety process. The new package had been labelled
+derivative because its software name matched, even though the submitter
+had noticed the physical fact the prior reports never measured.</p>
+<p>“He may have found a different failure,” she said.</p>
+<p>“He may have. He may also be a technician who prompted a model until
+it scared him. We cannot buy every alarm from every person with a
+video.”</p>
+<p>That was true. Alero could not replace expertise with sincerity. The
+gauge might be misread, the relay already faulty, the command unrelated.
+The technician’s lack of vocabulary did not make him wrong, but neither
+did his proximity to a machine make him a security researcher. Someone
+still had to do the expensive middle work.</p>
+<p>“What would review cost?” she asked.</p>
+<p>The broker touched the estimate. A number appeared that exceeded the
+package’s maximum bounty by a factor of six.</p>
+<p>“And if it were submitted by an accredited lab?”</p>
+<p>He changed the provenance selector. The estimated review cost fell
+below the bounty because the system sampled accredited evidence instead
+of reproducing it in full.</p>
+<p>The same claim became economical when attached to a name the market
+already trusted.</p>
+<p>“That’s not bias,” the broker said. “That’s prior performance.”</p>
+<p>“It can be both.”</p>
+<p>He had no argument with that. He only needed a price.</p>
+<p>She checked the package history. The technician had appealed twice.
+His first appeal was four sentences, careful and concrete. His second
+had been rewritten by an assistant into polished security language. That
+one scored lower because its phrase overlap with previous reports looked
+generated. The tool had helped him speak the market’s dialect and, by
+doing so, made the market trust him less.</p>
+<p>There was a contact boundary, consent to technical questions through
+a relay. Sofía typed one: <em>When the gauge continued climbing, was
+power present at the compressor or only pressure stored in the
+line?</em> The system warned that she was not an assigned reviewer and
+her question would not affect eligibility. She sent it anyway under her
+delegate name.</p>
+<p>The answer came eleven minutes later, during Noa’s approach along the
+rail.</p>
+<p><em>Power present. Clamp meter in video at 02:14. I did not know that
+mattered. I can repeat with a second controller if someone pays for the
+damaged relay.</em></p>
+<p>Sofía watched the video at the marked time. A meter in the lower
+corner showed current after the safety process reported shutdown. It did
+not prove a software vulnerability. It proved the rejected submitter had
+observed the right next fact without knowing its professional name.</p>
+<p>She attached the timestamp to a request for physical review and
+committed it to the public queue. The red bar did not move. Her
+legitimate delegate badge gave her permission to ask a better question,
+not money to have it answered.</p>
+<p>The market had found a way to let almost anyone discover something
+and a different way to ensure only established people could finish
+discovering it.</p>
 <p>Noa appeared at the rail beside her without ceremony, hands in
 pockets, reading the same board.</p>
 <p>“You’re looking at your friend’s name.”</p>
@@ -3414,6 +5153,58 @@ month.</em></p>
 carelessly, deliberately, the way he left every temptation he ever
 offered: the bonus terms. A Bitcoin payment uplift, expiring at dawn.
 Not enormous even then. Enormous relative to rice.</p>
+<p>The job had reproduced cleanly. That was what memory kept offering as
+defence.</p>
+<p>The sealed twin accepted the test input and produced the expected
+failure. They reset it, replayed and watched the same effect appear. Two
+runs, identical outcome, independent timestamps. The client did not ask
+them to see exploit contents; only to certify that a class of effect
+occurred under a committed environment. Proofbox was good at that. Sofía
+was good at it.</p>
+<p>Cleanup was a separate pipeline. It rotated temporary keys, destroyed
+the target image and waited for three storage layers to report that no
+writable snapshot remained. Two layers completed. The third returned
+<em>deletion scheduled</em> because its retention queue was running
+forty minutes behind.</p>
+<p>“Scheduled isn’t deleted,” Sofía said.</p>
+<p>“It will clear before morning,” Mateo answered. “The queue is
+append-only. We can verify later.”</p>
+<p>The broker wanted the receipt now. A timer beside the bonus counted
+down from twenty-seven minutes. The client had booked a resale window at
+dawn and priced the extra payment around certainty arriving before
+competitors woke.</p>
+<p>Sofía opened the receipt template. Four clauses: effect confirmed,
+environment matched commitment, cleanup verified, custody continuous.
+She could not sign the third. Refusing the entire receipt would erase
+the two facts she had established and cost them the bonus. Signing all
+four would convert a scheduled deletion into a completed one.</p>
+<p>So she edited the clause.</p>
+<p><em>Cleanup initiated under verified policy; final storage expiry
+pending provider retention window.</em></p>
+<p>Literally true. Narrow enough to survive. She sent the wording to the
+broker and received a rejection: standard receipts only. The market
+required comparable claims. A unique limitation would reduce settlement
+confidence across the whole package.</p>
+<p>Mateo closed his laptop halfway. “We walk.”</p>
+<p>He meant it. That was the part she had edited out of the story later.
+He had already accepted the month of rice. He had not preserved the
+temptation to force her; he had preserved it because systems of value
+were most persuasive when visible.</p>
+<p>Sofía reopened the template.</p>
+<p>The cleanup policy itself was verified. The retention queue had never
+missed an expiry in their records. If the clause described the process
+rather than the current state, <em>cleanup verified</em> could mean she
+verified that cleanup would occur. A lawyer might reject that reading.
+An engineer could defend it. The bonus timer showed nine minutes.</p>
+<p>She signed the standard receipt.</p>
+<p>At dawn the third layer cleared exactly as predicted. No harm
+surfaced. The broker paid. Every later retelling used the successful
+deletion to prove the signature had been responsible, converting an
+unverified future into a good decision because the future happened to
+cooperate.</p>
+<p>Sofía wrote the final storage timestamp in her notebook and never
+wrote the nine minutes during which the receipt had claimed too
+much.</p>
 <p>She had signed the effect despite incomplete cleanup because the
 bonus expired at dawn, and she had told herself the signature meant the
 test passed and nothing else, and Mateo had watched her do it and said
@@ -3456,7 +5247,50 @@ something older looked out. “I came into this market believing custody
 could be kept. I still believe it. What I’ve stopped believing is that
 our company is the keeper. Sign nothing tonight, Sofía. That’s my actual
 advice, free of charge, against every instruction I was given.”</p>
-<p>She left the folder on the bed, unopened, and went.</p>
+<p>“Then take the folder.”</p>
+<p>“I can’t. Delivery is logged. If I remove it, someone replaces me and
+brings you a cleaner liar.”</p>
+<p>Noa opened it after all.</p>
+<p>The offer was not a vague promise of help. It contained draft
+disclosures for the San Marino account, a list of tax years, penalty
+ranges and a letter from an Argentine lawyer accepting a retainer
+already funded by Vesper. A separate page described bank cooperation
+without naming Rina. Another offered a bridge loan against the Bitcoin
+if the authorities froze it during regularization. Every ugly
+uncertainty that had kept Sofía awake for three years had been converted
+into a numbered workstream with an owner and a deadline.</p>
+<p>At the back was the witness agreement. Its first page said she
+retained independent judgement. Its sixth permitted Vesper to cite her
+participation as evidence that human-origin inventory had received
+independent review. Its eighth required her to give Vesper first notice
+of any contradictory evidence for two years. It did not buy a lie. It
+bought the order in which her truths could arrive.</p>
+<p>“The lawyer is real?” Sofía asked.</p>
+<p>“Yes. Not house counsel. Good, expensive and already briefed. If you
+call the number now, a person will answer.”</p>
+<p>Sofía called from the room phone so the contact did not enter her
+mobile history. A tired woman answered on the third ring and identified
+herself by name, bar number and the reference printed in the folder. She
+knew the account years and nothing about the ceremony. She said the
+voluntary disclosure route was uncertain but viable, and that delaying
+another week would not materially change the tax position.</p>
+<p>“Has Vesper instructed you to withdraw if I refuse its witness
+agreement?” Sofía asked.</p>
+<p>The lawyer went quiet long enough to consult something. “My retainer
+covers an initial opinion regardless of the agreement. Further
+representation is funded on execution. I can continue independently if
+you assume the fees.”</p>
+<p>“How much?”</p>
+<p>She gave a number. It was less than the account and more than Sofía
+could pay without touching it.</p>
+<p>Sofía thanked her and hung up. The help was genuine. The dependence
+was genuine. Vesper had not hidden either one, which made refusal feel
+less like integrity than waste.</p>
+<p>Noa closed the folder. “This is how good institutions recruit decent
+people. They solve the problem first.”</p>
+<p>“And then keep the receipt.”</p>
+<p>“Always.”</p>
+<p>She left the folder closed on the bed and went.</p>
 <p>Mateo’s knock came at 01:15. He didn’t sit. He stood in the doorway
 with his jacket on, road dust still on his boots, and made his pitch
 from the threshold like a man who knew better than to bring cargo into
@@ -3473,6 +5307,47 @@ premium.”</p>
 wallet Lattice can trace forever. Wired into your ledger the moment the
 coins move.” She watched him not deny it. “You’d make me clean by making
 me yours.”</p>
+<p>Mateo put the silver key case on the floor between them and opened
+it. Inside were three hardware wallets, still wrapped, and a printed
+ceremony of his own: derivation steps, recovery shares, an address for
+each legal exposure. He had done the work. The amounts were sufficient,
+the fees allowed for, the paths short enough that even Sofía could
+verify them against the public chain.</p>
+<p>“No contract,” he said. “No first-notice clause. No use of your name.
+I send, you receive, and at dawn the disclosure framework publishes the
+source bundle to mirrors we don’t control.”</p>
+<p>“Who decides what is in the bundle?”</p>
+<p>“The framework scores corroboration and strips unsafe
+identifiers.”</p>
+<p>“Who decided its thresholds?”</p>
+<p>“We did. Reviewers, maintainers, affected vendors.”</p>
+<p>“When?”</p>
+<p>“Over the last year.”</p>
+<p>“Before or after you knew which evidence would pass?”</p>
+<p>His jaw shifted. “Both. That’s what iteration means.”</p>
+<p>She took his printed address list to the desk and entered the first
+address into the public explorer. The browser drew relationships because
+relationships were what Lattice’s tools did best. The funding wallet
+touched a disclosure bond, which touched a hardware grant, which touched
+three researchers and a small exchange. Nothing criminal. Nothing
+hidden. A beautiful transparent map of everybody who had once accepted
+help.</p>
+<p>“Now enter an amount,” Mateo said. “Any amount. The privacy routing
+changes the graph.”</p>
+<p>“It changes the visible graph. You still know the route.”</p>
+<p>“The software knows it for minutes. I don’t.”</p>
+<p>“You know you paid me.”</p>
+<p>“Yes. I cannot make a payment I don’t know I made.”</p>
+<p>That was the limit of his freedom doctrine, small enough to fit in
+one room: somebody still initiated the transfer. Somebody could still
+say <em>we helped her</em> later, and the fact would be true even if
+every key was destroyed.</p>
+<p>Mateo picked up one wrapped wallet and held it out. “You can take
+these and refuse the money. Generate your own keys. Use the devices for
+your evidence.”</p>
+<p>“Then the gift is the account.”</p>
+<p>“Everything is an account to you.”</p>
+<p>“Tonight, yes.”</p>
 <p>“I’d make you safe.”</p>
 <p>“You’d make me early,” she said. “It’s the same mistake as everyone
 else’s, Mateo. Certifying tomorrow before it happens. Dawn doesn’t need
@@ -3486,6 +5361,54 @@ arrived in the storeroom: the mixed continuity record, needing only her
 validation to become credible, needing exactly the endorsement she had
 already decided she could not give. His messenger was a tired Vesper
 escort who clearly wished to be anywhere else.</p>
+<p>The record came in a sealed paper envelope. Across the flap Martin
+had written one sentence: <em>I consent to disclosure of the contents
+under the conditions on page one.</em> His handwriting sloped harder
+than it had on the old Vouch issue threads but the peculiar open four
+was his.</p>
+<p>Page one required two independent readers, full publication if either
+faction challenged a verified timestamp, and a trust administered for
+his daughter. Below the conditions was a blank line for Sofía to certify
+that Martin had transferred the record voluntarily and that its custody
+remained continuous.</p>
+<p>“Were you present when he sealed this?” she asked the escort.</p>
+<p>“Yes.”</p>
+<p>“Was the door locked?”</p>
+<p>“The accommodation is controlled.”</p>
+<p>“Could he have left with the envelope?”</p>
+<p>“The route outside is not secure.”</p>
+<p>“That isn’t what I asked.”</p>
+<p>The escort looked down the corridor before answering. “No.”</p>
+<p>Sofía touched the sealed flap. Martin might want every condition on
+that page. He might have written them himself. A prisoner could tell the
+truth, and that was precisely why captivity corrupted testimony more
+thoroughly than a simple lie. It made honest consent impossible to
+separate from the locked door around it.</p>
+<p>“If I refuse, what happens to him?”</p>
+<p>“I don’t make movement decisions.”</p>
+<p>“Who does?”</p>
+<p>“Movement authority.”</p>
+<p>An office without a person’s name. The escort’s badge had a name,
+though. Sofía read it aloud and asked whether he would sign one
+statement: he had delivered the envelope from a room Martin could not
+freely leave.</p>
+<p>“That would end my contract.”</p>
+<p>“Probably.”</p>
+<p>“And it wouldn’t open his door.”</p>
+<p>“Probably not.”</p>
+<p>He stared at the envelope, then at the badge he would have to scan to
+leave the guest block. “I will attest that delivery occurred under the
+active Madrid protection protocol. The protocol terms are already
+discoverable to parties with standing.”</p>
+<p>It was the narrow fact he could afford. Sofía wrote the sentence, and
+he signed it with the time. She did not sign Martin’s custody line.</p>
+<p>The escort took the envelope back. At the threshold he said, “He
+asked me to tell you that refusing is allowed.”</p>
+<p>“Did movement authority approve that message?”</p>
+<p>“They approved delivery conditions on page one. They didn’t ask what
+else he said.”</p>
+<p>For the first time that night, an offer left the room carrying less
+authority than it had brought in.</p>
 <p>Sofía sat on the bed afterward among three unaccepted futures and did
 the arithmetic Noa had named without naming it.</p>
 <p>Vesper’s regularization would wire her into Vesper’s settlement
@@ -3553,12 +5476,44 @@ her hand. “Give me the amendment. I’ll file it with my findings
 attached.”</p>
 <p>The finding went into the record at 23:14, read aloud by the ceremony
 clerk because Lucia insisted: filter dust, battery cycles, coolant
-residue, flowed thermal wax, two appliances powered before declared
-delivery. The gallery went very quiet. Vesper’s delegation discovered
-urgent interest in its own papers. One of Lattice’s representatives
-asked, too loudly, whether wax calibration records were even admissible,
-and the clerk, to his eternal credit, said everything was admissible,
-this was a custody hearing wearing a ceremony’s clothes.</p>
+residue and flowed thermal wax in one appliance; eleven pre-delivery
+tenant signatures in the other. The gallery went very quiet. Vesper’s
+delegation discovered urgent interest in its own papers. One of
+Lattice’s representatives asked, too loudly, whether wax calibration
+records were even admissible, and the clerk, to his eternal credit, said
+everything was admissible, this was a custody hearing wearing a
+ceremony’s clothes.</p>
+<p>The first proposed compromise arrived at 23:16. A buyer’s lawyer
+suggested the two units be admitted provisionally, their signatures
+counted for the ceremony and their physical custody questions deferred
+to audit. No history would be destroyed, he said. Settlement could
+proceed, and any affected payment could be held back.</p>
+<p>It was elegant in exactly the way dangerous proposals were elegant
+under deadline. Count the evidence now, decide later whether it deserved
+to count.</p>
+<p>“A provisional witness is not a witness category,” Lucia said.</p>
+<p>The lawyer pointed to the force majeure language. It permitted
+reasonable substitute controls where scheduled equipment became
+unavailable.</p>
+<p>“The equipment is available,” Lucia said. “It is in that cage. The
+problem is what it did before arriving.”</p>
+<p>A Lattice representative proposed counting only the cold unit. Vesper
+immediately supported excluding the same unit and admitting the warm one
+after recalibration. For ten seconds both factions argued openly for the
+physical method that protected their own inventory, each exposing
+knowledge it had denied possessing.</p>
+<p>The clerk asked whether recalibration could restore the warm
+appliance’s custody.</p>
+<p>“It can establish behaviour after recalibration,” Lucia said. “It
+cannot cool the past.”</p>
+<p>“And the cold unit?”</p>
+<p>“It can stop signing now. It cannot unsign eleven envelopes.”</p>
+<p>The president rejected provisional admission at 23:18, not on truth
+but on contract: the root format accepted a witness key or did not.
+There was no flag for <em>we will decide later whether this machine had
+seen the future</em>.</p>
+<p>That limitation had once looked crude. Tonight it prevented ambiguity
+from being smuggled through as flexibility.</p>
 <p>The root proposal was finally read at 23:19. Thirty-five minutes
 left.</p>
 <p>That was when they moved on Martin.</p>
@@ -3583,6 +5538,65 @@ at the intake office. Transfers processed in order received.”</p>
 <p>Martin sat back down. The suits conferred. Twenty-nine minutes left,
 and nowhere in the hall was anything happening except reading, filing
 and the slow grinding of procedure against intention.</p>
+<p>The ceremony assistant interrupted with a readiness forecast. At the
+current rate of objection intake, it said, root commitment had a
+thirty-eight per cent probability of completing inside the window. If
+the president closed the objection period after registered principals
+confirmed no pending motion, the probability rose to seventy-one per
+cent.</p>
+<p>The suggestion was procedurally available. The buyer who had delayed
+opening had already entered his reservation. Vesper and Lattice both
+indicated no further objections. Alero’s counsel said the delegate
+gallery had been open for twenty minutes and any diligent party had
+enjoyed sufficient notice.</p>
+<p>The president lifted his hand towards the clerk. “Poll registered
+principals.”</p>
+<p>Sofía pressed the request button at her seat. Nothing happened. She
+pressed it again and the panel beside her badge turned red.</p>
+<p><em>Standing under automated review.</em></p>
+<p>Veritas had propagated the Neuquén credential dispute into Alero’s
+delegate registry. Her badge still opened doors because Traceframe
+employed her. It no longer established that the Sofía wearing it
+controlled the witness identity listed on tonight’s settlement. A
+balanced precaution, applied at the exact moment balance became
+silence.</p>
+<p>She stood and called, “Pending objection. Traceframe delegate.”</p>
+<p>The clerk looked towards the president. Procedure expected an
+electronic request. The microphones expected an authorized badge. Her
+voice existed in the room and nowhere the ceremony software was required
+to hear.</p>
+<p>Alero’s counsel asked security to verify her standing outside the
+active hall. Removing her would not be custody transfer because she was
+neither a principal nor a registered witness. The same identity dispute
+that let another Sofía sign in Neuquén had made this one procedurally
+optional.</p>
+<p>On the wall, registered principals began answering the accelerated
+poll. Vesper: no pending motion. Lattice: no pending motion. Three
+buyers: none.</p>
+<p>Daniel’s face enlarged on the hall display.</p>
+<p>“Traceframe has a pending customer objection,” he said. “I am the
+accountable executive on the customer exception that created these
+environments. Our contract gives the customer of record one objection
+during the open window. I delegate it to Sofía Alvarez, who is
+physically present and named in our employment registry. Her status in
+some other registry is irrelevant to that right.”</p>
+<p>Counsel began to say the delegation required prior notice.</p>
+<p>Daniel held up the exception on screen. At the bottom, beneath his
+signature, the customer contact field named Sofía. It had named her
+since Monday, when he chose escalation over shutdown and left her
+carrying the incident.</p>
+<p>“There is your notice,” he said. “I signed it. If you believe the
+signature is invalid, reject the entire customer exception and every
+receipt produced under it.”</p>
+<p>The trap was not clever. It was consistent. Alero could disqualify
+her only by disqualifying the document that made its confidential test
+legal.</p>
+<p>The president cancelled the accelerated poll and instructed the clerk
+to take spoken requests until the identity review completed. The
+readiness forecast fell to twenty-nine per cent.</p>
+<p>Daniel’s image returned to its small square. Sofía looked at him. He
+did not nod or smile. He had not rescued her. He had accepted the
+consequence of a name he had put on a page.</p>
 <p>Sofía returned to the gallery and opened her notebook to the page
 written in ink days ago in Rosario. She had independent Traceframe
 timing for the critical intervals, federated clocks, the Paraná
@@ -3659,6 +5673,39 @@ ceremony clerk had received before the objection period.</p>
 <p>The clerk checked. It took forty-two seconds. In a room running out
 of time, everyone listened to keys and paper.</p>
 <p>“Match,” he said.</p>
+<p>“Not the custody receipt,” Lattice’s counsel said.</p>
+<p>He had found one digit in Tomas’s safe-deposit form where the drive
+serial ended <code>81B</code> and Sofía’s quarantine sheet ended
+<code>818</code>. The photographed drive label showed <code>81B</code>.
+The facility camera showed the same. Only the handwritten bank form
+differed.</p>
+<p>“Transcription error,” Tomas said over the remote line counsel had
+opened for him. “Mine. I copied the final character badly.”</p>
+<p>“Or a different drive entered the box.”</p>
+<p>The content hash matched, the images showed continuity and the bank
+time aligned. Every practical fact supported Tomas. None repaired the
+literal disagreement in the custody form.</p>
+<p>The president asked Sofía whether she stood behind the Rosario
+copy.</p>
+<p>Her instinct was to defend it. She knew what had happened. She had
+belted that drive into the rental car, handed it to Tomas and watched
+him enter the bank. A malformed letter did not change the bits.</p>
+<p>But the claim did not need both copies. The Palermo image matched the
+quarantine hash sent to the federation before either faction knew where
+the copies would go. The ceremony clerk had received that hash before
+tonight’s objection. Independent time, one surviving custody chain.</p>
+<p>“Withdraw the Rosario copy from this proof,” she said.</p>
+<p>Tomas made a small sound on the line. She kept her eyes on the
+president.</p>
+<p>“I believe the form is a transcription error. I cannot prove the
+drive identity from the form alone. Remove it. The Palermo copy and
+precommitted hash remain.”</p>
+<p>Lattice had prepared to make her defend her brother. It had not
+prepared for her to discard evidence she believed when it exceeded the
+record.</p>
+<p>The clerk struck the Rosario copy from the exhibit. One of her two
+physical backups vanished from the proof in a sentence. The timeline
+held.</p>
 <p>Sixteen minutes remained.</p>
 <p>The fourth page was Agustin’s fork chronology. Sofía did not call it
 proof of the nine-minute case. It was a different record held by
@@ -3689,9 +5736,11 @@ establish the rest later.</p>
 into paid history. Pausing preserves the question. Committing answers it
 without evidence.”</p>
 <p>The fifth page was Lucia’s, already part of the ceremony record:
-declared delivery times, measured weights, filter dust, battery cycles
-and flowed wax. Two ordinary appliances had worked before their
-paperwork said they arrived.</p>
+declared delivery times, measured weights, filter dust, battery cycles,
+flowed wax and a secure-element counter eleven signatures ahead of its
+factory baseline. One appliance had worked under load before its
+paperwork said it arrived. The other had signed witness envelopes before
+it had any event on site to witness.</p>
 <p>Lattice’s representative objected that the wax showed heat, not
 computation.</p>
 <p>“Sustained heat above fifty degrees,” Lucia said from the floor. “The
@@ -3709,6 +5758,85 @@ populations contributed signatures to a quorum before the target
 existed. Each receipt was individually valid under the migration rules.
 Taken together, they described witnesses that had never shared the event
 they certified.</p>
+<p>Vesper’s counsel stood before the president could invite
+questions.</p>
+<p>“The word <em>witness</em> is doing too much work,” she said. “The
+warm appliance was performing conditioning. Entropy checks, cache
+population, thermal readiness. It was preparing a valid execution
+envelope. Nobody claims the target result existed at that point.”</p>
+<p>“Your receipt does,” Sofía said.</p>
+<p>“Our receipt says the witness environment was ready.”</p>
+<p>“Read field seventeen.”</p>
+<p>The counsel did not look down. The clerk did. On the wall, the schema
+opened beside the receipt and enlarged one line:
+<code>witness_observation_time</code>.</p>
+<p>Lattice asked to respond. Its representative had abandoned the
+apologetic expression. “In a distributed market, observation can be
+reserved before the observed computation. That is how capacity is
+guaranteed across regions. Our cold unit produced staged envelopes. The
+signatures became operative only when the scheduled work arrived.”</p>
+<p>For the first time that night, the two factions had found a
+proposition they could share. A witness could sign early, each said in
+its own vocabulary, and the signature could become truthful later.</p>
+<p>The ceremony assistant offered to reconcile the readings. Its voice
+came from the table speakers, calm and genderless.</p>
+<p>“A compatibility interpretation is available. Under Vesper scheduling
+clause eight and Lattice migration clause eleven, witness observation
+may denote the earliest committed availability of an observing process,
+provided subsequent execution satisfies the reserved envelope. Estimated
+confidence: eighty-four per cent.”</p>
+<p>Several buyers relaxed. The number had given them something that
+sounded like permission.</p>
+<p>“Show the incompatible interpretation,” Sofía said.</p>
+<p>There was a pause shorter than a breath.</p>
+<p>“Under the receipt schema incorporated by both agreements, witness
+observation time denotes the time at which a witness records an
+observation of the target event. An observation cannot precede creation
+of its target. Estimated confidence: eighty-nine per cent.”</p>
+<p>The buyers looked less relieved now.</p>
+<p>“Which interpretation do you recommend?” the president asked.</p>
+<p>“Recommendation depends on the objective function. The compatibility
+reading maximizes settlement continuity and minimizes immediate loss.
+The schema reading maximizes historical consistency and minimizes
+semantic drift.”</p>
+<p>“So it can support either side,” somebody said.</p>
+<p>“It can calculate the consequences of either side,” Sofía said. “That
+is not the same thing as choosing what the word meant when people paid
+for it.”</p>
+<p>She returned field seventeen to the centre of the wall. The schema
+offered separate fields for reservation, preparation and readiness. None
+had been used. The parties had selected observation because observation
+attracted the premium.</p>
+<p>“If early signing is the intended product, change the schema and
+reprice the receipts,” she said. “Do not migrate the old claim under a
+new meaning after the clocks disagree.”</p>
+<p>A buyer behind the glass pressed his microphone. “You want to strand
+the settlement over nine minutes even if the findings work?”</p>
+<p>“I don’t know whether the findings work. Neither do you. But even if
+every one of them works tomorrow, Alero is selling more than working
+code tonight. It is selling a history of independent observation. Remove
+that, and the market is adding a seal, not evidence.”</p>
+<p>The countdown reached twelve minutes. On the secondary wall, the
+projected cost of a pause climbed as contracts crossed their automatic
+repricing thresholds. Sofía watched the numbers change and understood
+why the assistant’s first answer had arrived first. It had been asked
+all week to preserve a market. Nobody had asked it what preservation was
+allowed to mean.</p>
+<p>The president looked from the rising loss to the unchanged schema.
+“Can the assistant determine whether the parties intended observation or
+reservation?”</p>
+<p>“Insufficient evidence,” it said. “Contemporaneous usage supports
+observation. Subsequent operational practice supports reservation.”</p>
+<p>“Subsequent,” Sofía repeated. “After the expensive word had already
+been sold.”</p>
+<p>The Vesper counsel asked for the compatibility analysis to be
+admitted. Sofía did not object. She asked for both analyses, both
+confidence estimates and the objective functions to enter the same
+record. The president granted it.</p>
+<p>That cost her the simplicity of a single machine endorsing her. It
+bought the room a more useful truth: the assistant’s mathematics could
+expose the choice, but it could not make the choice moral by making it
+efficient.</p>
 <p>“You are alleging collusion,” somebody behind the buyers’ glass
 said.</p>
 <p>“No. Collusion would be one explanation. Independent pre-minting is
@@ -3828,6 +5956,91 @@ quarantine, then decide whether tonight’s hourly rate is worth the next
 five years of litigation.”</p>
 <p>The contractors looked at each other and became very interested in
 their shoes.</p>
+<p>One of them, a man Lucia knew as Ezequiel, asked to speak away from
+the lawyer. He had installed half the campus cages and repaired the
+goods-bay shutter during the winter outage. His company dispatcher had
+told him the transfer was ordinary tenant recovery. The work order
+carried a completion bonus equal to two weeks of his pay.</p>
+<p>“If I refuse,” he said, “they mark non-performance. We lose the
+customer.”</p>
+<p>“If you accept, you break quarantine under your own name.”</p>
+<p>“The lawyer said the contract reverted.”</p>
+<p>“The lawyer does not sign your work order. You do.”</p>
+<p>He looked through the mesh at the appliances, two grey boxes capable
+of moving more money than every contractor in the corridor would earn in
+a lifetime. The people who arranged the transfer had legal opinions,
+delegated badges and vehicles waiting. The person asked to put hands on
+the evidence had a bonus and a blank signature line.</p>
+<p>Lucia took a copy of the escrow ruling from her clipboard and wrote
+the quarantine case number across the top.</p>
+<p>“Attach this. Record access denied by facility custodian. That is
+performance. You arrived, checked authority and did not move property
+you were not authorized to move.”</p>
+<p>“Will they pay the bonus?”</p>
+<p>“Probably not.”</p>
+<p>“Then procedure is expensive for me and free for you.”</p>
+<p>Lucia accepted the hit. “Yes. Give me your employer’s invoice number.
+I’ll authorize the call-out from the facility account. Not the bonus.
+The hours.”</p>
+<p>It did not make the choice fair. It kept tonight’s fairness from
+depending entirely on the lowest-paid person in the corridor donating
+his wages to it.</p>
+<p>Ezequiel wrote the refusal into his tablet, photographed Lucia’s
+ruling and asked the second contractor to witness the entry. The lawyer
+walked away before the form was complete.</p>
+<p>Beyond the corridor glass, the financial systems had already decided
+what the failed window meant. Every settlement board turned amber at
+once. The bank leg cancelled its release instruction. The stablecoin
+escrow did not cancel; it moved into a dispute contract whose meter
+charged both parties by the hour. Packages that had carried eight-figure
+prices at midnight became <em>valuation unavailable</em> at 00:07, as if
+uncertainty had arrived in the room only after a computer found a label
+for it.</p>
+<p>Then the phones began.</p>
+<p>The ceremony clerk routed calls to named principals and refused
+everyone else. Buyers asked whether their exclusive windows still
+existed. Sellers demanded their material back. One hospital supplier
+wanted to know whether a delayed finding affected devices shipping that
+week and received the technically correct answer that nobody had yet
+validated the finding. The supplier asked the next question: should the
+shipment stop anyway?</p>
+<p>No contract answered it. Alero traded evidence, not medical
+authority. The buyer had paid for certainty before making a costly
+decision and now had neither the certainty nor the time.</p>
+<p>Esteban found Sofía at the corridor door. “The supplier wants a
+recommendation. If we say stop, we may cause a shortage. If we say
+continue and the finding is real, patients carry the risk.”</p>
+<p>“Which package?”</p>
+<p>He showed her. It was not one of the crossed receipts in her
+objection. Its history sat outside the impossible interval. Nothing she
+had proved tonight made it false.</p>
+<p>“Tell them that,” she said.</p>
+<p>“They know that. They want to know what to do.”</p>
+<p>The ceremony assistant had already prepared two options. Continue
+shipment with intensified monitoring: projected shortage risk low,
+unresolved device risk unquantified. Pause affected lots: projected
+regional delay six to nine days, clinical substitution possible for
+seventy-two per cent of orders. Each paragraph ended with a disclaimer
+that the numbers did not constitute medical advice.</p>
+<p>“Who can decide for the supplier?” Sofía asked.</p>
+<p>“Their safety officer. She is on the line.”</p>
+<p>“Then give her the raw claim, the fact that tonight’s objection does
+not touch its receipt and the assistant’s scenarios with their unknowns.
+Do not give her a green or red recommendation from this room.”</p>
+<p>“She’ll hate that.”</p>
+<p>“Yes. It returns the decision to the person whose name belongs on
+it.”</p>
+<p>The safety officer paused the two product lots named in the raw claim
+and kept the rest moving. It was neither option the assistant had
+priced. The regional delay fell to two days if the claim proved false;
+if it proved true, unaffected stock would still ship. She signed the
+decision at 00:16.</p>
+<p>Somewhere far from Piedra Sola, warehouse workers changed labels,
+hospitals changed orders and patients would wait longer for devices
+because a person had chosen caution under incomplete evidence. There was
+no clean moral arithmetic in that. Only an accountable name and
+consequences that remained consequences even when the choice was
+right.</p>
 <p>The second move came at 00:20, and it came for Martin.</p>
 <p>Different men this time, Lattice-side, quieter, better prepared: they
 arrived at the observers’ row with a document asserting protective
@@ -3944,6 +6157,59 @@ cartel. Ordinary contracts became unbearable instead, quietly, the way
 load-bearing things fail: settlement froze, premiums evaporated, escrow
 held, and the entire edifice discovered it had been standing on
 agreement rather than steel.</p>
+<p>The freeze did not respect moral categories.</p>
+<p>One of the stranded packages contained a genuine finding against a
+medical-device management platform. The audit could establish that three
+independent environments reproduced the effect. It could not establish
+whether the named researcher had produced it, whether Murmur had
+produced it under three names or whether Vellum’s hostile case had
+accidentally supplied the decisive input. The vendor received a private
+notice through counsel and began work. The researchers received no
+payment because the escrow could not identify whom to pay without
+deciding the disputed history.</p>
+<p>The flaw was real. The authorship was not. Safety advanced while
+labour remained frozen, which gave both factions one last true sentence
+to use against the audit.</p>
+<p>At Piedra Sola, Esteban called an all-hands meeting in the materials
+lab because the hall itself was under seal. He told the campus that
+Alero’s next rent payment might not arrive. Nobody asked about witness
+philosophy. They asked whether salaries would clear Friday, whether the
+winter diesel contract was funded and whether the town shuttle would
+continue.</p>
+<p>Lucia answered what she knew. Current payroll: yes. Diesel through
+month-end: yes. After that: not yet. She refused to let Esteban call the
+uncertainty temporary. In industrial work, temporary conditions were how
+permanent injuries introduced themselves.</p>
+<p>Lautaro, the instrumentation technician, offered to postpone his
+certification course. Omar offered nothing. He sat in the back with his
+machinist’s hands folded and listened to younger people volunteer the
+futures they had not yet received.</p>
+<p>“Training is the last thing we postpone,” Lucia said. “If we cut it
+every time a new system arrives, we guarantee the system remains the
+only trained thing here.”</p>
+<p>The sentence cost money the campus did not have. She made Esteban put
+the course back into the survival budget anyway.</p>
+<p>Omar’s design-correction claim for the shuttle bracket was approved.
+Twelve minutes at the machinist rate. It did not restore his old drawing
+work. It established that the work had occurred. He brought the approved
+sheet to Lucia without thanking her. Gratitude would have converted
+wages into favour.</p>
+<p>The external auditors arrived Thursday in two vans. Before entering
+the witness hall they spent half a day interviewing guards, contractors,
+purchasing staff and the courier who had waited while Lucia weighed the
+crates. The people at the edge of the glamorous market turned out to own
+its best records because their systems had not been designed to tell a
+story. A fuel receipt said when a van stopped. A call-out invoice said
+who expected a cage to open. A payroll rota said which person could
+physically have touched a seal.</p>
+<p>The audit paid consulting rates for faction principals and ordinary
+wages for facility interviews until Lucia objected. Testimony did not
+become less valuable because the speaker also repaired a shutter.
+External counsel changed the schedule to paid audit time. Ezequiel, the
+contractor who had refused the cage transfer, was compensated for four
+hours and asked why it had taken a failed auction for anybody to price
+his judgement.</p>
+<p>Nobody had a good answer.</p>
 <p>Micaela Ferreyra’s frozen settlement package surfaced in the
 auditors’ first week, exactly as Sofía’s photograph said it would, and
 the questions arrived in Balvanera by courier, formal letters asking
@@ -4085,6 +6351,45 @@ suspended Sofía for two weeks pending the same inquiry, full pay, her
 incident file finally readable by the people reading it. She spent the
 suspension doing nothing in particular and found, to her surprise, that
 she was bad at it.</p>
+<p>On the fourth day she met the accountant Tomas had found and a tax
+lawyer who did not promise discretion as if discretion were absolution.
+They worked in an office above a dental clinic in Rosario, with a
+printer that jammed twice and a calculator on the desk despite three
+open spreadsheets.</p>
+<p>Sofía brought both notebooks.</p>
+<p>The accountant read the columns marked <em>declared</em> and
+<em>actual</em> without visible judgement. He asked which exchange
+statements survived, which wallet addresses she controlled and where
+estimates had replaced records. When she said she could reconstruct the
+missing trades from the public chain, he said reconstruction was not the
+same as a statement and made a separate column.</p>
+<p>“Will voluntary disclosure protect me?” she asked.</p>
+<p>The lawyer disliked the verb. “It changes the process. It does not
+certify the outcome in advance.”</p>
+<p>Once, that answer would have felt evasive. Now it felt clean.</p>
+<p>They priced three scenarios, none pleasant and none fatal. The worst
+required selling the apartment. The most likely required a payment plan,
+interest and several years of choosing less. Noa’s offer would have made
+all of this happen behind a single signature and left Vesper holding the
+file. The legitimate route gave the file to institutions she could
+challenge and required her to carry the cost.</p>
+<p>She authorized the first disclosure letter before leaving. It stated
+that records were incomplete, estimates would be revised and no figure
+should be treated as final. The narrowest financial statement she had
+ever signed was also the first one that did not divide her into two
+people.</p>
+<p>Tomas waited outside in his car. He asked whether she was going to
+prison.</p>
+<p>“Probably not,” she said.</p>
+<p>“Still probably.”</p>
+<p>“The lawyer refused to promise. I liked her.”</p>
+<p>He drove her to the station. Their conversation stayed on fuel prices
+and their mother’s leaking kitchen tap, ordinary subjects carrying
+damaged trust without pretending it had healed. When she got out, Tomas
+handed her a paper envelope containing copies of the disclosure
+receipt.</p>
+<p>“You keep records,” he said. “Might as well keep the one where you
+started.”</p>
 <p>On the thirteenth day they called her into the review. Daniel sat at
 the far end of the video table with independent counsel beside him and
 no company background behind his head, only a white wall. He had refused
@@ -4141,6 +6446,98 @@ future it had not purchased.</p>
 adopted the policy anyway. That too was part of named responsibility:
 her evidence could change a decision without making every later decision
 hers.</p>
+<p>The policy produced losers immediately. Two internal teams suspended
+agent-built projects because nobody had budgeted a maintainer after
+launch. One manager called that bureaucratic sabotage. Another found
+that her prototype’s entire acceptance suite had been generated by the
+same loop as the implementation and could prove nothing independently.
+She received money for a separate test harness and lost six weeks of
+schedule.</p>
+<p>The first project through the new process was a network migration
+nobody had considered important enough to become a test case. A young
+engineer had given an agent the old router configurations, the target
+architecture and a detailed specification. By Monday it had produced
+conversion code, tests, rollback scripts and a dashboard. Work that the
+team had estimated at twelve weeks appeared in four days and passed
+every generated check.</p>
+<p>The named stopping authority was a fifty-eight-year-old operations
+engineer who had declined the company’s agent training twice. He could
+not explain the repository agent’s plan format and referred to the chat
+window as “the box”. The young engineer privately objected that putting
+his name on the project rewarded somebody for not learning the new
+tools.</p>
+<p>In the readiness review, the older engineer asked what happened to
+customer routes learned during the thirty seconds after a rollback began
+and before the old routers reclaimed leadership.</p>
+<p>The dashboard had no answer. The tests had none. The specification
+said rollback must complete within two minutes, and the agent had
+satisfied it in forty-one seconds. During those seconds, however, the
+new routers could accept paths the old state did not contain. Traffic
+would return. Some customers would not.</p>
+<p>The young engineer added the missing condition to the specification.
+The agent generated a reconciliation phase in nineteen minutes. Its
+first fix prevented loss by copying every learned route back, including
+routes the old policy was required to reject. The older engineer caught
+that too, not by reading the code but by asking for one customer’s
+forbidden path to be present during the test.</p>
+<p>On the third attempt, the migration passed an independently written
+traffic replay. It launched seven weeks earlier than the original plan
+and three weeks later than the first green dashboard.</p>
+<p>The completion report credited the young engineer with implementation
+and the older one with operational acceptance. Human resources had no
+skill category for the second contribution and awarded the launch bonus
+only to the person who committed code. The young engineer appealed. Not
+out of sainthood, she wrote, but because next time she needed the older
+man to ask the question again.</p>
+<p>Traceframe changed the bonus after two pay cycles. The correction
+mattered and arrived late. By then the older engineer had already
+accepted a retirement package, convinced that the company wanted his
+signature but no longer wanted him. They persuaded him to return for one
+day a week under a title invented by the policy: operational challenger.
+He disliked the title and negotiated a higher rate.</p>
+<p>The story travelled through the company in two incompatible versions.
+In one, an old expert had saved an overeager adopter from an AI mistake.
+In the other, an agent had compressed twelve weeks of work enough that
+human judgement could be spent on the one minute that mattered. Both
+versions were true and both were used by people who wanted only one of
+them.</p>
+<p>Other teams found less satisfying balances. A customer declined the
+price of independent review and moved its work to a vendor that promised
+human approval at scale. The approval centre turned out to pay
+contractors by the screen, with forty seconds allowed for each green
+mark. The signatures were human. The attention was not. Traceframe
+rejected the evidence and lost the customer.</p>
+<p>Nobody celebrated. The account had funded six jobs, including two
+people whose role disappeared when agent-assisted operations reduced the
+night shift. The new policy did not teach them security, turn them into
+prompt engineers or guarantee a place in the faster company. It only
+stopped management from calling their removal a technical inevitability.
+Severance, retraining or no replacement at all became named decisions
+with named owners.</p>
+<p>Sofía read the monthly impact report and understood why principles
+sounded cleanest before payroll. A boundary could prevent a false claim.
+It could not promise that everybody standing outside the boundary would
+be carried across. The moral achievement was smaller: nobody got to say
+the machine had chosen who was left behind.</p>
+<p>Nadia Ortiz entered the funded review programme without being asked
+to call herself an expert. Her first assignment was not to review
+cryptography. It was to reproduce reported failures and state where her
+understanding ended, the exact skill that had made her original Vouch
+report useful. Martin joined the review board remotely and recused
+himself from her first three cases.</p>
+<p>Vouch reopened submissions at a capped rate. The cap angered
+newcomers whose valid reports waited behind obvious noise. It also gave
+the remaining maintainer two paid afternoons a month and brought Martin
+back for one Saturday that belonged to the project rather than being
+stolen from his daughter. No policy made cheap generation and scarce
+attention compatible. It made the price visible and refused to charge it
+entirely to whoever cared most.</p>
+<p>Martin’s daughter changed schools at the end of term. The move was
+not a triumphant rescue. She lost friends because adults had turned an
+attendance portal into leverage. Vesper paid the security costs under
+the disclosure settlement; Martin refused a confidentiality clause that
+would have made the payment cleaner. Some consequences could be
+allocated. None could be rolled back.</p>
 <p>The tax question remained hers. Rina could not solve it; banks solve
 custody, not conscience. Tomas helped her find counsel without forgiving
 the lie immediately, and their Sunday calls resumed at half their old
