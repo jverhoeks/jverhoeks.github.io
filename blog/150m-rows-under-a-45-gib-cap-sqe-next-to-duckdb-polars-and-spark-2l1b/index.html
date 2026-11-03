@@ -1,0 +1,394 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-tldeq5d5><head><!-- Theme: default dark (/echo). Honor saved light preference. --><script>
+	(function () {
+		try {
+			if (localStorage.getItem('theme') === 'light') {
+				document.documentElement.setAttribute('data-theme', 'light');
+			}
+		} catch (e) {}
+	})();
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#071014"><meta name="author" content="Jacob Verhoeks"><meta name="generator" content="Astro v7.2.2"><!-- Google Fonts: Oswald + Spectral + IBM Plex Mono (non-render-blocking) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"></noscript><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/150m-rows-under-a-45-gib-cap-sqe-next-to-duckdb-polars-and-spark-2l1b/"><link rel="alternate" type="application/rss+xml" title="Jacob's Blog" href="https://jacob.verhoeks.org/rss.xml"><!-- Primary Meta Tags --><title>150M rows under a 4.5 GiB cap: SQE next to DuckDB, Polars and Spark</title><meta name="title" content="150M rows under a 4.5 GiB cap: SQE next to DuckDB, Polars and Spark"><meta name="description" content="Firat Celik's DuckDB 2.0 vs Polars vs Spark on one machine: 150M rows under a 4.5 GiB cap asks a..."><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:site_name" content="Jacob's Blog"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jacob.verhoeks.org/blog/150m-rows-under-a-45-gib-cap-sqe-next-to-duckdb-polars-and-spark-2l1b/"><meta property="og:title" content="150M rows under a 4.5 GiB cap: SQE next to DuckDB, Polars and Spark"><meta property="og:description" content="Firat Celik's DuckDB 2.0 vs Polars vs Spark on one machine: 150M rows under a 4.5 GiB cap asks a..."><meta property="og:image" content="https://jacob.verhoeks.org/og/150m-rows-under-a-45-gib-cap-sqe-next-to-duckdb-polars-and-spark-2l1b.jpg"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@jverhoeks"><meta name="twitter:creator" content="@jverhoeks"><meta name="twitter:title" content="150M rows under a 4.5 GiB cap: SQE next to DuckDB, Polars and Spark"><meta name="twitter:description" content="Firat Celik's DuckDB 2.0 vs Polars vs Spark on one machine: 150M rows under a 4.5 GiB cap asks a..."><meta name="twitter:image" content="https://jacob.verhoeks.org/og/150m-rows-under-a-45-gib-cap-sqe-next-to-duckdb-polars-and-spark-2l1b.jpg"><meta name="theme-color" content="#071014"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"150M rows under a 4.5 GiB cap: SQE next to DuckDB, Polars and Spark","description":"Firat Celik's DuckDB 2.0 vs Polars vs Spark on one machine: 150M rows under a 4.5 GiB cap asks a...","datePublished":"2026-11-03T13:02:55.000Z","author":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org/about"},"publisher":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org"},"image":"https://jacob.verhoeks.org/og/150m-rows-under-a-45-gib-cap-sqe-next-to-duckdb-polars-and-spark-2l1b.jpg","keywords":"benchmarks, duckdb, polars, iceberg","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacob.verhoeks.org/blog/150m-rows-under-a-45-gib-cap-sqe-next-to-duckdb-polars-and-spark-2l1b/"}}</script><link rel="stylesheet" href="/_astro/BaseHead.Yu20hq-f.css"><style>a[data-astro-cid-evkijfd6]{text-decoration:none;display:inline-block}a[data-astro-cid-evkijfd6].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-nen7h5rs]{background:linear-gradient(180deg, var(--echo-ink-2), var(--bg));border-top:2px solid var(--accent);border-bottom:1px solid var(--echo-hair);min-height:56px;margin:0;padding:0 1em;transition:background-color .25s,border-color .25s}h2[data-astro-cid-nen7h5rs]{font-size:.95em;font-family:var(--font-display);text-transform:uppercase;letter-spacing:.06em;margin:0;font-weight:600}h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs],h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active{color:rgb(var(--black));text-decoration:none}h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:var(--accent)}nav[data-astro-cid-nen7h5rs]{justify-content:space-between;align-items:center;gap:.75rem;display:flex}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{color:var(--echo-mute);font-family:var(--font-mono);letter-spacing:.12em;text-transform:uppercase;border-bottom:2px solid #0000;padding:1em .5em;font-size:.72rem;text-decoration:none}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:rgb(var(--black))}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active{color:rgb(var(--black));border-bottom-color:var(--accent);text-decoration:none}.social-links[data-astro-cid-nen7h5rs],.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{align-items:center;display:flex}.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{color:var(--echo-mute);border-bottom:none;padding:.5em}.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:var(--accent)}.theme-toggle[data-astro-cid-nen7h5rs]{border:1px solid var(--echo-hair);width:36px;height:36px;color:var(--echo-mute);cursor:pointer;background:0 0;border-radius:2px;justify-content:center;align-items:center;margin-right:.35em;padding:0;transition:background-color .2s,border-color .2s,color .2s;display:inline-flex}.theme-toggle[data-astro-cid-nen7h5rs]:hover{border-color:var(--accent);color:var(--accent)}.icon-sun[data-astro-cid-nen7h5rs]{display:block}.icon-moon[data-astro-cid-nen7h5rs],:root[data-theme=light] .icon-sun[data-astro-cid-nen7h5rs]{display:none}:root[data-theme=light] .icon-moon[data-astro-cid-nen7h5rs]{display:block}@media (width<=720px){.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{display:none}.social-links[data-astro-cid-nen7h5rs] .theme-toggle[data-astro-cid-nen7h5rs]{display:inline-flex}h2[data-astro-cid-nen7h5rs]{white-space:nowrap;font-size:.8em}.internal-links[data-astro-cid-nen7h5rs]{white-space:nowrap;scrollbar-width:none;flex:1;min-width:0;display:flex;overflow-x:auto;mask-image:linear-gradient(90deg,#000 85%,#0000)}.internal-links[data-astro-cid-nen7h5rs]::-webkit-scrollbar{display:none}}footer[data-astro-cid-jo6i4kqk]{background:linear-gradient(180deg, transparent, var(--echo-ink-2));border-top:1px solid var(--echo-hair);color:var(--echo-mute);text-align:center;padding:2.5em 1em 5em}.projects[data-astro-cid-jo6i4kqk]{flex-wrap:wrap;justify-content:center;align-items:center;gap:.5em;margin-bottom:1em;display:flex}.project-link[data-astro-cid-jo6i4kqk]{color:rgb(var(--black));font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase;font-size:.72rem;font-weight:500;text-decoration:none;transition:color .2s}.project-link[data-astro-cid-jo6i4kqk]:hover{color:var(--accent)}.project-sep[data-astro-cid-jo6i4kqk]{color:var(--echo-mute);opacity:.5;font-weight:300}.social-links[data-astro-cid-jo6i4kqk]{justify-content:center;gap:1em;margin-top:.5em;display:flex}.social-links[data-astro-cid-jo6i4kqk] a[data-astro-cid-jo6i4kqk]{color:var(--echo-mute);text-decoration:none}.social-links[data-astro-cid-jo6i4kqk] a[data-astro-cid-jo6i4kqk]:hover{color:var(--accent)}.copyright[data-astro-cid-jo6i4kqk]{font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;margin-top:1.25em;font-size:.7rem}
+body.echo-blog{background:var(--bg)}
+</style><link rel="stylesheet" href="/_astro/BlogPost.NnC8XkKt.css"></head><body class="echo-blog" data-astro-cid-tldeq5d5><header data-astro-cid-nen7h5rs><nav data-astro-cid-nen7h5rs><h2 data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs>Jacob&#39;s Blog</a></h2><div class="internal-links" data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Home</a><a href="/blog" class="active" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Blog</a><a href="/#books" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Books</a><a href="/projects" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Projects</a><a href="/about" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>About</a></div><div class="social-links" data-astro-cid-nen7h5rs><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle light mode" title="Toggle light mode" data-astro-cid-nen7h5rs><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-nen7h5rs><circle cx="12" cy="12" r="4" data-astro-cid-nen7h5rs></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" data-astro-cid-nen7h5rs></path></svg><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor" data-astro-cid-nen7h5rs><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" data-astro-cid-nen7h5rs></path></svg></button><a href="https://x.com/jverhoeks" target="_blank" data-astro-cid-nen7h5rs><span class="sr-only" data-astro-cid-nen7h5rs>Follow on X</span><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22" data-astro-cid-nen7h5rs><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" data-astro-cid-nen7h5rs></path></svg></a><a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-nen7h5rs><span class="sr-only" data-astro-cid-nen7h5rs>Go to GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-nen7h5rs><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-nen7h5rs></path></svg></a></div></nav></header><script>
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		btn.addEventListener('click', function () {
+			var root = document.documentElement;
+			var isLight = root.getAttribute('data-theme') === 'light';
+			if (isLight) {
+				root.removeAttribute('data-theme');
+				try { localStorage.setItem('theme', 'dark'); } catch (e) {}
+			} else {
+				root.setAttribute('data-theme', 'light');
+				try { localStorage.setItem('theme', 'light'); } catch (e) {}
+			}
+		});
+	})();
+</script><main data-astro-cid-tldeq5d5><article data-astro-cid-tldeq5d5><header class="article-header" data-astro-cid-tldeq5d5><div class="article-meta" data-astro-cid-tldeq5d5><time class="article-date" data-astro-cid-tldeq5d5><time datetime="2026-11-03T13:02:55.000Z">Nov 3, 2026</time></time><span class="meta-dot" data-astro-cid-tldeq5d5>|</span><span data-astro-cid-tldeq5d5>16 min read</span></div><h1 class="article-title" data-astro-cid-tldeq5d5>150M rows under a 4.5 GiB cap: SQE next to DuckDB, Polars and Spark</h1><p class="article-description" data-astro-cid-tldeq5d5>Firat Celik&#39;s DuckDB 2.0 vs Polars vs Spark on one machine: 150M rows under a 4.5 GiB cap asks a...</p><div class="article-tags" data-astro-cid-tldeq5d5><a href="/blog/tag/benchmarks/" class="echo-pill" data-astro-cid-tldeq5d5>benchmarks</a><a href="/blog/tag/duckdb/" class="echo-pill" data-astro-cid-tldeq5d5>duckdb</a><a href="/blog/tag/polars/" class="echo-pill" data-astro-cid-tldeq5d5>polars</a><a href="/blog/tag/iceberg/" class="echo-pill" data-astro-cid-tldeq5d5>iceberg</a></div></header><div class="prose" data-astro-cid-tldeq5d5><p>Firat Celik’s <a href="https://dev.to/firfircelik/duckdb-20-vs-polars-vs-spark-on-one-machine-150m-rows-under-a-45-gib-cap-h38">DuckDB 2.0 vs Polars vs Spark on one machine: 150M rows under a 4.5 GiB cap</a> asks a question most data teams run into: which engine still finishes when memory is tight. Firat ran four queries a data engineer writes every week over 150M rows, with a fresh process per run and a watchdog that kills any engine whose process tree goes above 4.5 GiB. The scripts are public in <a href="https://github.com/firfircelik/engine-bench">engine-bench</a>, with pinned versions and a seeded data generator. Anyone can rerun them.</p>
+<p>We did, with SQE added. SQE is our SQL engine for Apache Iceberg, built on Apache DataFusion. We wanted to see where it stands on a workload we did not design, and to learn from whatever broke. The upstream queries, data and runners stay unchanged, at the article’s versions: DuckDB 2.0.0, Polars 2.0.0 and PySpark 4.2.0. Every engine’s answer is checked against DuckDB’s, and all of them match.</p>
+<p>Our results table says SQE takes about half DuckDB’s time on the two heavy queries. One of those leads held up. The other came from a busy laptop. Below is how we told them apart, how the article’s findings look on our machine, and the two problems the benchmark found in SQE.</p>
+<h2 id="the-setup">The setup</h2>
+<p>The workload is a star schema: a <code>sales</code> fact table of 150M rows (3.2 GB of Parquet in 30 files, about 15M customers) and a 50,000-row <code>products</code> dimension. The four queries:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Query</th><th>What it does</th></tr></thead><tbody><tr><td><code>q1_filter_agg</code></td><td>Filter on a timestamp and a status, group by store and status</td></tr><tr><td><code>q2_join_agg</code></td><td>Join the fact to the dimension, drop cancelled orders (<code>status &#x3C;> 'cancelled'</code>), group by category and brand</td></tr><tr><td><code>q3_window_latest</code></td><td>Latest order per customer: <code>ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY ts DESC, order_id DESC) = 1</code></td></tr><tr><td><code>q4_highcard_agg</code></td><td>One row per customer, about 15M groups</td></tr></tbody></table>
+<p>SQE runs in three modes:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Engine</th><th>What runs</th><th>Where the data is</th></tr></thead><tbody><tr><td><code>sqe-parquet</code></td><td><code>sqe-cli --embedded</code>, a view over <code>read_parquet()</code></td><td>The same Parquet files DuckDB and Polars read. The like-for-like row.</td></tr><tr><td><code>sqe-iceberg</code></td><td><code>sqe-cli --embedded --warehouse</code></td><td>A local Iceberg warehouse, loaded once with CTAS</td></tr><tr><td><code>sqe-polaris</code></td><td>A native <code>sqe-server</code> coordinator, queried over Arrow Flight SQL (ADBC)</td><td>Iceberg tables in Polaris, data in RustFS (S3) in Docker</td></tr></tbody></table>
+<p>The rules follow the article. Every engine gets 8 threads. DuckDB, Spark and SQE get a 3 GB memory setting; Polars has no such setting and runs with its defaults, as in the article. Each run is a fresh process. A run waits until the machine has 5 GiB free and is under 30% CPU, and the engine order rotates per repetition. The watchdog samples the RSS of the whole process tree every 50 ms and kills the run above 4.5 GiB. We report medians of 3 repetitions.</p>
+<p>The machine is different. The article used an 8 vCPU Xeon VM with 15 GiB of RAM. We ran on an Apple M3 Pro laptop with 36 GiB. The thread count and the kill threshold are the same, so the memory picture carries over; absolute times do not.</p>
+<h2 id="query-time">Query time</h2>
+<p>Median seconds to read, compute and write the answer. Lower is better.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Query</th><th align="right"><code>sqe-parquet</code></th><th align="right"><code>sqe-iceberg</code></th><th align="right"><code>sqe-polaris</code></th><th align="right">DuckDB</th><th align="right">Polars</th><th align="right">Spark</th></tr></thead><tbody><tr><td><code>q1_filter_agg</code></td><td align="right">0.61</td><td align="right">0.75</td><td align="right">7.17</td><td align="right">0.68</td><td align="right"><strong>0.58</strong></td><td align="right">5.45</td></tr><tr><td><code>q2_join_agg</code></td><td align="right"><strong>1.06</strong></td><td align="right">1.14</td><td align="right">4.97</td><td align="right">1.38</td><td align="right">1.14</td><td align="right">10.02</td></tr><tr><td><code>q3_window_latest</code></td><td align="right"><strong>4.72</strong></td><td align="right">6.57</td><td align="right">13.91</td><td align="right">9.03</td><td align="right">killed</td><td align="right">30.91</td></tr><tr><td><code>q4_highcard_agg</code></td><td align="right"><strong>4.11</strong></td><td align="right">5.58</td><td align="right">13.79</td><td align="right">8.26</td><td align="right">4.17</td><td align="right">30.90</td></tr><tr><td>geomean</td><td align="right"><strong>1.88</strong></td><td align="right">2.36</td><td align="right">9.10</td><td align="right">2.89</td><td align="right">-</td><td align="right">15.11</td></tr></tbody></table>
+<p>Polars wins the filter by 30 ms. SQE on Parquet has the lowest median on the other three queries. All three SQE modes and DuckDB finish every run of every query; Polars and Spark do not.</p>
+<p>Those medians flatter SQE on the two heavy queries, so we checked both gaps before writing them down. We ran SQE and DuckDB alone, alternating, and measured CPU time and busy cores next to wall time.</p>
+<p>On the window query the gap is noise. Alone, SQE took 4.8 to 4.9 s and DuckDB 4.4 to 5.1 s. The 9.03 s median above came from runs with less free memory on the laptop. DuckDB spills 2.9 GB on this query and SQE 1.4 GB, so DuckDB loses more when the spill files no longer fit in the page cache.</p>
+<p>On the group-by the gap is real, and it comes from memory. Both engines spend about 30 CPU seconds on q4. What differs is how many cores each one keeps busy under the cap.</p>
+<p>The query has 15M groups in 150M rows, so almost every row starts a new group. Pre-aggregating such rows saves nothing, and DataFusion’s partial aggregate notices that after the first batches: it passed 149.1M of the 150M rows straight through. The rows are then hash-partitioned by <code>customer_id</code> to 8 final aggregates, so each group is held once. SQE stays near 2 GiB at any memory setting.</p>
+<p>DuckDB needs 10 to 11 GiB for the same query without a limit, and then the two engines are level: 3.0 to 3.2 s against SQE’s 3.3 to 3.5 s. Under the 3 GB setting DuckDB spills about 6 GB and keeps 4 to 5 cores busy where SQE keeps 7.5. That costs it 5 to 8 s. The credit belongs to DataFusion’s aggregate. A memory cap is exactly what the article tests, so the result counts. Give DuckDB the memory it asks for and the two finish together.</p>
+<h2 id="memory">Memory</h2>
+<p>Median peak RSS of the whole process tree, in GiB. The cap is 4.5.</p>
+<p><img src="https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/snsp229uzcpk20ubf1ea.png" alt="Peak memory per engine and query against the 4.5 GiB kill threshold. SQE stays under 3.2 GiB everywhere; Polars is killed on the window query."></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Query</th><th align="right"><code>sqe-parquet</code></th><th align="right"><code>sqe-iceberg</code></th><th align="right"><code>sqe-polaris</code></th><th align="right">DuckDB</th><th align="right">Polars</th><th align="right">Spark</th></tr></thead><tbody><tr><td><code>q1_filter_agg</code></td><td align="right">0.20</td><td align="right">0.70</td><td align="right">0.74</td><td align="right">0.69</td><td align="right">1.31</td><td align="right">1.56</td></tr><tr><td><code>q2_join_agg</code></td><td align="right">0.14</td><td align="right">0.70</td><td align="right">1.29</td><td align="right">0.40</td><td align="right">2.17</td><td align="right">1.48</td></tr><tr><td><code>q3_window_latest</code></td><td align="right">2.14</td><td align="right">1.92</td><td align="right">2.95</td><td align="right">3.32</td><td align="right">killed</td><td align="right">3.66</td></tr><tr><td><code>q4_highcard_agg</code></td><td align="right">2.03</td><td align="right">1.77</td><td align="right">3.11</td><td align="right">3.27</td><td align="right">3.99</td><td align="right">3.62</td></tr></tbody></table>
+<p>Finished runs out of three:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Query</th><th align="right"><code>sqe-parquet</code></th><th align="right"><code>sqe-iceberg</code></th><th align="right"><code>sqe-polaris</code></th><th align="right">DuckDB</th><th align="right">Polars</th><th align="right">Spark</th></tr></thead><tbody><tr><td><code>q3_window_latest</code></td><td align="right">3/3</td><td align="right">3/3</td><td align="right">3/3</td><td align="right">3/3</td><td align="right">0/3</td><td align="right">2/3</td></tr><tr><td><code>q4_highcard_agg</code></td><td align="right">3/3</td><td align="right">3/3</td><td align="right">3/3</td><td align="right">3/3</td><td align="right">1/3</td><td align="right">3/3</td></tr></tbody></table>
+<p>Every other cell is 3/3.</p>
+<p>The three engines from the article behave here the way the article says they do. “Polars is not slow,” as the article puts it, and it is fast when it fits, but it is killed on the window query in all three runs, at 4.50 to 4.69 GiB. It finishes the high-cardinality group-by once in three. Spark’s query time is three to eight times DuckDB’s, in line with the article’s 4.3x to 7.9x, and it loses one window run in three. The article lost it to the watchdog at 7.51 GiB and noted that “<code>spark.driver.memory = 3g</code> did not keep the process at 3 GiB.” We lost it inside the JVM, to a <code>SparkOutOfMemoryError</code> (<code>UNABLE_TO_ACQUIRE_MEMORY</code>) at 3.53 GiB. DuckDB finishes everything, with the window and group-by queries at 3.3 GiB.</p>
+<p>SQE on Parquet stays at 2.0 to 2.1 GiB on the two heavy queries and under 0.25 GiB on the two light ones. The filter and the join aggregate as the rows stream past, and the aggregate state is small, so the 3 GB limit is never close.</p>
+<h2 id="next-to-the-articles-numbers">Next to the article’s numbers</h2>
+<p>Our machine is not the article’s, so the first check is whether the three engines keep their shape. The article reports wall seconds, the whole process from start to exit, so this table does too. It is a different measure from the query-time table above.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Query</th><th align="right">DuckDB, article</th><th align="right">DuckDB, here</th><th align="right">Polars, article</th><th align="right">Polars, here</th><th align="right">Spark, article</th><th align="right">Spark, here</th></tr></thead><tbody><tr><td><code>q1_filter_agg</code></td><td align="right">0.87</td><td align="right">0.97</td><td align="right">0.96</td><td align="right">0.89</td><td align="right">10.77</td><td align="right">10.52</td></tr><tr><td><code>q2_join_agg</code></td><td align="right">1.47</td><td align="right">1.68</td><td align="right">1.46</td><td align="right">1.50</td><td align="right">16.10</td><td align="right">15.10</td></tr><tr><td><code>q3_window_latest</code></td><td align="right">7.92</td><td align="right">9.93</td><td align="right">killed</td><td align="right">killed</td><td align="right">46.29 (2/3)</td><td align="right">37.11 (2/3)</td></tr><tr><td><code>q4_highcard_agg</code></td><td align="right">7.91</td><td align="right">8.62</td><td align="right">4.21 (1/3)</td><td align="right">4.50 (1/3)</td><td align="right">39.70</td><td align="right">36.08</td></tr></tbody></table>
+<p>A fraction such as (2/3) counts the finished runs where not every run finished. The three engines keep their shape. The light queries land within 15% of the article’s times. On the heavy ones DuckDB is 9 to 25% slower here and Spark 9 to 20% faster. Polars fails on the same query in the same way. Memory moves even less: DuckDB peaks at 3.0 GiB on the heavy queries there and 3.3 GiB here.</p>
+<p>The article went further than the four-query run, and two of its follow-ups belong next to our numbers. Polars 2.0.0 with a 3 GiB out-of-core budget (<code>POLARS_OOC_MEMORY_BUDGET_MB=3072</code>) was still killed on the window query, and with the cap raised to 9 GiB it was killed at 9.04 to 9.54 GiB. Polars 2.1.0 finished it with a budget: 18.78 s at 3.34 GiB with 3072 MB, 20.11 s at 1.29 GiB with 1024 MB. The article’s max-timestamp rewrite of the query ran in 5.12 s on Polars. DuckDB with <code>memory_limit=1GB</code> finished the window query in 14.97 s at 1.12 GiB and the group-by in 13.94 s at 1.08 GiB. We have not run SQE at 1 GB yet.</p>
+<p>The article’s verdict on Polars holds for any engine: “Fast and close to the edge is a fine place for a notebook and a bad place for a scheduled job.” Polars on the group-by shows why, peaking at 4.0 GiB and finishing one run in three. We hold SQE to the same bar, so we watch peak memory as closely as time.</p>
+<h2 id="what-the-benchmark-found-in-sqe">What the benchmark found in SQE</h2>
+<p>Our first full run did not look like the tables above. SQE was slow on the window query, and its Iceberg scan used more memory than it needed. We traced both, and both are now fixed in SQE. A benchmark someone else wrote finds the cases you did not think to test.</p>
+<h3 id="the-window-query-sorted-150m-rows-to-keep-15m">The window query sorted 150M rows to keep 15M</h3>
+<p><code>ROW_NUMBER() ... = 1</code> asks for one row per customer. DataFusion 55 plans it as written: sort the whole input by customer, timestamp and order id, number the rows, keep row one. For q3 the sort is the whole query. In an earlier <code>EXPLAIN ANALYZE</code> trace it spilled 4.3 GB to disk, only for nine rows in ten to be thrown away at the end. DataFusion has a <code>WindowTopN</code> rewrite, but it does not match <code>rn = 1</code>, and the rework that would make it match lands after version 55.</p>
+<p><img src="https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/uzxdpouxdtsafkt5wiyf.png" alt="The window plan sorts all 150M rows, numbers them and keeps 15M. The group-by plan keeps the best row per customer in a partial and a final hash aggregate."></p>
+<p>The article worked around the same query on Polars by hand, with a max-timestamp rewrite. SQE now does that rewrite in the planner, so nobody has to write it by hand. A logical rule turns the filter over the window into a group-by on the partition key.</p>
+<p>For each customer the aggregate keeps the best row seen so far. Its sort key is stored in Arrow’s row format, so comparing a new row with the current best is one byte comparison. Because the rule runs inside DataFusion’s hash aggregate, it gets the partial and final stages, memory accounting and spilling that every group-by has.</p>
+<p>The rewrite applies only when the result stays the same: <code>rn = 1</code>, <code>rn &#x3C;= 1</code> or <code>rn &#x3C; 2</code>, one window function, and fixed-width columns. Another bound, a second window function in the same node, or a string or list column keeps the window plan. Among rows that tie on every <code>ORDER BY</code> key the first one seen wins, which is as arbitrary as the window’s own choice.</p>
+<p>On Parquet, q3 wall time went from 8.57 s to 4.90 s and peak memory from 2.47 to 2.14 GiB. The rewrite brought SQE level with DuckDB on the window query.</p>
+<h3 id="the-iceberg-scan-checked-every-kept-row-twice">The Iceberg scan checked every kept row twice</h3>
+<p>A <code>WHERE</code> clause that reaches an Iceberg scan can do work at three levels. It can skip whole files from the manifest statistics. It can skip row groups and pages inside a file, using column statistics, bloom filters and the page index. And it can become a Parquet <code>RowFilter</code>: the reader decodes the predicate columns first, evaluates the predicate on every row, and decodes the other columns only for the rows that pass. The iceberg-rust reader did all three with the scan predicate.</p>
+<p>SQE also keeps a <code>FilterExec</code> above every scan. DataFusion removes that filter only when the scan promises an exact result, and SQE’s scans never promise it, so every pushed filter is marked inexact. Every row the <code>RowFilter</code> kept was checked a second time above it.</p>
+<p><img src="https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/3lo7mc2utgwjq7z8kc3r.png" alt="Before: the RowFilter evaluates the predicate and hands 12.0M rows to the FilterExec, which checks them again. After: the RowFilter keeps only deletes and the join filter, the FilterExec checks 150M rows, and peak memory drops by 0.7 GiB."></p>
+<p>Checking each row twice costs little CPU. The real cost was memory. When the Parquet reader in arrow-rs runs a <code>RowFilter</code>, it caches the predicate columns it decoded, so it need not decode them again for the output. It caches only columns that are also in the output, and here they always were: the <code>FilterExec</code> above needs <code>status</code> to check it again. The cache defaults to 100 MB per row group, the Iceberg path does not change that default, and the scan decodes about one file per core at a time. We have not profiled the cache on its own. What we measured is the result of turning the <code>RowFilter</code> off, on the 150M-row Polaris table with one coordinator and a fresh server per run:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Predicate</th><th align="right">Rows kept</th><th align="right">Peak RSS with <code>RowFilter</code></th><th align="right">without</th></tr></thead><tbody><tr><td>q2, <code>status &#x3C;> 'cancelled'</code></td><td align="right">92%</td><td align="right">1.98 / 2.04 GiB</td><td align="right">1.26 / 1.26 GiB</td></tr><tr><td>q2, <code>status = 'cancelled'</code></td><td align="right">8%</td><td align="right">1.92 / 1.90 GiB</td><td align="right">1.25 / 1.20 GiB</td></tr><tr><td>q1, <code>ts >= ... AND status IN (...)</code></td><td align="right">not counted</td><td align="right">1.35 / 1.44 GiB</td><td align="right">0.64 / 0.69 GiB</td></tr></tbody></table>
+<p>Two repetitions each, side by side. Memory rose by 55 to 110%, whether the predicate kept most rows or few.</p>
+<p>The 8% query is the case where the <code>RowFilter</code> should win. With it, the scan hands 12.0M rows to the <code>FilterExec</code>, which spends 22 ms on them. Without it, the scan hands over all 150M rows and the <code>FilterExec</code> spends 868 ms. Spread over 8 threads, that extra filter work did not show up in the query time: without the <code>RowFilter</code> the query was as fast or faster in every run.</p>
+<p>So the scan predicate still prunes files, row groups and pages. It is no longer a per-row <code>RowFilter</code>, and the <code>FilterExec</code> drops the rest. DataFusion’s own Parquet reader splits the work the same way with its default <code>pushdown_filters = false</code>. Two things stay in the <code>RowFilter</code>. Equality deletes must be applied in the scan, because no operator above it can see the delete files. Join runtime filters arrive while the scan runs and cut rows of the fact table before they reach the join. The benchmark queries before and after, both from this machine:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Query</th><th>Engine</th><th align="right">Peak RSS before</th><th align="right">after</th></tr></thead><tbody><tr><td><code>q1_filter_agg</code></td><td><code>sqe-iceberg</code></td><td align="right">1.08 GiB</td><td align="right">0.70 GiB</td></tr><tr><td><code>q2_join_agg</code></td><td><code>sqe-iceberg</code></td><td align="right">1.48 GiB</td><td align="right">0.70 GiB</td></tr><tr><td><code>q1_filter_agg</code></td><td><code>sqe-polaris</code></td><td align="right">1.48 GiB</td><td align="right">0.74 GiB</td></tr><tr><td><code>q2_join_agg</code></td><td><code>sqe-polaris</code></td><td align="right">1.97 GiB</td><td align="right">1.29 GiB</td></tr></tbody></table>
+<p><code>scan_static_row_filter = true</code> in a catalog’s section brings the old behaviour back. We kept the switch for very selective predicates on wide rows, where decoding fewer rows could still pay off. We have not measured such a case yet. Distributed workers read Parquet through their own reader, which builds a <code>RowFilter</code> only when a late-materialization check says it pays. The change does not touch them, and they are the next thing we measure.</p>
+<h2 id="why-polaris-is-slower">Why Polaris is slower</h2>
+<p>The <code>sqe-polaris</code> column runs the same engine through a different path. The other engines read Parquet from local disk. <code>sqe-polaris</code> reads Iceberg data from RustFS in Docker, and on macOS every byte from a container crosses the Docker Desktop port forward, which moves about 220 MB/s here. The time also includes a catalog round trip, an Arrow Flight SQL fetch and the client writing the result.</p>
+<p>The harness can put every engine on the same path. <code>STORAGE=s3</code> copies the Parquet into RustFS and points DuckDB, Polars, Spark and <code>sqe-parquet</code> at <code>s3://</code>. In that mode, measured on 2 November before both fixes, the gap closes. Median q1 query time was 8.0 s on DuckDB, 7.4 s on Polars, 7.6 s on <code>sqe-parquet</code> and 9.4 s on <code>sqe-polaris</code>. The port forward is the bottleneck for everyone. The Polaris path is still the one SQE is built for: a catalog, a policy-checked plan and the user’s own credentials.</p>
+<h2 id="run-it-yourself">Run it yourself</h2>
+<p>The harness is in <code>quickstart/engine-bench/</code>. It clones engine-bench at a pinned commit, generates the data, loads the Iceberg copies, runs every engine, validates the answers against DuckDB’s and writes the tables above.</p>
+<div class="expressive-code"><link rel="stylesheet" href="/_astro/ec.t05yi.css"><script type="module" src="/_astro/ec.0vx5m.js"></script><figure class="frame is-terminal"><figcaption class="header"><span class="title"></span><span class="sr-only">Terminal window</span></figcaption><pre data-language="bash"><code><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">make</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">bench</span><span style="--0:#E1E4E8;--1:#24292E">                                </span><span style="--0:#99A0A6;--1:#616972"># 150M rows, 3 reps, all engines + Spark (about an hour)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">make</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">bench</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">BENCH_STORAGE=s3</span><span style="--0:#E1E4E8;--1:#24292E">               </span><span style="--0:#99A0A6;--1:#616972"># every engine reads from RustFS</span></div></div><div class="ec-line"><div class="code"><span style="--0:#B392F0;--1:#6F42C1">make</span><span style="--0:#E1E4E8;--1:#24292E"> </span><span style="--0:#9ECBFF;--1:#032F62">bench-smoke</span><span style="--0:#E1E4E8;--1:#24292E">                          </span><span style="--0:#99A0A6;--1:#616972"># 10M rows, no Spark, fails on any mismatch</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="make bench                                # 150M rows, 3 reps, all engines + Spark (about an hour)make bench BENCH_STORAGE=s3               # every engine reads from RustFSmake bench-smoke                          # 10M rows, no Spark, fails on any mismatch"><div></div></button></div></figure></div>
+<p>The article ends with “If your job fits on one machine, measure it on one machine before you start a cluster for it.” We agree. The harness also checks every answer, and that check carried our two fixes: both changed how a query runs, and the proof they kept the result is that all 24 cells still match DuckDB’s.</p>
+<p>Thanks to Firat for publishing the scripts and the raw numbers. Next on our list are SQE at the article’s 1 GB setting and larger data, published the same way.</p>
+<p>Get SQE from <a href="https://getsqe.com">https://getsqe.com</a></p></div><nav class="post-nav" data-astro-cid-tldeq5d5><span data-astro-cid-tldeq5d5></span><a href="/blog/2026-11-02-150m-rows-under-a-4-5-gib-cap/" class="post-nav-link post-nav-next" data-astro-cid-tldeq5d5><span class="post-nav-title" data-astro-cid-tldeq5d5>150M rows under a 4.5 GiB cap: SQE next to DuckDB, Polars and Spark</span><span class="post-nav-arrow" data-astro-cid-tldeq5d5>&rarr;</span></a></nav><a href="/blog/" class="back-link" data-astro-cid-tldeq5d5><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-tldeq5d5><path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-tldeq5d5></path></svg>All posts</a></article></main><footer data-astro-cid-jo6i4kqk><div class="projects" data-astro-cid-jo6i4kqk><a href="https://theartofagents.com/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-jo6i4kqk>The Art of Agents</a><span class="project-sep" data-astro-cid-jo6i4kqk>/</span><a href="https://neonarcade.net/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-jo6i4kqk>Neon Arcade</a></div><div class="social-links" data-astro-cid-jo6i4kqk><a href="https://x.com/jverhoeks" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Follow on X</span><svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" data-astro-cid-jo6i4kqk></path></svg></a><a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Go to GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-jo6i4kqk></path></svg></a></div><p class="copyright" data-astro-cid-jo6i4kqk>&copy; 2026 Jacob Verhoeks</p></footer></body></html>
