@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300" font-family="Inter, system-ui, sans-serif" font-size="12">
+<rect width="760" height="300" fill="#ffffff"/>
+<text x="44" y="22" font-size="14" font-weight="700" fill="#0b1726">Overall UI score per round (1-10)</text>
+<line x1="44" x2="736" y1="244.0" y2="244.0" stroke="#e3e8ef"/><text x="36" y="248.0" text-anchor="end" fill="#5b6b7f">5</text>
+<line x1="44" x2="736" y1="193.0" y2="193.0" stroke="#e3e8ef"/><text x="36" y="197.0" text-anchor="end" fill="#5b6b7f">6</text>
+<line x1="44" x2="736" y1="142.0" y2="142.0" stroke="#e3e8ef"/><text x="36" y="146.0" text-anchor="end" fill="#5b6b7f">7</text>
+<line x1="44" x2="736" y1="91.0" y2="91.0" stroke="#e3e8ef"/><text x="36" y="95.0" text-anchor="end" fill="#5b6b7f">8</text>
+<line x1="44" x2="736" y1="40.0" y2="40.0" stroke="#e3e8ef"/><text x="36" y="44.0" text-anchor="end" fill="#5b6b7f">9</text>
+<line x1="44" x2="736" y1="55.30000000000004" y2="55.30000000000004" stroke="#c2410c" stroke-dasharray="5 4"/><text x="736" y="49.30000000000004" text-anchor="end" fill="#c2410c">goal 8.7</text>
+<text x="44.0" y="262" text-anchor="middle" fill="#5b6b7f">R1</text>
+<text x="142.85714285714286" y="262" text-anchor="middle" fill="#5b6b7f">R2</text>
+<text x="241.71428571428572" y="262" text-anchor="middle" fill="#5b6b7f">R3</text>
+<text x="340.57142857142856" y="262" text-anchor="middle" fill="#5b6b7f">R4</text>
+<text x="439.42857142857144" y="262" text-anchor="middle" fill="#5b6b7f">R5</text>
+<text x="538.2857142857142" y="262" text-anchor="middle" fill="#5b6b7f">R6</text>
+<text x="637.1428571428571" y="262" text-anchor="middle" fill="#5b6b7f">R7</text>
+<text x="736.0" y="262" text-anchor="middle" fill="#5b6b7f">R8</text>
+<polyline fill="none" stroke="#0f9d8a" stroke-width="1.5" points="44.0,244.0 142.9,193.0 241.7,167.5 340.6,167.5 439.4,177.7 538.3,177.7 637.1,157.3 736.0,147.1"/>
+<circle cx="44.0" cy="244.0" r="2.5" fill="#0f9d8a"/>
+<circle cx="142.9" cy="193.0" r="2.5" fill="#0f9d8a"/>
+<circle cx="241.7" cy="167.5" r="2.5" fill="#0f9d8a"/>
+<circle cx="340.6" cy="167.5" r="2.5" fill="#0f9d8a"/>
+<circle cx="439.4" cy="177.7" r="2.5" fill="#0f9d8a"/>
+<circle cx="538.3" cy="177.7" r="2.5" fill="#0f9d8a"/>
+<circle cx="637.1" cy="157.3" r="2.5" fill="#0f9d8a"/>
+<circle cx="736.0" cy="147.1" r="2.5" fill="#0f9d8a"/>
+<polyline fill="none" stroke="#d68a00" stroke-width="1.5" points="44.0,193.0 142.9,142.0 241.7,121.6 340.6,121.6 439.4,121.6 538.3,126.7 637.1,111.4 736.0,106.3"/>
+<circle cx="44.0" cy="193.0" r="2.5" fill="#d68a00"/>
+<circle cx="142.9" cy="142.0" r="2.5" fill="#d68a00"/>
+<circle cx="241.7" cy="121.6" r="2.5" fill="#d68a00"/>
+<circle cx="340.6" cy="121.6" r="2.5" fill="#d68a00"/>
+<circle cx="439.4" cy="121.6" r="2.5" fill="#d68a00"/>
+<circle cx="538.3" cy="126.7" r="2.5" fill="#d68a00"/>
+<circle cx="637.1" cy="111.4" r="2.5" fill="#d68a00"/>
+<circle cx="736.0" cy="106.3" r="2.5" fill="#d68a00"/>
+<polyline fill="none" stroke="#8a5cd6" stroke-width="1.5" points="44.0,193.0 142.9,142.0 241.7,126.7 340.6,116.5 439.4,147.1 538.3,142.0 637.1,126.7 736.0,126.7"/>
+<circle cx="44.0" cy="193.0" r="2.5" fill="#8a5cd6"/>
+<circle cx="142.9" cy="142.0" r="2.5" fill="#8a5cd6"/>
+<circle cx="241.7" cy="126.7" r="2.5" fill="#8a5cd6"/>
+<circle cx="340.6" cy="116.5" r="2.5" fill="#8a5cd6"/>
+<circle cx="439.4" cy="147.1" r="2.5" fill="#8a5cd6"/>
+<circle cx="538.3" cy="142.0" r="2.5" fill="#8a5cd6"/>
+<circle cx="637.1" cy="126.7" r="2.5" fill="#8a5cd6"/>
+<circle cx="736.0" cy="126.7" r="2.5" fill="#8a5cd6"/>
+<polyline fill="none" stroke="#1d5fd1" stroke-width="3" points="44.0,209.8 142.9,158.8 241.7,138.4 340.6,135.4 439.4,148.6 538.3,148.6 637.1,131.8 736.0,126.7"/>
+<circle cx="44.0" cy="209.8" r="4" fill="#1d5fd1"/>
+<circle cx="142.9" cy="158.8" r="4" fill="#1d5fd1"/>
+<circle cx="241.7" cy="138.4" r="4" fill="#1d5fd1"/>
+<circle cx="340.6" cy="135.4" r="4" fill="#1d5fd1"/>
+<circle cx="439.4" cy="148.6" r="4" fill="#1d5fd1"/>
+<circle cx="538.3" cy="148.6" r="4" fill="#1d5fd1"/>
+<circle cx="637.1" cy="131.8" r="4" fill="#1d5fd1"/>
+<circle cx="736.0" cy="126.7" r="4" fill="#1d5fd1"/>
+<text x="736.0" y="114.7" text-anchor="end" font-weight="700" fill="#1d5fd1">7.3</text>
+<line x1="44" x2="62" y1="286" y2="286" stroke="#1d5fd1" stroke-width="4"/><text x="68" y="290" fill="#0b1726">Mean of three</text>
+<line x1="183" x2="201" y1="286" y2="286" stroke="#0f9d8a" stroke-width="2.5"/><text x="207" y="290" fill="#0b1726">Claude</text>
+<line x1="273" x2="291" y1="286" y2="286" stroke="#d68a00" stroke-width="2.5"/><text x="297" y="290" fill="#0b1726">Codex</text>
+<line x1="356" x2="374" y1="286" y2="286" stroke="#8a5cd6" stroke-width="2.5"/><text x="380" y="290" fill="#0b1726">Grok</text>
+</svg>

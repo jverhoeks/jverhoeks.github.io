@@ -1,0 +1,297 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-tldeq5d5><head><!-- Theme: default dark (/echo). Honor saved light preference. --><script>
+	(function () {
+		try {
+			if (localStorage.getItem('theme') === 'light') {
+				document.documentElement.setAttribute('data-theme', 'light');
+			}
+		} catch (e) {}
+	})();
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#071014"><meta name="author" content="Jacob Verhoeks"><meta name="generator" content="Astro v7.4.5"><!-- Google Fonts: Oswald + Spectral + IBM Plex Mono (non-render-blocking) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"></noscript><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/2026-11-07-console-polish/"><link rel="alternate" type="application/rss+xml" title="Jacob's Blog" href="https://jacob.verhoeks.org/rss.xml"><!-- Primary Meta Tags --><title>Eight rounds of review: polishing the dbx-migrator console with three models</title><meta name="title" content="Eight rounds of review: polishing the dbx-migrator console with three models"><meta name="description" content="Three models scored the dbx-migrator console from Storybook screenshots. We fixed what they agreed on and asked again, eight times. The score went from 5.7…"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:site_name" content="Jacob's Blog"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jacob.verhoeks.org/blog/2026-11-07-console-polish/"><meta property="og:title" content="Eight rounds of review: polishing the dbx-migrator console with three models"><meta property="og:description" content="Three models scored the dbx-migrator console from Storybook screenshots. We fixed what they agreed on and asked again, eight times. The score went from 5.7…"><meta property="og:image" content="https://jacob.verhoeks.org/og/2026-11-07-console-polish.jpg"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@jverhoeks"><meta name="twitter:creator" content="@jverhoeks"><meta name="twitter:title" content="Eight rounds of review: polishing the dbx-migrator console with three models"><meta name="twitter:description" content="Three models scored the dbx-migrator console from Storybook screenshots. We fixed what they agreed on and asked again, eight times. The score went from 5.7…"><meta name="twitter:image" content="https://jacob.verhoeks.org/og/2026-11-07-console-polish.jpg"><meta name="theme-color" content="#071014"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Eight rounds of review: polishing the dbx-migrator console with three models","description":"Three models scored the dbx-migrator console from Storybook screenshots. We fixed what they agreed on and asked again, eight times. The score went from 5.7 to 7.3, short of the 8.7 goal, and the last rounds showed why: past 8 needs a design-system pass, not another review.","datePublished":"2026-11-07T00:00:00.000Z","author":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org/about"},"publisher":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org"},"image":"https://jacob.verhoeks.org/og/2026-11-07-console-polish.jpg","keywords":"ui, design, storybook, ai-review, dbx-migrator","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacob.verhoeks.org/blog/2026-11-07-console-polish/"}}</script><link rel="stylesheet" href="/_astro/BaseHead.Yu20hq-f.css"><style>a[data-astro-cid-evkijfd6]{text-decoration:none;display:inline-block}a[data-astro-cid-evkijfd6].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-nen7h5rs]{background:linear-gradient(180deg, var(--echo-ink-2), var(--bg));border-top:2px solid var(--accent);border-bottom:1px solid var(--echo-hair);min-height:56px;margin:0;padding:0 1em;transition:background-color .25s,border-color .25s}h2[data-astro-cid-nen7h5rs]{font-size:.95em;font-family:var(--font-display);text-transform:uppercase;letter-spacing:.06em;margin:0;font-weight:600}h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs],h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active{color:rgb(var(--black));text-decoration:none}h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:var(--accent)}nav[data-astro-cid-nen7h5rs]{justify-content:space-between;align-items:center;gap:.75rem;display:flex}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{color:var(--echo-mute);font-family:var(--font-mono);letter-spacing:.12em;text-transform:uppercase;border-bottom:2px solid #0000;padding:1em .5em;font-size:.72rem;text-decoration:none}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:rgb(var(--black))}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active{color:rgb(var(--black));border-bottom-color:var(--accent);text-decoration:none}.social-links[data-astro-cid-nen7h5rs],.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{align-items:center;display:flex}.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{color:var(--echo-mute);border-bottom:none;padding:.5em}.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:var(--accent)}.theme-toggle[data-astro-cid-nen7h5rs]{border:1px solid var(--echo-hair);width:36px;height:36px;color:var(--echo-mute);cursor:pointer;background:0 0;border-radius:2px;justify-content:center;align-items:center;margin-right:.35em;padding:0;transition:background-color .2s,border-color .2s,color .2s;display:inline-flex}.theme-toggle[data-astro-cid-nen7h5rs]:hover{border-color:var(--accent);color:var(--accent)}.icon-sun[data-astro-cid-nen7h5rs]{display:block}.icon-moon[data-astro-cid-nen7h5rs],:root[data-theme=light] .icon-sun[data-astro-cid-nen7h5rs]{display:none}:root[data-theme=light] .icon-moon[data-astro-cid-nen7h5rs]{display:block}@media (width<=720px){.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{display:none}.social-links[data-astro-cid-nen7h5rs] .theme-toggle[data-astro-cid-nen7h5rs]{display:inline-flex}h2[data-astro-cid-nen7h5rs]{white-space:nowrap;font-size:.8em}.internal-links[data-astro-cid-nen7h5rs]{white-space:nowrap;scrollbar-width:none;flex:1;min-width:0;display:flex;overflow-x:auto;mask-image:linear-gradient(90deg,#000 85%,#0000)}.internal-links[data-astro-cid-nen7h5rs]::-webkit-scrollbar{display:none}}footer[data-astro-cid-jo6i4kqk]{background:linear-gradient(180deg, transparent, var(--echo-ink-2));border-top:1px solid var(--echo-hair);color:var(--echo-mute);text-align:center;padding:2.5em 1em 5em}.projects[data-astro-cid-jo6i4kqk]{flex-wrap:wrap;justify-content:center;align-items:center;gap:.5em;margin-bottom:1em;display:flex}.project-link[data-astro-cid-jo6i4kqk]{color:rgb(var(--black));font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase;font-size:.72rem;font-weight:500;text-decoration:none;transition:color .2s}.project-link[data-astro-cid-jo6i4kqk]:hover{color:var(--accent)}.project-sep[data-astro-cid-jo6i4kqk]{color:var(--echo-mute);opacity:.5;font-weight:300}.social-links[data-astro-cid-jo6i4kqk]{justify-content:center;gap:1em;margin-top:.5em;display:flex}.social-links[data-astro-cid-jo6i4kqk] a[data-astro-cid-jo6i4kqk]{color:var(--echo-mute);text-decoration:none}.social-links[data-astro-cid-jo6i4kqk] a[data-astro-cid-jo6i4kqk]:hover{color:var(--accent)}.copyright[data-astro-cid-jo6i4kqk]{font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;margin-top:1.25em;font-size:.7rem}
+body.echo-blog{background:var(--bg)}
+</style><link rel="stylesheet" href="/_astro/BlogPost.NnC8XkKt.css"></head><body class="echo-blog" data-astro-cid-tldeq5d5><header data-astro-cid-nen7h5rs><nav data-astro-cid-nen7h5rs><h2 data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs>Jacob&#39;s Blog</a></h2><div class="internal-links" data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Home</a><a href="/blog" class="active" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Blog</a><a href="/#books" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Books</a><a href="/projects" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Projects</a><a href="/about" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>About</a></div><div class="social-links" data-astro-cid-nen7h5rs><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle light mode" title="Toggle light mode" data-astro-cid-nen7h5rs><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-nen7h5rs><circle cx="12" cy="12" r="4" data-astro-cid-nen7h5rs></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" data-astro-cid-nen7h5rs></path></svg><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor" data-astro-cid-nen7h5rs><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" data-astro-cid-nen7h5rs></path></svg></button><a href="https://x.com/jverhoeks" target="_blank" data-astro-cid-nen7h5rs><span class="sr-only" data-astro-cid-nen7h5rs>Follow on X</span><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22" data-astro-cid-nen7h5rs><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" data-astro-cid-nen7h5rs></path></svg></a><a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-nen7h5rs><span class="sr-only" data-astro-cid-nen7h5rs>Go to GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-nen7h5rs><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-nen7h5rs></path></svg></a></div></nav></header><script>
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		btn.addEventListener('click', function () {
+			var root = document.documentElement;
+			var isLight = root.getAttribute('data-theme') === 'light';
+			if (isLight) {
+				root.removeAttribute('data-theme');
+				try { localStorage.setItem('theme', 'dark'); } catch (e) {}
+			} else {
+				root.setAttribute('data-theme', 'light');
+				try { localStorage.setItem('theme', 'light'); } catch (e) {}
+			}
+		});
+	})();
+</script><main data-astro-cid-tldeq5d5><article data-astro-cid-tldeq5d5><header class="article-header" data-astro-cid-tldeq5d5><div class="article-meta" data-astro-cid-tldeq5d5><time class="article-date" data-astro-cid-tldeq5d5><time datetime="2026-11-07T00:00:00.000Z">Nov 7, 2026</time></time><span class="meta-dot" data-astro-cid-tldeq5d5>|</span><span data-astro-cid-tldeq5d5>Jacob Verhoeks</span><span class="meta-dot" data-astro-cid-tldeq5d5>|</span><span data-astro-cid-tldeq5d5>11 min read</span></div><h1 class="article-title" data-astro-cid-tldeq5d5>Eight rounds of review: polishing the dbx-migrator console with three models</h1><p class="article-description" data-astro-cid-tldeq5d5>Three models scored the dbx-migrator console from Storybook screenshots. We fixed what they agreed on and asked again, eight times. The score went from 5.7 to 7.3, short of the 8.7 goal, and the last rounds showed why: past 8 needs a design-system pass, not another review.</p><div class="article-tags" data-astro-cid-tldeq5d5><a href="/blog/tag/ui/" class="echo-pill" data-astro-cid-tldeq5d5>ui</a><a href="/blog/tag/design/" class="echo-pill" data-astro-cid-tldeq5d5>design</a><a href="/blog/tag/storybook/" class="echo-pill" data-astro-cid-tldeq5d5>storybook</a><a href="/blog/tag/ai-review/" class="echo-pill" data-astro-cid-tldeq5d5>ai-review</a><a href="/blog/tag/dbx-migrator/" class="echo-pill" data-astro-cid-tldeq5d5>dbx-migrator</a></div></header><div class="prose" data-astro-cid-tldeq5d5><p>The dbx-migrator console (<code>ui/</code>, Angular and Storybook) worked, but it looked like a first draft. Titles were very
+large, panels had no padding and the flow matrix ran off the page. Every state had its own kind of chip. We wanted a
+quick, honest way to improve it without guessing what “better” means. So we asked three models to score the console as
+reviewers, fixed what they agreed on and asked them again. We did eight rounds.</p>
+<p>This post shows the console before and after, what each round changed, and where it stopped.</p>
+<h2 id="the-method">The method</h2>
+<ol>
+<li><strong>Screens from Storybook, not from a live app.</strong> Every component and page state already has a story, with fake data
+from <code>ui/src/stories/fixtures.ts</code>. A small Playwright script builds Storybook and takes a screenshot of every story:
+1440 px wide for desktop and 390 px for the <code>Narrow</code> stories. That gives 165 screens per round. They are the same
+every time, contain no customer data and need no backend.</li>
+<li><strong>Three reviewers, one brief.</strong> Claude (Opus 5.5), Codex (GPT-6.1) and Grok (4.7) each got the same brief and the
+same folder of screens. Each scored seven categories from 1.0 to 10.0: Typography, Hierarchy, Spacing &#x26; Density,
+Color &#x26; Contrast, Iconography, Consistency &#x26; Polish and Clarity, plus Overall. Each wrote JSON with the scores, a
+short rationale and a ranked list of improvements, each with a where, a what and a why. The brief said to score
+against a console you would ship to customers, not against the last round, so an improvement alone does not earn
+points.</li>
+<li><strong>Fix what they agree on.</strong> We grouped the improvements across the three lists. Anything two or three reviewers
+raised was fixed first. A point raised by only one reviewer was fixed if it was cheap or clearly right.</li>
+<li><strong>Every fix passes the gate.</strong> <code>make ui-check</code> checks the generated API client and builds the app. It runs the unit
+specs, checks that English and Dutch have the same keys, and runs every story as a test with axe for
+accessibility. Nothing went to the next round unless that gate passed.</li>
+</ol>
+<h2 id="the-scores">The scores</h2>
+<p><img alt="Overall score per round: the mean rises from 5.7 to 7.3; the goal of 8.7 was not reached" loading="lazy" decoding="async" width="760" height="300" src="/_astro/scores.DZ6CXvLf_2gmIvB.svg"></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Round</th><th>Typo</th><th>Hier</th><th>Spacing</th><th>Color</th><th>Icons</th><th>Polish</th><th>Clarity</th><th><strong>Overall</strong></th></tr></thead><tbody><tr><td>1</td><td>6.0</td><td>5.7</td><td>5.0</td><td>6.3</td><td>7.0</td><td>5.7</td><td>6.0</td><td><strong>5.7</strong></td></tr><tr><td>2</td><td>6.7</td><td>6.3</td><td>6.0</td><td>6.7</td><td>6.7</td><td>6.3</td><td>6.3</td><td><strong>6.7</strong></td></tr><tr><td>3</td><td>7.2</td><td>7.1</td><td>6.5</td><td>7.3</td><td>7.2</td><td>6.9</td><td>6.9</td><td><strong>7.1</strong></td></tr><tr><td>4</td><td>7.4</td><td>7.2</td><td>6.7</td><td>7.4</td><td>7.2</td><td>7.0</td><td>7.1</td><td><strong>7.1</strong></td></tr><tr><td>5</td><td>7.2</td><td>7.1</td><td>6.3</td><td>7.4</td><td>7.1</td><td>6.7</td><td>6.9</td><td><strong>6.9</strong></td></tr><tr><td>6</td><td>7.2</td><td>7.0</td><td>6.5</td><td>7.4</td><td>7.2</td><td>6.7</td><td>6.8</td><td><strong>6.9</strong></td></tr><tr><td>7</td><td>7.5</td><td>7.2</td><td>6.9</td><td>7.6</td><td>7.3</td><td>7.2</td><td>7.2</td><td><strong>7.2</strong></td></tr><tr><td>8</td><td>7.5</td><td>7.3</td><td>7.1</td><td>7.6</td><td>7.2</td><td>7.2</td><td>7.2</td><td><strong>7.3</strong></td></tr></tbody></table>
+<p>These are means of the three reviewers. Rounds 1 and 2 were scored in whole numbers, and one decimal from round 3 on.
+Claude was the strictest every round (6.9 in round 8). Codex was the most generous (7.7) and Grok sat in the middle
+(7.3).</p>
+<h2 id="before-and-after">Before and after</h2>
+<h3 id="plan">Plan</h3>
+<p><img alt="Plan, before" loading="lazy" decoding="async" width="1200" height="1697" src="/_astro/plan-ready-before.DJ_hrU3C_2sgdza.webp">
+<img alt="Plan, after" loading="lazy" decoding="async" width="1200" height="1337" src="/_astro/plan-ready-after.DL_sbmas_Z2szCAb.webp"></p>
+<ul>
+<li>The title is at an operational size instead of a poster size, and every small line above a title uses the same sans
+style.</li>
+<li>Target cards span the width. The progress rail is a single line, with the current step drawn as a ring.</li>
+<li>The validate line leads with what is still open (“4 blocked, 9 wait for review”). The run and digest come after it,
+in grey.</li>
+<li>Object kinds, layers and actions read as words (“Render Airflow DAG”, “Table data”), not as identifiers. The raw value
+stays in the tooltip.</li>
+<li>Blocked rows keep the red label and a thin red bar, but lost the red background. The row says “blocked” twice, not
+four times.</li>
+<li>The filter shows a count per result.</li>
+</ul>
+<h3 id="runs-and-the-flow-matrix">Runs and the flow matrix</h3>
+<p><img alt="Runs, before" loading="lazy" decoding="async" width="1200" height="1182" src="/_astro/runs-flow-before.D9wLOHTn_Z1pWlhh.webp">
+<img alt="Runs, after" loading="lazy" decoding="async" width="1200" height="1212" src="/_astro/runs-flow-after.CaDEXgi3_Z1qi3fm.webp"></p>
+<ul>
+<li>“Where each target stands” was six large boxes per target. It is now a single line of step chips, with the reason and
+the next action under it.</li>
+<li>The command matrix scrolls inside its card and never widens the page. It has a scroll bar with arrows that show
+when there is more to the left or right. Each step snaps to the left edge.</li>
+<li>Run cells share one shape and use three looks: an outline, a dashed box for “not run”, and a fill for a result. The
+selected cell has a ring.</li>
+<li>The legend is built from the cells on screen. It is split into “Run” and “Plan result”, and each entry has a tooltip.</li>
+<li>The run list and log are lighter. The run state on the dark console uses its own colour, and step titles use the
+same sans heading as the rest of the console.</li>
+</ul>
+<h3 id="operate">Operate</h3>
+<p><img alt="Operate, before" loading="lazy" decoding="async" width="1200" height="750" src="/_astro/operate-failed-before.DJQ1eEsf_Z1j8WUy.webp">
+<img alt="Operate, after" loading="lazy" decoding="async" width="1200" height="750" src="/_astro/operate-failed-after.Dmc_IQ87_Z2tTFvu.webp"></p>
+<ul>
+<li>Inserts, updates and deletes each have their own column. A zero shows as a dash, so the changes that did happen stand
+out.</li>
+<li>A table that is further behind than the task’s lag limit is red, like a failure. A lag within the limit stays grey.</li>
+<li>Each status uses one chip style, with an icon that means only that status. Lag has an hourglass, a count check has an
+equals sign.</li>
+</ul>
+<h3 id="inventory">Inventory</h3>
+<p><img alt="Inventory, before" loading="lazy" decoding="async" width="1200" height="1087" src="/_astro/inventory-ready-before.sBednpn0_Zv20t5.webp">
+<img alt="Inventory, after" loading="lazy" decoding="async" width="1200" height="971" src="/_astro/inventory-ready-after.Bp0cn-D__Z2oVNPm.webp"></p>
+<ul>
+<li>The guidance names the session you are looking at and agrees with its state. The “next step” panel is calmer.</li>
+<li>A session whose discover failed gets the same light red wash and bar as a failed row in Operate.</li>
+<li>The empty state has a button that opens discover.</li>
+</ul>
+<h3 id="errors">Errors</h3>
+<p><img alt="Error panel, before" loading="lazy" decoding="async" width="900" height="562" src="/_astro/state-panel-failed-before.C3CPfxFF_Zq7OWJ.webp">
+<img alt="Error panel, after" loading="lazy" decoding="async" width="900" height="562" src="/_astro/state-panel-failed-after.CLtj_XcO_9jXK3.webp"></p>
+<p>Loading, empty and error states share one component. The error panel is lighter now: a light wash with a red bar, a
+red title and the technical detail in grey mono.</p>
+<h3 id="phones">Phones</h3>
+<p>Before round 7 there was no phone layout: pages became wider than the screen. Now every page works at 390 px.
+Tables turn into cards with a label above each value, the page refresh is an icon beside the title, and the Operate
+cards are laid out two by two.</p>
+<p>
+  <img src="/images/blog/console-polish/plan-narrow-after.jpg" alt="Plan on a phone" width="300">
+  <img src="/images/blog/console-polish/operate-narrow-after.jpg" alt="Operate on a phone" width="300">
+</p>
+<h2 id="what-each-round-did">What each round did</h2>
+<p><strong>Round 1 (5.7): the obvious.</strong> All three reviewers asked for padding on the Validate and Reset panels, a smaller page
+title, and a flow matrix that stays inside the page. They also asked to make Blocked louder than Review, to split the
+change counts, and to put the target name on every rail. We fixed all of these.</p>
+<p><strong>Round 2 (6.7): one system.</strong> The reviewers now wanted a type scale in the design tokens, used everywhere. They asked
+for one table header style and for signal colour spent only on what needs attention. We added the scale and the tone
+variables (<code>tone.ts</code>) and replaced one-off sizes and colours with them. Two reviewers also found numbers that
+contradicted each other between stories, such as a count in one panel that another panel did not match. Making the fake
+data agree turned out to be design work too: reviewers read it as a product bug.</p>
+<p><strong>Round 3 (7.1): states that look alike.</strong> Selected, focused and running looked the same, so each got its own look:
+a ring, a focus outline and a spinner. The “next step” panel was calmed down. Table rows got tighter. Rail reasons were
+translated, and graph nodes got an ink stroke.</p>
+<p><strong>Round 4 (7.1): details.</strong> The matrix now opens scrolled to the start and no longer clips cells. Focus rings stay out
+of static screenshots. Blocked and Failed got different glyphs, and Acknowledged got its own fill instead of the Info
+colour. The score barely moved: the reviewers found new details as fast as we fixed old ones.</p>
+<p><strong>Round 5 (6.9): a step back.</strong> The score dropped. Changes from round 4 had made the lag chip overlap the row count.
+Identifiers were shown in upper case, and the Plan table lost some of its row lines. All three saw it. The lesson:
+a visible regression costs more than a round of small gains earns, so check the screens yourself before sending them to
+the reviewers.</p>
+<p><strong>Round 6 (6.9): phones.</strong> The reviewers moved on to small screens, where the Plan table and the Inventory sessions
+were clipped. The matrix also did not show that it scrolls. We built real phone layouts for every page and made
+matrix labels stay on one line.</p>
+<p><strong>Round 7 (7.2): the phone layouts land.</strong> These changes came in this round:</p>
+<ul>
+<li>tables as cards with labels on phones;</li>
+<li>one style for run cells;</li>
+<li>sans section titles;</li>
+<li>the current step drawn as a ring;</li>
+<li>a tooltip on every cell;</li>
+<li>plain words for run states (“Runner failed”, “After validate”, “Done elsewhere”).</li>
+</ul>
+<p>All three reviewers still disliked the matrix arrows that sat over the headers, and the long legend.</p>
+<p><strong>Round 8 (7.3): one meaning per signal.</strong> These changes came in this round:</p>
+<ul>
+<li>the scroll bar above the matrix;</li>
+<li>the legend built from what is on screen;</li>
+<li>an icon of its own for carry, validated, exported, lag and spark;</li>
+<li>the lag limit shown in red;</li>
+<li>calmer blocked rows and a validate line that leads with the counts in Plan;</li>
+<li>the refresh icon beside the title on phones.</li>
+</ul>
+<p><strong>After round 8 (not scored).</strong> We added the last open points from round 7:</p>
+<ul>
+<li>a wash on the broken session row;</li>
+<li>a lighter run log;</li>
+<li>a lighter error panel;</li>
+<li>the clock icon only for “waiting”. “After validate” got its own arrow icon, and “Not run” and “To remove” got a
+hollow circle.</li>
+</ul>
+<h2 id="where-it-stopped-and-why">Where it stopped, and why</h2>
+<p>We set a goal of 8.7 and reached 7.3. In the last two rounds the score rose by about 0.1 per round. Each round still
+fixed what the reviewers asked for, but each fix also uncovered the next layer:</p>
+<ul>
+<li>columns cut in half at the edge of the matrix;</li>
+<li>matrix headers of uneven height;</li>
+<li>two pill sizes;</li>
+<li>mono and sans text not lining up in one table row.</li>
+</ul>
+<p>Those are not spot fixes. To get past 8, the console needs a design-system pass:</p>
+<ul>
+<li>one size scale for pills and tags;</li>
+<li>an icon set with a single meaning per glyph, checked in one place;</li>
+<li>a matrix that only scrolls by whole columns;</li>
+<li>a clear order of information in every metadata line.</li>
+</ul>
+<p>That is a few days of focused work, not another review round.</p>
+<h2 id="what-we-would-do-again">What we would do again</h2>
+<ul>
+<li><strong>Review the Storybook screens.</strong> They are cheap, the same every time and free of real data, and the reviewers
+see every state, including the error and empty ones a demo skips.</li>
+<li><strong>Use several reviewers and act on what they agree on.</strong> A single model’s list mixes good points with
+preferences. Agreement between three different models was a good filter.</li>
+<li><strong>Score on an absolute scale.</strong> Asking “how good is this as a product?” instead of “is it better than last time?”
+kept the numbers honest. It also showed when we had stopped making real progress.</li>
+<li><strong>Keep the gate strict.</strong> Every story runs as an accessibility test, and English and Dutch must have the same keys.
+Over eight rounds of fast changes, that is what kept the console working.</li>
+</ul></div><nav class="post-nav" data-astro-cid-tldeq5d5><span data-astro-cid-tldeq5d5></span><a href="/blog/2026-11-05-snowflake-and-sqe-read-each-others-tables/" class="post-nav-link post-nav-next" data-astro-cid-tldeq5d5><span class="post-nav-title" data-astro-cid-tldeq5d5>Snowflake and SQE read each other&#39;s tables</span><span class="post-nav-arrow" data-astro-cid-tldeq5d5>&rarr;</span></a></nav><a href="/blog/" class="back-link" data-astro-cid-tldeq5d5><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-tldeq5d5><path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-tldeq5d5></path></svg>All posts</a></article></main><footer data-astro-cid-jo6i4kqk><div class="projects" data-astro-cid-jo6i4kqk><a href="https://theartofagents.com/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-jo6i4kqk>The Art of Agents</a><span class="project-sep" data-astro-cid-jo6i4kqk>/</span><a href="https://neonarcade.net/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-jo6i4kqk>Neon Arcade</a></div><div class="social-links" data-astro-cid-jo6i4kqk><a href="https://x.com/jverhoeks" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Follow on X</span><svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" data-astro-cid-jo6i4kqk></path></svg></a><a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Go to GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-jo6i4kqk></path></svg></a></div><p class="copyright" data-astro-cid-jo6i4kqk>&copy; 2026 Jacob Verhoeks</p></footer></body></html>
