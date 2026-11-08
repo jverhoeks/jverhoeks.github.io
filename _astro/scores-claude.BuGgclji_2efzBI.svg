@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" width="680" height="320" role="img" aria-labelledby="title desc">
+<title id="title">Overall score per round: Claude Opus 5.5</title>
+<desc id="desc">Claude Opus 5.5: ours went from 5.8 in round 0 to 7.3 in round 9; Snowflake 7.6 to 8, Databricks 7.8 to 7.6.</desc>
+<style>
+  .bg{fill:#fcfcfb} .t1{fill:#0b0b0b} .t2{fill:#52514e} .grid{stroke:#e4e3df} .axis{stroke:#b9b8b2}
+  .s1{stroke:#2a78d6} .s2{stroke:#eb6834} .s3{stroke:#1baf7a} .d1{fill:#2a78d6} .d2{fill:#eb6834} .d3{fill:#1baf7a}
+  .ring{stroke:#fcfcfb} .gap{fill:#efeeea}
+  @media (prefers-color-scheme: dark){
+    .bg{fill:#1a1a19} .t1{fill:#f0efec} .t2{fill:#c3c2b7} .grid{stroke:#33332f} .axis{stroke:#5a5955}
+    .s1{stroke:#3987e5} .s2{stroke:#d95926} .s3{stroke:#199e70} .d1{fill:#3987e5} .d2{fill:#d95926} .d3{fill:#199e70}
+    .ring{stroke:#1a1a19} .gap{fill:#262624}
+  }
+  text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;font-size:12px}
+</style>
+<rect class="bg" width="680" height="320" rx="8"/>
+<text class="t1" x="52" y="26" style="font-size:14px;font-weight:600">Claude Opus 5.5</text>
+<line class="s1" x1="52" y1="44" x2="74" y2="44" stroke-width="2" stroke-dasharray=""/><circle class="d1" cx="63" cy="44" r="4"/>
+<text class="t2" x="80" y="48">Ours</text>
+<line class="s2" x1="130" y1="44" x2="152" y2="44" stroke-width="2" stroke-dasharray="6 4"/><circle class="d2" cx="141" cy="44" r="4"/>
+<text class="t2" x="158" y="48">Snowflake</text>
+<line class="s3" x1="243" y1="44" x2="265" y2="44" stroke-width="2" stroke-dasharray="6 4"/><circle class="d3" cx="254" cy="44" r="4"/>
+<text class="t2" x="271" y="48">Databricks</text>
+<rect class="gap" x="376.7" y="64" width="28" height="204" rx="4"/>
+<text class="t2" x="390.7" y="78" text-anchor="middle" style="font-size:11px">not</text>
+<text class="t2" x="390.7" y="91" text-anchor="middle" style="font-size:11px">scored</text>
+<line class="grid" x1="52" y1="268.0" x2="560" y2="268.0" stroke-width="1"/>
+<text class="t2" x="44" y="272.0" text-anchor="end">5.5</text>
+<line class="grid" x1="52" y1="234.0" x2="560" y2="234.0" stroke-width="1"/>
+<text class="t2" x="44" y="238.0" text-anchor="end">6.0</text>
+<line class="grid" x1="52" y1="200.0" x2="560" y2="200.0" stroke-width="1"/>
+<text class="t2" x="44" y="204.0" text-anchor="end">6.5</text>
+<line class="grid" x1="52" y1="166.0" x2="560" y2="166.0" stroke-width="1"/>
+<text class="t2" x="44" y="170.0" text-anchor="end">7.0</text>
+<line class="grid" x1="52" y1="132.0" x2="560" y2="132.0" stroke-width="1"/>
+<text class="t2" x="44" y="136.0" text-anchor="end">7.5</text>
+<line class="grid" x1="52" y1="98.0" x2="560" y2="98.0" stroke-width="1"/>
+<text class="t2" x="44" y="102.0" text-anchor="end">8.0</text>
+<line class="grid" x1="52" y1="64.0" x2="560" y2="64.0" stroke-width="1"/>
+<text class="t2" x="44" y="68.0" text-anchor="end">8.5</text>
+<line class="axis" x1="52" y1="268" x2="560" y2="268" stroke-width="1"/>
+<text class="t2" x="52.0" y="286" text-anchor="middle">0</text>
+<text class="t2" x="108.4" y="286" text-anchor="middle">1</text>
+<text class="t2" x="164.9" y="286" text-anchor="middle">2</text>
+<text class="t2" x="221.3" y="286" text-anchor="middle">3</text>
+<text class="t2" x="277.8" y="286" text-anchor="middle">4</text>
+<text class="t2" x="334.2" y="286" text-anchor="middle">5</text>
+<text class="t2" x="390.7" y="286" text-anchor="middle">6</text>
+<text class="t2" x="447.1" y="286" text-anchor="middle">7</text>
+<text class="t2" x="503.6" y="286" text-anchor="middle">8</text>
+<text class="t2" x="560.0" y="286" text-anchor="middle">9</text>
+<text class="t2" x="306.0" y="308" text-anchor="middle">Round</text>
+<polyline class="s1" fill="none" stroke-width="2" stroke-linejoin="round" stroke-dasharray="" points="52.0,247.6 108.4,227.2 164.9,193.2 221.3,206.8 277.8,159.2 334.2,152.4"/>
+<polyline class="s1" fill="none" stroke-width="2" stroke-linejoin="round" stroke-dasharray="" points="447.1,179.6 503.6,179.6 560.0,145.6"/>
+<circle class="d1 ring" cx="52.0" cy="247.6" r="4.5" stroke-width="2"><title>Ours, round 0: 5.8</title></circle>
+<circle class="d1 ring" cx="108.4" cy="227.2" r="4.5" stroke-width="2"><title>Ours, round 1: 6.1</title></circle>
+<circle class="d1 ring" cx="164.9" cy="193.2" r="4.5" stroke-width="2"><title>Ours, round 2: 6.6</title></circle>
+<circle class="d1 ring" cx="221.3" cy="206.8" r="4.5" stroke-width="2"><title>Ours, round 3: 6.4</title></circle>
+<circle class="d1 ring" cx="277.8" cy="159.2" r="4.5" stroke-width="2"><title>Ours, round 4: 7.1</title></circle>
+<circle class="d1 ring" cx="334.2" cy="152.4" r="4.5" stroke-width="2"><title>Ours, round 5: 7.2</title></circle>
+<circle class="d1 ring" cx="447.1" cy="179.6" r="4.5" stroke-width="2"><title>Ours, round 7: 6.8</title></circle>
+<circle class="d1 ring" cx="503.6" cy="179.6" r="4.5" stroke-width="2"><title>Ours, round 8: 6.8</title></circle>
+<circle class="d1 ring" cx="560.0" cy="145.6" r="4.5" stroke-width="2"><title>Ours, round 9: 7.3</title></circle>
+<polyline class="s2" fill="none" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6 4" points="52.0,125.2 108.4,118.4 164.9,98.0 221.3,125.2 277.8,104.8 334.2,104.8"/>
+<polyline class="s2" fill="none" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6 4" points="447.1,98.0 503.6,98.0 560.0,98.0"/>
+<circle class="d2 ring" cx="52.0" cy="125.2" r="4.5" stroke-width="2"><title>Snowflake, round 0: 7.6</title></circle>
+<circle class="d2 ring" cx="108.4" cy="118.4" r="4.5" stroke-width="2"><title>Snowflake, round 1: 7.7</title></circle>
+<circle class="d2 ring" cx="164.9" cy="98.0" r="4.5" stroke-width="2"><title>Snowflake, round 2: 8</title></circle>
+<circle class="d2 ring" cx="221.3" cy="125.2" r="4.5" stroke-width="2"><title>Snowflake, round 3: 7.6</title></circle>
+<circle class="d2 ring" cx="277.8" cy="104.8" r="4.5" stroke-width="2"><title>Snowflake, round 4: 7.9</title></circle>
+<circle class="d2 ring" cx="334.2" cy="104.8" r="4.5" stroke-width="2"><title>Snowflake, round 5: 7.9</title></circle>
+<circle class="d2 ring" cx="447.1" cy="98.0" r="4.5" stroke-width="2"><title>Snowflake, round 7: 8</title></circle>
+<circle class="d2 ring" cx="503.6" cy="98.0" r="4.5" stroke-width="2"><title>Snowflake, round 8: 8</title></circle>
+<circle class="d2 ring" cx="560.0" cy="98.0" r="4.5" stroke-width="2"><title>Snowflake, round 9: 8</title></circle>
+<polyline class="s3" fill="none" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6 4" points="52.0,111.6 108.4,145.6 164.9,132.0 221.3,125.2 277.8,118.4 334.2,118.4"/>
+<polyline class="s3" fill="none" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6 4" points="447.1,125.2 503.6,125.2 560.0,125.2"/>
+<circle class="d3 ring" cx="52.0" cy="111.6" r="4.5" stroke-width="2"><title>Databricks, round 0: 7.8</title></circle>
+<circle class="d3 ring" cx="108.4" cy="145.6" r="4.5" stroke-width="2"><title>Databricks, round 1: 7.3</title></circle>
+<circle class="d3 ring" cx="164.9" cy="132.0" r="4.5" stroke-width="2"><title>Databricks, round 2: 7.5</title></circle>
+<circle class="d3 ring" cx="221.3" cy="125.2" r="4.5" stroke-width="2"><title>Databricks, round 3: 7.6</title></circle>
+<circle class="d3 ring" cx="277.8" cy="118.4" r="4.5" stroke-width="2"><title>Databricks, round 4: 7.7</title></circle>
+<circle class="d3 ring" cx="334.2" cy="118.4" r="4.5" stroke-width="2"><title>Databricks, round 5: 7.7</title></circle>
+<circle class="d3 ring" cx="447.1" cy="125.2" r="4.5" stroke-width="2"><title>Databricks, round 7: 7.6</title></circle>
+<circle class="d3 ring" cx="503.6" cy="125.2" r="4.5" stroke-width="2"><title>Databricks, round 8: 7.6</title></circle>
+<circle class="d3 ring" cx="560.0" cy="125.2" r="4.5" stroke-width="2"><title>Databricks, round 9: 7.6</title></circle>
+<text class="t1" x="572" y="102.0"><tspan style="font-weight:600">8.0</tspan> <tspan class="t2">Snowflake</tspan></text>
+<text class="t1" x="572" y="129.2"><tspan style="font-weight:600">7.6</tspan> <tspan class="t2">Databricks</tspan></text>
+<text class="t1" x="572" y="149.6"><tspan style="font-weight:600">7.3</tspan> <tspan class="t2">Ours</tspan></text>
+</svg>

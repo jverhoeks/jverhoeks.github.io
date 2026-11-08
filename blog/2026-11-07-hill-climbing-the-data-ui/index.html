@@ -1,0 +1,524 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-tldeq5d5><head><!-- Theme: default dark (/echo). Honor saved light preference. --><script>
+	(function () {
+		try {
+			if (localStorage.getItem('theme') === 'light') {
+				document.documentElement.setAttribute('data-theme', 'light');
+			}
+		} catch (e) {}
+	})();
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#071014"><meta name="author" content="Jacob Verhoeks"><meta name="generator" content="Astro v7.4.5"><!-- Google Fonts: Oswald + Spectral + IBM Plex Mono (non-render-blocking) --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"></noscript><!-- Canonical URL --><link rel="canonical" href="https://jacob.verhoeks.org/blog/2026-11-07-hill-climbing-the-data-ui/"><link rel="alternate" type="application/rss+xml" title="Jacob's Blog" href="https://jacob.verhoeks.org/rss.xml"><!-- Primary Meta Tags --><title>Hill climbing the data UI with a council of three models</title><meta name="title" content="Hill climbing the data UI with a council of three models"><meta name="description" content="Three models from three providers scored our data UI next to Snowflake and Databricks, an agent fixed what they agreed on, and the next round scored again…"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:site_name" content="Jacob's Blog"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://jacob.verhoeks.org/blog/2026-11-07-hill-climbing-the-data-ui/"><meta property="og:title" content="Hill climbing the data UI with a council of three models"><meta property="og:description" content="Three models from three providers scored our data UI next to Snowflake and Databricks, an agent fixed what they agreed on, and the next round scored again…"><meta property="og:image" content="https://jacob.verhoeks.org/og/2026-11-07-hill-climbing-the-data-ui.jpg"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@jverhoeks"><meta name="twitter:creator" content="@jverhoeks"><meta name="twitter:title" content="Hill climbing the data UI with a council of three models"><meta name="twitter:description" content="Three models from three providers scored our data UI next to Snowflake and Databricks, an agent fixed what they agreed on, and the next round scored again…"><meta name="twitter:image" content="https://jacob.verhoeks.org/og/2026-11-07-hill-climbing-the-data-ui.jpg"><meta name="theme-color" content="#071014"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Hill climbing the data UI with a council of three models","description":"Three models from three providers scored our data UI next to Snowflake and Databricks, an agent fixed what they agreed on, and the next round scored again. Over nine rounds the score went from 6.1 to 7.5: past Databricks for two judges, still behind Snowflake for all three.","datePublished":"2026-11-07T00:00:00.000Z","author":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org/about"},"publisher":{"@type":"Person","name":"Jacob Verhoeks","url":"https://jacob.verhoeks.org"},"image":"https://jacob.verhoeks.org/og/2026-11-07-hill-climbing-the-data-ui.jpg","keywords":"ui, design, storybook, ai-review, agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://jacob.verhoeks.org/blog/2026-11-07-hill-climbing-the-data-ui/"}}</script><link rel="stylesheet" href="/_astro/BaseHead.Yu20hq-f.css"><style>a[data-astro-cid-evkijfd6]{text-decoration:none;display:inline-block}a[data-astro-cid-evkijfd6].active{font-weight:bolder;text-decoration:underline}header[data-astro-cid-nen7h5rs]{background:linear-gradient(180deg, var(--echo-ink-2), var(--bg));border-top:2px solid var(--accent);border-bottom:1px solid var(--echo-hair);min-height:56px;margin:0;padding:0 1em;transition:background-color .25s,border-color .25s}h2[data-astro-cid-nen7h5rs]{font-size:.95em;font-family:var(--font-display);text-transform:uppercase;letter-spacing:.06em;margin:0;font-weight:600}h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs],h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active{color:rgb(var(--black));text-decoration:none}h2[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:var(--accent)}nav[data-astro-cid-nen7h5rs]{justify-content:space-between;align-items:center;gap:.75rem;display:flex}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{color:var(--echo-mute);font-family:var(--font-mono);letter-spacing:.12em;text-transform:uppercase;border-bottom:2px solid #0000;padding:1em .5em;font-size:.72rem;text-decoration:none}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:rgb(var(--black))}nav[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs].active{color:rgb(var(--black));border-bottom-color:var(--accent);text-decoration:none}.social-links[data-astro-cid-nen7h5rs],.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{align-items:center;display:flex}.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{color:var(--echo-mute);border-bottom:none;padding:.5em}.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]:hover{color:var(--accent)}.theme-toggle[data-astro-cid-nen7h5rs]{border:1px solid var(--echo-hair);width:36px;height:36px;color:var(--echo-mute);cursor:pointer;background:0 0;border-radius:2px;justify-content:center;align-items:center;margin-right:.35em;padding:0;transition:background-color .2s,border-color .2s,color .2s;display:inline-flex}.theme-toggle[data-astro-cid-nen7h5rs]:hover{border-color:var(--accent);color:var(--accent)}.icon-sun[data-astro-cid-nen7h5rs]{display:block}.icon-moon[data-astro-cid-nen7h5rs],:root[data-theme=light] .icon-sun[data-astro-cid-nen7h5rs]{display:none}:root[data-theme=light] .icon-moon[data-astro-cid-nen7h5rs]{display:block}@media (width<=720px){.social-links[data-astro-cid-nen7h5rs] a[data-astro-cid-nen7h5rs]{display:none}.social-links[data-astro-cid-nen7h5rs] .theme-toggle[data-astro-cid-nen7h5rs]{display:inline-flex}h2[data-astro-cid-nen7h5rs]{white-space:nowrap;font-size:.8em}.internal-links[data-astro-cid-nen7h5rs]{white-space:nowrap;scrollbar-width:none;flex:1;min-width:0;display:flex;overflow-x:auto;mask-image:linear-gradient(90deg,#000 85%,#0000)}.internal-links[data-astro-cid-nen7h5rs]::-webkit-scrollbar{display:none}}footer[data-astro-cid-jo6i4kqk]{background:linear-gradient(180deg, transparent, var(--echo-ink-2));border-top:1px solid var(--echo-hair);color:var(--echo-mute);text-align:center;padding:2.5em 1em 5em}.projects[data-astro-cid-jo6i4kqk]{flex-wrap:wrap;justify-content:center;align-items:center;gap:.5em;margin-bottom:1em;display:flex}.project-link[data-astro-cid-jo6i4kqk]{color:rgb(var(--black));font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase;font-size:.72rem;font-weight:500;text-decoration:none;transition:color .2s}.project-link[data-astro-cid-jo6i4kqk]:hover{color:var(--accent)}.project-sep[data-astro-cid-jo6i4kqk]{color:var(--echo-mute);opacity:.5;font-weight:300}.social-links[data-astro-cid-jo6i4kqk]{justify-content:center;gap:1em;margin-top:.5em;display:flex}.social-links[data-astro-cid-jo6i4kqk] a[data-astro-cid-jo6i4kqk]{color:var(--echo-mute);text-decoration:none}.social-links[data-astro-cid-jo6i4kqk] a[data-astro-cid-jo6i4kqk]:hover{color:var(--accent)}.copyright[data-astro-cid-jo6i4kqk]{font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;margin-top:1.25em;font-size:.7rem}
+body.echo-blog{background:var(--bg)}
+</style><link rel="stylesheet" href="/_astro/BlogPost.NnC8XkKt.css"></head><body class="echo-blog" data-astro-cid-tldeq5d5><header data-astro-cid-nen7h5rs><nav data-astro-cid-nen7h5rs><h2 data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs>Jacob&#39;s Blog</a></h2><div class="internal-links" data-astro-cid-nen7h5rs><a href="/" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Home</a><a href="/blog" class="active" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Blog</a><a href="/#books" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Books</a><a href="/projects" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>Projects</a><a href="/about" data-astro-cid-nen7h5rs="true" data-astro-cid-evkijfd6>About</a></div><div class="social-links" data-astro-cid-nen7h5rs><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle light mode" title="Toggle light mode" data-astro-cid-nen7h5rs><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-nen7h5rs><circle cx="12" cy="12" r="4" data-astro-cid-nen7h5rs></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" data-astro-cid-nen7h5rs></path></svg><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor" data-astro-cid-nen7h5rs><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" data-astro-cid-nen7h5rs></path></svg></button><a href="https://x.com/jverhoeks" target="_blank" data-astro-cid-nen7h5rs><span class="sr-only" data-astro-cid-nen7h5rs>Follow on X</span><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22" data-astro-cid-nen7h5rs><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" data-astro-cid-nen7h5rs></path></svg></a><a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-nen7h5rs><span class="sr-only" data-astro-cid-nen7h5rs>Go to GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-nen7h5rs><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-nen7h5rs></path></svg></a></div></nav></header><script>
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		btn.addEventListener('click', function () {
+			var root = document.documentElement;
+			var isLight = root.getAttribute('data-theme') === 'light';
+			if (isLight) {
+				root.removeAttribute('data-theme');
+				try { localStorage.setItem('theme', 'dark'); } catch (e) {}
+			} else {
+				root.setAttribute('data-theme', 'light');
+				try { localStorage.setItem('theme', 'light'); } catch (e) {}
+			}
+		});
+	})();
+</script><main data-astro-cid-tldeq5d5><article data-astro-cid-tldeq5d5><header class="article-header" data-astro-cid-tldeq5d5><div class="article-meta" data-astro-cid-tldeq5d5><time class="article-date" data-astro-cid-tldeq5d5><time datetime="2026-11-07T00:00:00.000Z">Nov 7, 2026</time></time><span class="meta-dot" data-astro-cid-tldeq5d5>|</span><span data-astro-cid-tldeq5d5>Jacob Verhoeks</span><span class="meta-dot" data-astro-cid-tldeq5d5>|</span><span data-astro-cid-tldeq5d5>20 min read</span></div><h1 class="article-title" data-astro-cid-tldeq5d5>Hill climbing the data UI with a council of three models</h1><p class="article-description" data-astro-cid-tldeq5d5>Three models from three providers scored our data UI next to Snowflake and Databricks, an agent fixed what they agreed on, and the next round scored again. Over nine rounds the score went from 6.1 to 7.5: past Databricks for two judges, still behind Snowflake for all three.</p><div class="article-tags" data-astro-cid-tldeq5d5><a href="/blog/tag/ui/" class="echo-pill" data-astro-cid-tldeq5d5>ui</a><a href="/blog/tag/design/" class="echo-pill" data-astro-cid-tldeq5d5>design</a><a href="/blog/tag/storybook/" class="echo-pill" data-astro-cid-tldeq5d5>storybook</a><a href="/blog/tag/ai-review/" class="echo-pill" data-astro-cid-tldeq5d5>ai-review</a><a href="/blog/tag/agents/" class="echo-pill" data-astro-cid-tldeq5d5>agents</a></div></header><div class="prose" data-astro-cid-tldeq5d5><p>Our data UI worked, but next to Snowflake and Databricks it looked messy. We have no designer on the team. Over two
+days we turned “make it look better” into something a set of agents could climb: three models from three providers
+score screenshots of our UI next to the competitors, an agent fixes what they agree on, and the next round scores
+again. Over nine scored rounds the overall score went from 6.1 to 7.5, past Databricks for two of the three judges
+and still behind Snowflake for all three. The screenshots below show what changed.</p>
+<p>The method is the one Theo Browne (t3.gg) describes in
+<a href="https://www.youtube.com/watch?v=xq0eB8vxeqk&#x26;t=910s">Agents Sucked At UI (Until Today)</a>. Have a “council” of strong
+models from different providers score the UI, fix what they flag, and repeat until they agree it is good enough. The
+part from 15:10 onwards is what made it work for us: do not score your app on its own, score it next to the products
+you want to beat. Theo found that Codex scored T3 Code’s main branch at 7 next to Claude Code and Codex, while the
+same model, looking at the app alone, had just given it a 9. A model looking at one design “with its brain wiped of
+all the other designs” will think it is fine.</p>
+<h2 id="the-set-up">The set-up</h2>
+<ul>
+<li><strong>Judges.</strong> Claude Opus 5.5, Grok 4.7 and Codex (GPT 6.1). Each one ran as a separate delegate in T3 Code with the
+same brief and wrote its result to its own file. None of them could see the others’ scores or change any file.</li>
+<li><strong>What they scored.</strong> Six screens of ours, rendered from Storybook at 1280×800: the side navigation, the workspace
+home, the workspaces list, a catalog table, the SQL editor and a job run. Next to them, five real screenshots of
+Snowflake and Databricks. From round 4 on, every screen of ours was scored in both dark and light mode.</li>
+<li><strong>The scale.</strong> Seven categories (typography, hierarchy, spacing and density, colour and contrast, iconography,
+consistency and polish, clarity) plus an overall score, 1 to 10. 10 means best-in-class enterprise SaaS.</li>
+<li><strong>What they returned.</strong> Scores, the reasons for each score with the screenshot named, and a ranked “top 10 fixes”
+list with file and line references to our code.</li>
+<li><strong>Constraints the judges could not argue with.</strong> The body text stays 12px: this is a dense data tool, by an
+earlier owner decision. Claude asked for 13px in round 0 and we said no. Everything follows the Schuberg Philis
+brand book: the palette through tokens, sentence case, yellow only as a marker, and no colour as the only signal.
+WCAG AA, Dutch as well as English.</li>
+<li><strong>The loop.</strong> A summary file collects what all three agree on. An implementing agent (Claude) builds those fixes in
+a worktree and takes new screenshots. Then the next round scores again.</li>
+</ul>
+<h2 id="the-rounds">The rounds</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Round</th><th>What changed</th><th>Claude</th><th>Grok</th><th>Codex</th><th>Average</th><th>Snowflake</th><th>Databricks</th></tr></thead><tbody><tr><td>0</td><td>Baseline (see “Capture from the commit you score”)</td><td>5.8</td><td>6.3</td><td>6.2</td><td>6.1</td><td>7.9</td><td>7.77</td></tr><tr><td>1</td><td>CSS fixes from the consensus list</td><td>6.1</td><td>6.4</td><td>–</td><td>6.25</td><td>7.95</td><td>7.2</td></tr><tr><td>2</td><td>More CSS: a surface ladder, title step</td><td>6.6</td><td>6.2</td><td>–</td><td>6.4</td><td>8.0</td><td>7.85</td></tr><tr><td>3</td><td>Last CSS round</td><td>6.4</td><td>6.4</td><td>–</td><td>6.4</td><td>7.85</td><td>7.45</td></tr><tr><td>4</td><td>Tier A: the design guide, tokens, one selection style, quiet graph nodes, dark and light</td><td>7.1</td><td>6.7</td><td>7.3</td><td>7.03</td><td>8.03</td><td>7.7</td></tr><tr><td>5</td><td>Every page built from shared <code>lib/ui</code> components with stories, and a guard spec</td><td>7.2</td><td>7.1</td><td>7.3</td><td>7.2</td><td>8.03</td><td>7.83</td></tr><tr><td>6</td><td>Tier A and the components merged to main (#439 to #442)</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr><tr><td>7</td><td>Tier B, first build: page templates, the SQL workbench, a run selector, grouped tabs, a workspace switcher</td><td>6.8</td><td>6.5</td><td>7.2</td><td>6.83</td><td>8.07</td><td>7.7</td></tr><tr><td>8</td><td>Ideas round: the finding line, the home as a brief, profiled results, the run strip</td><td>6.8</td><td>6.6</td><td>7.1</td><td>6.83</td><td>8.1</td><td>7.6</td></tr><tr><td>9</td><td>Repair only: the SQL editor and the job run, then polish</td><td>7.3</td><td>7.3</td><td>7.9</td><td>7.5</td><td>8.13</td><td>7.63</td></tr></tbody></table>
+<p>Codex hit its usage limit in rounds 1 to 3, so those rounds have two judges. Round 6 was not scored: it is the merge
+to main, and its screenshots served as the “after” images of the first version of this post. Each average is the
+mean of the judges that scored that round, for the competitors too.</p>
+<h3 id="the-scores-per-judge">The scores per judge</h3>
+<p>Each chart shows one judge’s overall score for ours (solid) and for the two competitors (dashed) per round. The grey
+bands are rounds that judge did not score.</p>
+<p><img alt="Claude&#39;s overall scores per round: ours from 5.8 to 7.3, Snowflake 7.6 to 8.0, Databricks 7.8 to 7.6" loading="lazy" decoding="async" width="680" height="320" src="/_astro/scores-claude.BuGgclji_2efzBI.svg"></p>
+<p>Claude was the strictest judge of ours at the start (5.8) and moved most: +1.5 by round 9. It never let us past
+either competitor; the gap to Databricks closed from 2.0 to 0.3.</p>
+<p><img alt="Grok&#39;s overall scores per round: ours from 6.3 to 7.3, Snowflake 8.0 to 8.2, Databricks 7.2 to 7.0" loading="lazy" decoding="async" width="680" height="320" src="/_astro/scores-grok.CacnknTE_2efzBI.svg"></p>
+<p>Grok put ours above Databricks for the first time in round 9 (7.3 against 7.0). Its Databricks score is also the
+most erratic line here: 8.2 in round 2, 7.0 in rounds 8 and 9, for the same three screenshots.</p>
+<p><img alt="Codex&#39;s overall scores per round: ours from 6.2 to 7.9, Snowflake 8.1 to 8.2, Databricks 8.3" loading="lazy" decoding="async" width="680" height="320" src="/_astro/scores-codex.Duj-QJLu_2efzBI.svg"></p>
+<p>Codex scored all three products highest and missed rounds 1 to 3. Its round-9 score of 7.9 is the highest any judge
+gave ours, 0.3 behind Snowflake and 0.4 behind Databricks, which Codex rates above Snowflake throughout.</p>
+<p><img alt="The judges&#39; average per round: ours from 6.1 to 7.5, Snowflake 7.9 to 8.13, Databricks 7.77 to 7.63" loading="lazy" decoding="async" width="680" height="320" src="/_astro/scores-average.eVRqUtnr_2efzBI.svg"></p>
+<p>Averaged, ours climbed 1.4 points while Snowflake stayed within 7.85 to 8.13 and Databricks within 7.2 to 7.85. The
+two flat stretches, rounds 1 to 3 and rounds 7 to 8, are the two lessons below: small CSS fixes stall, and a round
+that regresses one screen loses what it gains on the others.</p>
+<h2 id="the-journey-after-round-6">The journey after round 6</h2>
+<p>The first version of this post stopped at round 6, with tier A and the components on main. The owner then asked for
+two more rounds and a score above 9. It took three, and we did not get to 9.</p>
+<p><strong>Round 7: tier B, and the score fell.</strong> Tier B (OpenSpec change data-ui-layout, #441) was the layout work the
+judges had asked for: page templates with a type ramp (11, 12, 14, 18 and 24px, body still 12), the SQL editor as a
+workbench with a result dock, a run selector and node drawer on the job run, grouped tabs on the catalog object, and
+a workspace switcher. The structure got better and all three judges said so. The score went down 0.37 anyway,
+because four screens had new faults that all three judges named:</p>
+<ul>
+<li>the workspaces row joined the namespace to the counts line and clipped its pills;</li>
+<li>the SQL result became a navy slab with a 60 to 120px header;</li>
+<li>the home lost its purpose line, and the attention strip had the same fill as the rows;</li>
+<li>the job run clipped its attempts inside the graph’s box.</li>
+</ul>
+<p><strong>Round 8, first half: ask for ideas, not scores.</strong> Instead of another fix list, we asked each judge a different
+question: what would make a data engineer say this is better than both, and what would it take to get past 9? Each
+wrote an ideas document with bold moves, ranked by expected lift, and one “signature” element. The three signatures
+came out close to each other:</p>
+<ul>
+<li><strong>Claude: the insight line.</strong> The brand book’s header is eyebrow, title, marker, subhead, and its writing rule is
+that a title states a finding. Make that sentence under the marker a fact with a baseline: “Succeeded in 6 min
+31 s, 19 s over its 30-day median; report needed a second attempt.”</li>
+<li><strong>Grok: the finding line.</strong> The same place, one sentence computed from the data the page already loads, with its
+action as a link. “The marker stays the brand mark. The sentence is the product mark.”</li>
+<li><strong>Codex: the evidence seam.</strong> One blue selection rule that ties the selected row, column or task to a pane that
+answers “What happened?”, “What supports this?” and “What next?”. Less a sentence than a way of working.</li>
+</ul>
+<p>Two of three proposed the same sentence under the marker without seeing each other’s work, and Codex’s seam asks the
+same question of the selection. That made it the one move every page got. The other moves the build took from the
+ideas: the workspace home as a brief (what needs attention, recent runs, your recent queries), a result that
+profiles its own columns, a run strip that sets this run against its last runs and their median, a three-group
+evidence band on the catalog table, and a workspaces list that compares quality across workspaces. Claude’s own
+arithmetic said these moves together would land at about 8.9 to 9.1.</p>
+<p><strong>Round 8, second half: flat.</strong> The ideas landed and the score stayed at 6.83. The judges called the home brief, the
+workspaces table and the catalog evidence band real gains; Claude called the finding line “our strongest asset”, one
+that neither competitor has. But two screens regressed, and they cost what the rest gained:</p>
+<ul>
+<li>the SQL editor clipped its tab, showed profiles that did not sit over their columns, lost its syntax colouring and
+made Run look disabled;</li>
+<li>the job run shrank its graph nodes to about 9px text, lost the command and retry lines, and hid the zoom.</li>
+</ul>
+<p><strong>Round 9: repair, nothing new.</strong> The build brief for round 9 had one rule: fix what round 8 broke and add no new
+moves. The SQL editor and the job run were rebuilt against the round-8 notes, and every screen was checked by eye in
+both themes before it was scored. That gave +0.67, the largest step of the whole exercise and more than tier A. All
+three judges wrote that nothing regressed. The work is in PR #445, open for review.</p>
+<h2 id="what-we-learned">What we learned</h2>
+<p><strong>Small CSS fixes stall.</strong> Rounds 1 to 3 each fixed the top of the consensus list, and the score went up by only 0.3
+in total. We had set a stopping rule (stop when a round gains less than 0.3), and round 2 triggered it. The judges
+kept naming the same causes: boxes inside boxes, no real page title, too many filled elements per view, and one
+“Open” tile per feature. Those are missing parts of a system, not CSS bugs.</p>
+<p><strong>Ask what it would take.</strong> After round 3 we asked the judges a different question. Not “score this”, but “what
+would it take to reach 9.5?” They both said 9.5 was not realistic under our brand and the 12px rule, and that about
+8.5 was. They also split the work into three tiers:</p>
+<ul>
+<li><strong>A</strong>, presentation only. This became a written design guide (<code>docs/data-design-guide.md</code>).</li>
+<li><strong>B</strong>, layout changes that alter what the spec promises. This became the OpenSpec change data-ui-layout.</li>
+<li><strong>C</strong>, new product features such as recents and favourites. This became data-recents.</li>
+</ul>
+<p>The owner set the target at 8.5. Tier A alone gave the largest jump up to then: +0.6.</p>
+<p><strong>Build the system, then score it.</strong> Round 5 moved every page onto shared, reusable components in <code>lib/ui</code>. Each
+component has its own Storybook stories in dark and light. A guard spec (<code>ui/pages.spec.ts</code>) keeps a page’s own CSS
+to layout only, with a per-page budget that can only go down. The score barely moved (+0.2). What the judges
+noticed was consistency: “consistency and polish” went from 6.9 to 7.4. This step is the base for tier B, which is
+where the remaining layout gains are.</p>
+<p><strong>Judges catch regressions.</strong> Round 5 named three things we had made worse:</p>
+<ul>
+<li>the job-run title had lost its heading font;</li>
+<li>“New catalog” had become a bare plus icon;</li>
+<li>the home tiles and graph nodes had gained hairline borders, which the brand book does not allow.</li>
+</ul>
+<p>All three judges flagged them, and each came with a file reference. That is the main value of a council over one
+reviewer: when three models from three vendors name the same thing, it is almost always real.</p>
+<p><strong>A regression costs more than a move gains.</strong> Rounds 7 and 8 both added things the judges liked and both scored
+lower or flat, because one or two screens broke. The judges’ expected lifts were per move, from a repaired
+baseline; they did not survive a round that also broke a screen. Round 9, which only repaired, gained more than
+any round that added. Since then the build brief asks the implementing agent to look at every render in both themes
+before the round is scored, not only to run the Storybook tests.</p>
+<p><strong>Ideas from three vendors converge.</strong> The three ideas documents were written blind to each other. Two arrived at
+the same signature (a computed sentence under the brand marker) and the third at the same question in another
+form. Where they converge is where to build; where only one judge asks (Grok wants the finding line at 14px, the
+other two are fine at 12px), we leave it.</p>
+<p><strong>Capture from the commit you score.</strong> Writing this post, we found that four of the six round-0 screenshots were
+not rendered from main on the day. We had copied them from older Storybook review runs, from 16 October and
+4 November. The job-run screenshot showed a card grid without edges, and the job graph had replaced that grid
+before we started. So the round-0 judges asked us to “draw dependency edges”, and those edges already existed. The
+round-0 scores are a little low for that reason. Since round 1, every screenshot has been rendered from the code
+being scored.</p>
+<p><strong>Light mode needs its own eyes.</strong> Rounds 0 to 3 scored dark only. When light mode joined in round 4, the judges
+found problems that dark mode had hidden: a washed-out second surface on the home page, a caret line that was too
+loud, and a quiet selection colour. Every Storybook story now has to pass in both themes.</p>
+<p><strong>The scores are vibes, and the scorers drift.</strong> The Snowflake and Databricks screenshots never changed, but their
+scores moved between rounds: Databricks ran from 7.0 to 8.3 depending on the judge and the round. Theo saw the same
+thing. We read the scores as a trend across three judges, never as a single number. Theo has a second warning that
+we only half followed at first: the round-5 brief asked the judges what was “left to reach 8.5”, so they knew the
+target. From round 7 on, the scoring brief no longer names a target.</p>
+<h2 id="before-and-after">Before and after</h2>
+<p>All six screens, in both themes. The before images are main on 6 November (commit <code>d8766ccc</code>), the day we started,
+rendered afterwards from that commit. The after images are the round-9 build in PR #445, which is open for review
+and not yet on main. All are Storybook renders at 1280×800 with fixture data. The numbered dots on the after images
+are ours; the key under each screen says what changed there.</p>
+<h3 id="side-navigation">Side navigation</h3>
+<p>Before, the navigation was one flat list. After:</p>
+<ol>
+<li>a workspace switcher at the top, so the navigation is scoped to the workspace you are in;</li>
+<li>the items in groups (work, manage, admin), the group named in small mono text;</li>
+<li>one selection style everywhere: a filled row with a blue rail on the left, icons one size (16px);</li>
+<li>a collapse control at the foot.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td>Dark</td><td><img alt="Navigation, dark, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/navigation-dark-before.1gtPBE8A_1Sz0Cm.webp"></td><td><img alt="Navigation, dark, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/navigation-dark-after.NcymC7WV_1eRevo.webp"></td></tr><tr><td>Light</td><td><img alt="Navigation, light, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/navigation-light-before.lVg4hssg_Zs2l1c.webp"></td><td><img alt="Navigation, light, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/navigation-light-after.BQ92QSDy_7pdhe.webp"></td></tr></tbody></table>
+<h3 id="workspace-home">Workspace home</h3>
+<p>Before: six equal “Open” tiles in a bordered panel, and the breadcrumb said “Data · Workspaces” on every page.
+After, the home is a brief:</p>
+<ol>
+<li>the finding line under the title: what fails, what it reaches, how last night’s runs went, and a link to the
+failing checks;</li>
+<li>“Needs attention”: each failing table with the check that fails, its value against its limit, and what it
+affects downstream;</li>
+<li>the last five check outcomes as squares, each with its icon, and the words “3 of 5 passed”;</li>
+<li>recent runs, with their status in words and an icon;</li>
+<li>your own recent queries, with rows and duration;</li>
+<li>the actions beside the title, one of them filled.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td>Dark</td><td><img alt="Workspace home, dark, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/workspace-home-dark-before.CZP6ORIa_Zkt1Lw.webp"></td><td><img alt="Workspace home, dark, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/workspace-home-dark-after.CgTL4fvw_2uwKjG.webp"></td></tr><tr><td>Light</td><td><img alt="Workspace home, light, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/workspace-home-light-before.-XOhGO0y_Z8PyaP.webp"></td><td><img alt="Workspace home, light, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/workspace-home-light-after.DiW0erna_1xltxv.webp"></td></tr></tbody></table>
+<h3 id="workspaces">Workspaces</h3>
+<p>Before: a list of rows. After, a table to compare workspaces:</p>
+<ol>
+<li>a page title, the marker and a finding: “4 workspaces; 2 have failing checks”;</li>
+<li>the name with its namespace on its own mono line, and a row that expands;</li>
+<li>the counts in aligned, sortable columns with tabular figures;</li>
+<li>a quality column: a ratio bar (failing hatched, not run outlined) plus the counts in words, with the failing
+count as the only pill;</li>
+<li>the groups, viewers first and the admin group on its own line.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td>Dark</td><td><img alt="Workspaces, dark, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/workspaces-dark-before.HvIq6fN-_Z2eKeiN.webp"></td><td><img alt="Workspaces, dark, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/workspaces-dark-after.DztrRSdV_Z20wGEY.webp"></td></tr><tr><td>Light</td><td><img alt="Workspaces, light, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/workspaces-light-before.BP-6YL1__Z1yPMms.webp"></td><td><img alt="Workspaces, light, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/workspaces-light-after.BZsY71aG_m0cOz.webp"></td></tr></tbody></table>
+<h3 id="catalog-table">Catalog table</h3>
+<p>Before: the table name in mono body size, every column type in a pill, “Nullable” on every row, and a dashed chip
+for every classification. After:</p>
+<ol>
+<li>the table name as the page title with its level, and a finding: rows against a week ago, and which column holds
+personal data;</li>
+<li>an evidence band in three groups: rows with their trend and columns, last write and format, contract and
+profile;</li>
+<li>the tabs in three named groups: data, quality, access;</li>
+<li>the classification suggestion as one warning with its action (“Raise classification”);</li>
+<li>nulls as a small share bar beside the number; types as plain mono text, “Required” only where it applies;</li>
+<li>a classification chip only where a column differs from the table’s level, with an icon so colour is not the only
+signal.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td>Dark</td><td><img alt="Catalog table, dark, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/catalog-table-dark-before.DmtcKftN_kEY9Q.webp"></td><td><img alt="Catalog table, dark, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/catalog-table-dark-after.BOLh1h_J_Z1gY7yq.webp"></td></tr><tr><td>Light</td><td><img alt="Catalog table, light, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/catalog-table-light-before.iF4IRm05_ZkSIUI.webp"></td><td><img alt="Catalog table, light, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/catalog-table-light-after.B_KevzD7_1gUf16.webp"></td></tr></tbody></table>
+<h3 id="sql-editor">SQL editor</h3>
+<p>The screen that regressed in rounds 7 and 8 and was rebuilt in round 9. After:</p>
+<ol>
+<li>one tab per statement, the tab named after its SQL, and ”+” after the tabs;</li>
+<li>one toolbar: Run (the one filled button) and the row limit, Explain, the context (catalog and source dialect)
+with Translate in one group, then Save and the download;</li>
+<li>syntax colouring, and an editor only as tall as it needs;</li>
+<li>a result receipt: status, rows, duration, the engine and as whom it ran;</li>
+<li>a profile under each result column, computed in the browser from the rows returned: top values for text, a
+histogram with its range for numbers;</li>
+<li>a grid without a frame: a strong rule under the header, quiet rules between rows, tabular figures.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td>Dark</td><td><img alt="SQL editor, dark, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/sql-editor-dark-before.Bf-_ib5a_ZQ248B.webp"></td><td><img alt="SQL editor, dark, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/sql-editor-dark-after.D6k6kwrX_NareS.webp"></td></tr><tr><td>Light</td><td><img alt="SQL editor, light, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/sql-editor-light-before.BQwtXRPx_1Gt3S3.webp"></td><td><img alt="SQL editor, light, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/sql-editor-light-after.BLvXinn5_ZAuc7c.webp"></td></tr></tbody></table>
+<h3 id="job-run">Job run</h3>
+<p>The graph itself was already there. Before, it sat inside a box inside a box, had green-filled nodes, and was
+preceded by a progress bar and a count pill that repeated the status. The labels were in upper case, and the
+attempts were loose rows. After:</p>
+<ol>
+<li>a page title with the run number and its status, and a finding against the 30-day median;</li>
+<li>the run facts in sentence case, including the time against the median;</li>
+<li>a run strip: the last runs as bars by duration, failures hatched, the median labelled, oldest and newest named,
+and a selector to step to the previous or next run;</li>
+<li>readable nodes with their status, duration, the file they run and their retry note, a coloured edge bar instead
+of a fill;</li>
+<li>zoom and fit on the graph, beside the Graph / Timeline switch;</li>
+<li>a details rail: who started it, as whom it ran, the project, the commit and the parameters;</li>
+<li>the attempts as an aligned table, with the log action in its row.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Before</th><th>After</th></tr></thead><tbody><tr><td>Dark</td><td><img alt="Job run, dark, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/job-run-dark-before.Sd2EXv_5_Z1ufjEM.webp"></td><td><img alt="Job run, dark, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/job-run-dark-after.BuYpis5B_1Wckew.webp"></td></tr><tr><td>Light</td><td><img alt="Job run, light, before" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/job-run-light-before.COx4MxSb_24EETQ.webp"></td><td><img alt="Job run, light, after" loading="lazy" decoding="async" width="1280" height="800" src="/_astro/job-run-light-after.DI5zH-Sx_2fq5SQ.webp"></td></tr></tbody></table>
+<h2 id="what-it-cost">What it cost</h2>
+<p>Nine scored rounds (0 to 5 and 7 to 9) plus one ideas round, with three judges in each round where Codex had quota,
+spread over two days. The judges and the implementing agents all run on subscriptions we already pay for. Most of
+the agent time goes to building the fixes, not to judging them: the round-8 build, which took ideas from all three
+documents at once, ran for hours, and a scoring round takes about ten minutes.</p>
+<p>We kept the usual rules of this repository:</p>
+<ul>
+<li>Every change lands as signed commits in normal pull requests (#439 to #442 merged, #445 open), reviewed and merged
+by the owner.</li>
+<li>Layout changes that alter what the spec promises went through an OpenSpec change first (data-ui-layout, #441).</li>
+<li>The rest is guarded by Storybook tests in dark, light and Dutch.</li>
+</ul>
+<h2 id="what-is-next">What is next</h2>
+<ul>
+<li><strong>Land #445</strong> (tier B and rounds 8 and 9). Its open items: the portal end-to-end test, the component-style bundle
+budget in <code>make ui-check</code> (8 kB, now 17.23 kB), a decision on the notebooks page template, and the capitalisation
+of the status key.</li>
+<li><strong>The next fixes the judges agree on</strong> (round 9):
+<ul>
+<li>the SQL profiles as three separate pictures, and the grid to the dock’s edge;</li>
+<li>the dark home’s columns as filled tiles;</li>
+<li>share and null bars that do not read as a value at 0%;</li>
+<li>“attempt 2” beside “2 retries” on the job run, which reads as a contradiction;</li>
+<li>distinct icons for Workspaces and Catalog, and for Access and Admin.</li>
+</ul>
+</li>
+<li><strong>Tier C (data-recents, #440):</strong> recents and favourites, so the home can show what you worked on, not only what
+failed.</li>
+</ul>
+<p>Grok puts its presentation fixes at about +0.7 together. After rounds 7 and 8 we no longer add up lift estimates:
+even if they all held, the average would land near 8.2, level with Snowflake and still well short of 9.
+To beat both by a clear margin, the judges point at what the competitors cannot show: the finding line and the
+evidence behind it, on every screen. That is where we will spend the next rounds.</p>
+<p>All rounds, briefs, ideas, results and screenshots are kept locally in <code>.run/design-score/</code>, which is not in git.</p></div><nav class="post-nav" data-astro-cid-tldeq5d5><a href="/blog/2026-11-07-console-polish/" class="post-nav-link post-nav-prev" data-astro-cid-tldeq5d5><span class="post-nav-arrow" data-astro-cid-tldeq5d5>&larr;</span><span class="post-nav-title" data-astro-cid-tldeq5d5>Eight rounds of review: polishing the dbx-migrator console with three models</span></a><a href="/blog/2026-11-05-snowflake-and-sqe-read-each-others-tables/" class="post-nav-link post-nav-next" data-astro-cid-tldeq5d5><span class="post-nav-title" data-astro-cid-tldeq5d5>Snowflake and SQE read each other&#39;s tables</span><span class="post-nav-arrow" data-astro-cid-tldeq5d5>&rarr;</span></a></nav><a href="/blog/" class="back-link" data-astro-cid-tldeq5d5><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-astro-cid-tldeq5d5><path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" data-astro-cid-tldeq5d5></path></svg>All posts</a></article></main><footer data-astro-cid-jo6i4kqk><div class="projects" data-astro-cid-jo6i4kqk><a href="https://theartofagents.com/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-jo6i4kqk>The Art of Agents</a><span class="project-sep" data-astro-cid-jo6i4kqk>/</span><a href="https://neonarcade.net/" target="_blank" rel="noopener noreferrer" class="project-link" data-astro-cid-jo6i4kqk>Neon Arcade</a></div><div class="social-links" data-astro-cid-jo6i4kqk><a href="https://x.com/jverhoeks" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Follow on X</span><svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" data-astro-cid-jo6i4kqk></path></svg></a><a href="https://github.com/jverhoeks" target="_blank" data-astro-cid-jo6i4kqk><span class="sr-only" data-astro-cid-jo6i4kqk>Go to GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" data-astro-cid-jo6i4kqk><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" data-astro-cid-jo6i4kqk></path></svg></a></div><p class="copyright" data-astro-cid-jo6i4kqk>&copy; 2026 Jacob Verhoeks</p></footer></body></html>
